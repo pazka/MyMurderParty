@@ -1,0 +1,4 @@
+
+interface AppStorage{
+    inventory: InventoryItem[];
+}

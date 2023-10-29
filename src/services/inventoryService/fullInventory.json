@@ -1,0 +1,20 @@
+[
+    {
+        "id": "Silver Key"
+    },
+    {
+        "id": "Gold Key"
+    },
+    {
+        "id": "Chest",
+        "name": "Chest"
+    },
+    {
+        "id": "Door",
+        "name": "Door"
+    },
+    {
+        "id" : "Drawer",
+        "name" : "Drawer"
+    }
+]
