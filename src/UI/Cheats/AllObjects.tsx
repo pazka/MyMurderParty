@@ -1,4 +1,4 @@
-import { addItemToInventory, getFullInventory, useInventory } from "../../services/inventoryService"
+import { addItemToInventory, getFullInventory } from "../../services/inventoryService"
 import { resetStorage } from "../../services/storageService";
 
 export const AllObjects = () => {
@@ -9,7 +9,7 @@ export const AllObjects = () => {
             <h1>All objects</h1>
             <button onClick={x=> resetStorage()}>Reset storage</button>
             <ul>
-                {allInventory.map((inventoryItem) => (
+                {Object.values(allInventory).map((inventoryItem : InventoryItem) => (
                     <li >{inventoryItem.id} <button onClick={e => addItemToInventory(inventoryItem)}> Take item</button></li>
                 ))}
             </ul>

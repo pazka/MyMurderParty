@@ -1,11 +1,13 @@
 import { setGlobaState, getGlobalState, useGlobalStorage } from "../storageService";
-import fullInventory from "./fullInventory.json";
+import fullInventory from "./fullInventory";
 
-export const getFullInventory = (): InventoryItem[] => {
+
+export const getFullInventory = (): Inventory => {
     return fullInventory;
 };
+
 export const identifyItem = (itemQrCode: QrCodeData): InventoryItem | null => {
-    return getFullInventory().find((item) => item.id === itemQrCode) ?? null;
+    return getFullInventory()[itemQrCode] ?? null;
 };
 
 export const getUserInventory = (): InventoryItem[] => {
