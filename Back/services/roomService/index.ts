@@ -1,0 +1,1 @@
+import {RoomCRUD} from '../persist'
