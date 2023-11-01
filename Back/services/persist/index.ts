@@ -3,33 +3,30 @@ let data: AppDatabase = {
     users: {}
 }
 
-export class BaseEntityORM<T extends AppDatabaseEntity>{
+export class BaseEntityORM<T extends AppDatabaseEntity & NewT, NewT extends NewAppDatabaseEntity>{
     private entityData: { [id: string]: T };
     constructor(entityData: { [id: string]: T }) {
         this.entityData = entityData;
     }
 
-    create = (obj: (T & NewAppDatabaseEntity)): (T & AppDatabaseEntity) => {
-        if (obj.id === undefined) {
-            const createdObj = obj as T;
-            obj.id = Math.random().toString(36).substring(7);
-            this.entityData[obj.id] = createdObj;
-        }
+    create = (obj: NewT): T => {
+        const createdObj: T = { ...obj, id: Math.random().toString()} as unknown as T;
+        this.entityData[createdObj.id] = createdObj;
 
-        return {...obj};
+        return { ...createdObj };
     }
 
-    read = (id: string) : T => {
-        return {...this.entityData[id]}
+    read = (id: string): T => {
+        return { ...this.entityData[id] }
     }
 
-    readAll = () : T[] => {
-        return {...Object.values(this.entityData)}
+    readAll = (): T[] => {
+        return { ...Object.values(this.entityData) }
     }
 
-    update = (obj: T) : T => {
+    update = (obj: T & AppDatabaseEntity): T => {
         this.entityData[obj.id] = obj;
-        return {...obj};
+        return { ...obj };
     }
 
     delete = (id: string) => {
@@ -38,7 +35,7 @@ export class BaseEntityORM<T extends AppDatabaseEntity>{
 }
 
 //Rooms CRUD
-export const RoomCRUD = new BaseEntityORM<Room>(data.rooms);
+export const RoomCRUD: BaseEntityORM<Room,NewRoom> = new BaseEntityORM<Room,NewRoom>(data.rooms);
 
 //Users CRUD
-export const UserCRUD = new BaseEntityORM<User>(data.users);
+export const UserCRUD: BaseEntityORM<User,NewUser> = new BaseEntityORM<User,NewUser>(data.users);
