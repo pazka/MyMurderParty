@@ -4,7 +4,7 @@ let data: AppDatabase = {
 }
 
 export class BaseEntityORM<T extends AppDatabaseEntity>{
-    entityData: { [id: string]: T };
+    private entityData: { [id: string]: T };
     constructor(entityData: { [id: string]: T }) {
         this.entityData = entityData;
     }
