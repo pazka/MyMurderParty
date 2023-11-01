@@ -1,5 +1,18 @@
 type QrCodeData = string;
 
+interface User {
+    id: string;
+    name: string;
+    socketId?: string;
+    choosenCharacterId?: string;
+}
+
+interface Room {
+    id: string;
+    usersId: string[];
+    availableObjectsId: string[];
+}
+
 interface InventoryItem {
     id: string;
     name?: string;
@@ -10,7 +23,6 @@ interface InventoryItem {
 interface Inventory {
     [id: string]: InventoryItem
 }
-
 
 interface Character {
     items_allowed: InventoryItem[];

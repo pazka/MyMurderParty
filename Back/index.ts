@@ -1,4 +1,7 @@
 import dotenv from 'dotenv';
+//For env File 
+dotenv.config();
+
 import fs from 'fs';
 
 import express, { Express, Request, Response, Application } from 'express';
@@ -7,11 +10,12 @@ import http from 'http';
 const server = http.createServer(app);
 import { Server, Socket } from 'socket.io';
 import userEvents from './services/socketService/userEvents';
-import { createNewRoom } from './services/roomService';
-const io = new Server(server);
+import { createNewRoom, getAllRooms } from './services/roomService';
+import config from './services/config';
+import { getAllUsers } from './services/userService';
+import cors from 'cors';
+const io = new Server(server , { cors: config.cors });
 
-//For env File 
-dotenv.config();
 
 const getVersion = () => {
   const versionTxt = fs.readFileSync('./version.txt')
@@ -23,14 +27,23 @@ const getVersion = () => {
 
 const port = process.env.PORT || 8000;
 
+app.use(cors(config.cors))
 app.use(express.static('public'))
 
 app.get('/info', (req: Request, res: Response) => {
   res.send(getVersion().join('.'));
 });
 
-app.listen(port, () => {
-  console.log(`Server is Fire at http://localhost:${port}`);
+app.get('/users', (req: Request, res: Response) => {
+  getAllUsers().then((users) => {
+    res.send(users);
+  })
+});
+
+app.get('/rooms', (req: Request, res: Response) => {
+  getAllRooms().then((rooms) => {
+    res.send(rooms);
+  })
 });
 
 app.post('/room', (req: Request, res: Response) => {
@@ -48,4 +61,8 @@ app.post('/room', (req: Request, res: Response) => {
 
 io.on('connection', (userSocket: Socket) => {
   userEvents(userSocket, io)
+});
+
+server.listen(port, () => {
+  console.log(`Server is Fire at http://localhost:${port}`);
 });

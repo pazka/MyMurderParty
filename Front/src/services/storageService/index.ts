@@ -2,6 +2,17 @@ import { useEffect, useId, useState } from "react";
 
 let subscriptions: { [subscriptionkey: string]: Function } = {};
 
+export const getDefaultStorage = (): AppStorage => {
+    return {
+        inventory: [],
+        allRooms: [],
+        currentRoom: null,
+        allUsers: [],
+        currentUser: null,
+    };
+};
+
+
 const persistStorage = (storage: AppStorage) => {
     localStorage.setItem("persist", JSON.stringify(storage));
 };
@@ -36,15 +47,7 @@ export const useGlobalStorage = (): [AppStorage, Function] => {
         subscriptions[id] = setStorage;
     }, [id]);
 
-
     return [storage, setGlobaState];
-};
-
-export const getDefaultStorage = (): AppStorage => {
-    return {
-        inventory: [],
-
-    };
 };
 
 export const resetStorage = () => {

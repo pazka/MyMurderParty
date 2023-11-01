@@ -1,16 +1,14 @@
-import { AllObjects } from "../Cheats/AllObjects"
-import { AllCharacters } from "../Cheats/AllUser"
-import { TestKeys } from "../Components/TestKeys"
-import { TestNoKeys } from "../Components/TestNoKeys"
-import { UserInventory } from "../Components/UserInventory"
+import AllObjects from "../Cheats/AllObjects"
+import AllCharacters from "../Cheats/AllCharacters"
+import UserInventory from "../Components/UserInventory"
+import AllUsers from "../Cheats/AllUsers"
 
 export const TestPage = () => {
-    return <>
+    return <div>
         <h1>Test Page</h1>
+        <AllUsers />
         <UserInventory />
-        <TestKeys />
-        <TestNoKeys />
         <AllObjects />
         <AllCharacters />
-    </>
+    </div>
 }

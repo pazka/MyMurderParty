@@ -2,7 +2,6 @@ import { Server, Socket } from "socket.io";
 import { createNewRoom, getAllRooms, getUsersInRoom, userJoinRoom, userLeaveRoom, userShareAnObjectToRoom, userTakeAnObjectFromRoom } from "../roomService";
 import { RoomCRUD } from "../persist";
 
-
 export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) => {
     let currentRoomId: string | null;
 
@@ -70,6 +69,15 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
             userSocket.emit('error', err.message);
         });
     });
+
+    userSocket.on('broadcast-to-room', (data: any) => {
+        if (!currentRoomId) {
+            userSocket.emit('error', "You are not in a room");
+            return;
+        }
+
+        io.to(currentRoomId).emit('broadcast-from-room', { sender:user, data });
+    })
 }
 
 const notifyRoomUpdate = async (io: Server, roomId: string) => {

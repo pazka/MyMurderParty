@@ -1,7 +1,7 @@
 import { addItemToInventory, getFullInventory } from "../../services/inventoryService"
 import { resetStorage } from "../../services/storageService";
 
-export const AllObjects = () => {
+export default () => {
     const allInventory = getFullInventory();
 
     return (
