@@ -16,20 +16,20 @@ export class BaseEntityORM<T extends AppDatabaseEntity>{
             this.entityData[obj.id] = createdObj;
         }
 
-        return obj;
+        return {...obj};
     }
 
     read = (id: string) : T => {
-        return this.entityData[id]
+        return {...this.entityData[id]}
     }
 
     readAll = () : T[] => {
-        return Object.values(this.entityData);
+        return {...Object.values(this.entityData)}
     }
 
     update = (obj: T) : T => {
         this.entityData[obj.id] = obj;
-        return obj;
+        return {...obj};
     }
 
     delete = (id: string) => {

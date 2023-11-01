@@ -22,7 +22,7 @@ interface AppDatabaseEntity extends NewAppDatabaseEntity {
 interface NewRoom extends NewAppDatabaseEntity {
     name: string;
     password: string;
-    users: string[];
+    users: User[];
 }
 
 interface Room extends NewRoom, AppDatabaseEntity {
