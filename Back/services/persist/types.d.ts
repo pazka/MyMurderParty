@@ -13,16 +13,16 @@ interface AppDatabaseEntity extends NewAppDatabaseEntity {
 interface NewRoom extends NewAppDatabaseEntity {
     name: string;
     password: string;
+}
+
+interface Room extends NewRoom,  AppDatabaseEntity {
     usersId: string[];
     availableObjectsId: string[];
 }
 
-interface Room extends NewRoom,  AppDatabaseEntity {
-}
-
 interface NewUser extends NewAppDatabaseEntity {
     name: string;
-    socketId: string;
+    socketId?: string;
     choosenCharacterId?: string;
 }
 

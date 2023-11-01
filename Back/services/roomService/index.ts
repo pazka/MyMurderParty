@@ -1,25 +1,39 @@
 import { RoomCRUD } from '../persist'
 import { UserCRUD } from '../persist'
 
-const createNewRoom = async (roomName: string): Promise<Room> => {
-    const newRoom: NewRoom = {
-        name: roomName,
-        password: "",
+export const getAllRooms = async (): Promise<Room[]> => {
+    const allRooms = RoomCRUD.readAll();
+    return allRooms;
+}
+
+export const createNewRoom = async (newRoom : NewRoom): Promise<Room> => {
+    //check that room with same name dosen't already exist 
+    const allRooms = await getAllRooms();
+    if (allRooms.find(r => r.name === newRoom.name)) {
+        throw new Error("Room with same name already exists");
+    }
+    
+    let createdRoom: Room = RoomCRUD.create(newRoom);
+    
+    createdRoom = {
+        ...createdRoom,
         usersId: [],
         availableObjectsId: []
     }
-    return RoomCRUD.create(newRoom);
+
+    RoomCRUD.update(createdRoom);
+    return createdRoom;    
 }
 
-const getUsersInRoom = async (roomId: string): Promise<User[]> => {
+export const getUsersInRoom = async (roomId: string): Promise<User[]> => {
     const room: Room = RoomCRUD.read(roomId);
     const allUsers = UserCRUD.readAll();
     const allUsersInRoom = allUsers.filter(u => room.usersId.includes(u.id));
     return allUsersInRoom;
 }
 
-const createNewRoomWithOneUser = async (roomName: string, userId: string): Promise<Room> => {
-    const room: Room = await createNewRoom(roomName);
+export const createNewRoomWithOneUser = async (newRoom : NewRoom, userId: string): Promise<Room> => {
+    const room: Room = await createNewRoom(newRoom);
     //check that user exists
     const user: User = UserCRUD.read(userId);
     if (!user) {
@@ -33,11 +47,11 @@ const createNewRoomWithOneUser = async (roomName: string, userId: string): Promi
     return room;
 }
 
-const userJoinRoom = async (roomId: string, password: string, userId: string): Promise<void> => {
+export const userJoinRoom = async (roomId: string, password: string, userId: string): Promise<Room> => {
     const room: Room = RoomCRUD.read(roomId);
     const user: User = UserCRUD.read(userId);
 
-    if (room.usersId.includes(userId)) { return }
+    if (room.usersId.includes(userId)) { return room; }
 
     //check password 
     if (room.password !== password) {
@@ -54,9 +68,10 @@ const userJoinRoom = async (roomId: string, password: string, userId: string): P
     room.usersId.push(userId);
 
     RoomCRUD.update(room);
+    return room;
 }
 
-const userLeaveRoom = async (roomId: string, userId: string): Promise<void> => {
+export const userLeaveRoom = async (roomId: string, userId: string): Promise<void> => {
     const room: Room = RoomCRUD.read(roomId);
     const user: User = UserCRUD.read(userId);
 
@@ -70,7 +85,7 @@ const userLeaveRoom = async (roomId: string, userId: string): Promise<void> => {
     UserCRUD.update(user);
 }
 
-const userChoosesACharacter = async (userId: string, roomId: string, characterId: string): Promise<void> => {
+export const userChoosesACharacter = async (userId: string, roomId: string, characterId: string): Promise<void> => {
     const user: User = UserCRUD.read(userId);
 
     //check that room users dosent have the same character
@@ -82,7 +97,7 @@ const userChoosesACharacter = async (userId: string, roomId: string, characterId
     UserCRUD.update(user);
 }
 
-const userShareAnObjectToRoom = async (userId: string, roomId: string, objectId: string): Promise<void> => {
+export const userShareAnObjectToRoom = async (userId: string, roomId: string, objectId: string): Promise<void> => {
     const user: User = UserCRUD.read(userId);
     const room: Room = RoomCRUD.read(roomId);
 
@@ -94,7 +109,7 @@ const userShareAnObjectToRoom = async (userId: string, roomId: string, objectId:
     //user object inventory is managed on the front side
 }
 
-const userTakeAnObjectFromRoom = async (userId: string, roomId: string, objectId: string): Promise<void> => {
+export const userTakeAnObjectFromRoom = async (userId: string, roomId: string, objectId: string): Promise<void> => {
     const user: User = UserCRUD.read(userId);
     const room: Room = RoomCRUD.read(roomId);
 
