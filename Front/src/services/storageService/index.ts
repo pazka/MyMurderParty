@@ -39,9 +39,7 @@ export const setGlobaState = (newStorage: AppStorage) => {
     persistStorage(newStorage);
 
     for (const [id, setStorage] of Object.entries(subscriptions)) {
-        console.debug("Setting new storage to", id);
         setStorage(newStorage);
-        console.debug("New Storage", getGlobalState());
     }
 };
 

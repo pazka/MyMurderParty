@@ -39,8 +39,6 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
     userSocket.on('leave-room', async (data: { roomId: string }) => {
         pingUser(user.id);
 
-        if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) return;
-
         const rooms = await getRoomsOfUser(user.id);
 
         //check if user is in this room

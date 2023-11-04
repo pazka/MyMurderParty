@@ -1,3 +1,5 @@
+import { isUserInARoom } from "../roomService";
+import { emitUpdateObjects } from "../socketService/emits";
 import { setGlobaState, getGlobalState, useGlobalStorage } from "../storageService";
 import fullInventory from "./fullInventory";
 
@@ -17,13 +19,27 @@ export const getUserInventory = (): InventoryItem[] => {
     return state.inventory;
 }
 
+export const updateOneObjectInRoom = (item: InventoryItem) => {
+    const state = getGlobalState();
+    if(isUserInARoom()) return;
+
+    const currentRoom = state.currentRoom as Room;
+    currentRoom.objects[item.id] = item;
+    emitUpdateObjects(currentRoom.objects);
+}
+
 export const addItemToInventory = (item: InventoryItem) => {
     const state = getGlobalState();
+    const currentUser = state.currentUser as User;
+    if(isUserInARoom()) return;
+
     if (state.inventory.find((i) => i.id === item.id)) {
         return;
     }
 
-    state.inventory.push(item);
+    item.ownerId = currentUser.id;
+    updateOneObjectInRoom(item);
+
     // set inventory object to localstorage
     setGlobaState(state);
 }

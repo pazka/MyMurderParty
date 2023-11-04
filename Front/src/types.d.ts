@@ -13,8 +13,10 @@ interface Room {
     name:string;
     password: string;
     usersId: string[];
-    objects : any;
+    objects : ObjectsInRoom;
 }
+
+type ObjectsInRoom = { [id: string]: ObjectInRoom };
 
 interface InventoryItem {
     id: string;
@@ -23,6 +25,7 @@ interface InventoryItem {
     isImmovable?: boolean;
     isSharedToRoom?: boolean;
     isUsed?: boolean;
+    ownerId?: string;
 }
 
 interface Inventory {

@@ -34,12 +34,3 @@ export const logout = async () => {
     setGlobaState({ ...storage, currentUser: null })
     emitLogout();
 }
-
-export const initLoginIfAlreadyPossible = async () => {
-    const storage = getGlobalState();
-    const user = storage.currentUser;
-
-    if (user) {
-        emitLogin(user);
-    }
-}

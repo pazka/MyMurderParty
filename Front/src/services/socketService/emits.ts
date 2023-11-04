@@ -24,16 +24,10 @@ export const emitLeaveRoom = async (roomId: string) => {
     (await getSocket()).emit("leave-room", { roomId });
 }
 
-export const emitMakeObjectAvailable = async (object: InventoryItem) => {
+export const emitUpdateObjects = async (objects: ObjectsInRoom) => {
     if(!isUserInARoom()) return;
     const roomId = getCurrentRoom()?.id;
-    (await getSocket()).emit("offer-object", { object, roomId });
-}
-
-export const emitTakeAvailableObject = async (object: InventoryItem) => {
-    if(!isUserInARoom()) return;
-    const roomId = getCurrentRoom()?.id;
-    (await getSocket()).emit("take-object", { object, roomId });
+    (await getSocket()).emit("update-room-objects", { objects, roomId });
 }
 
 export const emitBroadcastTextToRoom = async (text: string) => {

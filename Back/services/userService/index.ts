@@ -8,6 +8,13 @@ export const createNewUser = async (newUser: NewUser,sessionId : string): Promis
 
     return createdUser;
 }
+
+export const getUserBySessionId = async (sessionId : string): Promise<User|undefined> => {
+    const allUsers = UserCRUD.readAll();
+    const user = allUsers.find((user) => user.sessionId === sessionId);
+    return user;
+}
+
 export const createOrGetNewUser = async (newUser: NewUser,sessionId : string): Promise<User> => {
     const allUsers = UserCRUD.readAll();
     const user = allUsers.find((user) => user.sessionId === sessionId);

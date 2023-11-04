@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useGlobalStorage } from "../../services/storageService"
-import { getDefaultRoom } from "../../services/roomService"
+import { getDefaultRoom, updateCurrentRoom } from "../../services/roomService"
 import RoomBroadcast from "./RoomBroadcast"
 import currentConfig from "../../services/config"
 import { emitJoinRoom, emitLeaveRoom, emitNewRoom } from "../../services/socketService/emits"
@@ -21,6 +21,7 @@ export default () => {
     const handleLeaveRoom = () => {
         if (!storage.currentRoom) return
         emitLeaveRoom(storage.currentRoom.id)
+        updateCurrentRoom(null);
     }
 
     return (

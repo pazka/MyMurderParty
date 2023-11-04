@@ -1,6 +1,7 @@
 import { getGlobalState, setGlobaState } from "../storageService";
 import { enqueueSnackbar } from 'notistack'
 import { Socket } from "socket.io-client"
+import { updateCurrentRoom } from "../roomService";
 
 
 export default (socket: Socket) => {
@@ -8,6 +9,12 @@ export default (socket: Socket) => {
     socket.onAny((event, ...args) => {
         console.log(`socket.io : Received ${event} with args : `, args);
     });
+
+    socket.on("you-are", (user: User) => {
+        let storage = getGlobalState();
+        storage.currentUser = user;
+        setGlobaState(storage);
+    })
 
     socket.on("all-users", (allUsers: User[]) => {
         let storage = getGlobalState();
@@ -22,10 +29,9 @@ export default (socket: Socket) => {
     })
 
     socket.on("update-room", (room: Room) => {
-        let storage = getGlobalState();
-        storage.currentRoom = room;
-        setGlobaState(storage);
+        updateCurrentRoom(room);
     })
+
     socket.on("update-room-users", (users: User[]) => {
         let storage = getGlobalState();
         storage.usersInRoom = users;
