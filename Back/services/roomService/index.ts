@@ -78,6 +78,7 @@ export const userJoinRoom = async (roomId: string, password: string, userId: str
     }
 
     room.users[userId] = user;
+    room.roomHistory.push(`${user.name} joined the room`);
 
     RoomCRUD.update(room);
     return room;
@@ -90,6 +91,7 @@ export const userLeaveRoom = async (roomId: string, userId: string): Promise<voi
     if (!room.users[userId]) {
         throw new Error("User does not exist in the room");
     }
+    room.roomHistory.push(`${user.name} left the room`);
     delete room.users[userId];
 
     RoomCRUD.update(room);
@@ -111,6 +113,7 @@ export const userChoosesACharacter = async (userId: string, roomId: string, char
     }
 
     room.characters[characterId] = user;
+    room.roomHistory.push(`${user.name} chose a character`);
     RoomCRUD.update(room);
 }
 

@@ -15,6 +15,7 @@ export const getDefaultStorage = (): AppStorage => {
             sessionId: "",
             lastActivity: 0,
         },
+        roomHistory: [],
     };
 };
 

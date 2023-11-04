@@ -80,7 +80,12 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
         pingUser(user.id);
         if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) return;
 
+        const room: Room = RoomCRUD.read(data.roomId);
+        room.roomHistory.push(`${user.name} : ${data.message}`);
+        RoomCRUD.update(room);
+
         io.to(data.roomId).emit('broadcast-from-room', { sender: user, data });
+        notifyRoomUpdate(io, data.roomId);
     })
 }
 

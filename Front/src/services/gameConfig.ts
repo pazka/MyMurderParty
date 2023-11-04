@@ -1,54 +1,59 @@
-export const FULL_INVENTORY : Inventory = {
+export const FULL_INVENTORY: Inventory = {
     "Silver Key": {
-        "id" : "Silver Key",
+        description : "ok",
+        "id": "Silver Key",
     },
     "Gold Key": {
-        "id" : "Gold Key",
+        description : "ok",
+        "id": "Gold Key",
     },
     "Chest": {
-        "id" : "Chest",
+        description : "ok",
+        "id": "Chest",
         "name": "Chest",
-        "isImmovable" : true
+        "cantBeTaken": true,
+        combineWith:  [
+            "Silver Key",
+            "Gold Key",
+        ]
     },
     "Door": {
-        "id" : "Door",
+        description : "ok",
+        "id": "Door",
         "name": "Door",
-        "isImmovable" : true
+        "cantBeTaken": true,
+        combineWith:  [
+            "Gold Key",
+        ]
     },
     "Drawer": {
-        "id" : "Drawer",
+        description : "ok",
+        "id": "Drawer",
         "name": "Drawer",
-        "isImmovable" : true
+        "cantBeTaken": true,
+        "combineWith":  [
+            "Gold Key",
+        ]
+    },
+    "ExampleItem": {
+        description : "ok",
+        id: "ExampleItem",
+        name: "Example",
+        combineWith: ["ExampleItem"],
+        cantBeTaken: true,
+        isSharedToRoom: false,
+        isUsed: true
     }
 }
-
-FULL_INVENTORY["Chest"].items_allowed = [
-    FULL_INVENTORY["Silver Key"],
-    FULL_INVENTORY["Gold Key"],
-]
-
-FULL_INVENTORY["Door"].items_allowed = [
-    FULL_INVENTORY["Gold Key"],
-]
-
-FULL_INVENTORY["Drawer"].items_allowed = [
-    FULL_INVENTORY["Gold Key"],
-]
-
 
 export const TROMBINOSCOPE: Trombinoscope = {
     "SCIENTIST_ASSISTANT": {
         "id": "SCIENTIST_ASSISTANT",
-        "name": "Assitant.e du scientifique",
-        "items_allowed": [
-            FULL_INVENTORY["Silver Key"],
-            FULL_INVENTORY["Gold Key"],
-        ]
+        "name": "Assitant.e du scientifique"
     },
     "SCIENTIST_SECRETARY": {
         "id": "SCIENTIST_SECRETARY",
-        "name": "Secrétaire du scientifique",
-        "items_allowed": []
+        "name": "Secrétaire du scientifique"
     }
 }
 

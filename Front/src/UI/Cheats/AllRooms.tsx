@@ -4,6 +4,7 @@ import { getDefaultRoom, updateCurrentRoom } from "../../services/roomService"
 import RoomBroadcast from "./RoomBroadcast"
 import currentConfig from "../../services/config"
 import { emitJoinRoom, emitLeaveRoom, emitNewRoom } from "../../services/socketService/emits"
+import { spawn } from "child_process"
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
@@ -66,10 +67,15 @@ export default () => {
                     </ul>
                     <p>characters</p>
                     <ul>
-                        {Object.entries(storage.currentRoom.characters).map(([characterId,user]) => (
+                        {Object.entries(storage.currentRoom.characters).map(([characterId, user]) => (
                             <li key={user.id}>{characterId} : {JSON.stringify(user)}</li>
                         ))}
                     </ul>
+                    <p>history</p>
+                    <ul>
+                        {storage.currentRoom.roomHistory.map((item,i) => <span key={i}>{item}</span>)}
+                    </ul>
+
 
                     <RoomBroadcast />
                 </div>

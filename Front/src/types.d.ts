@@ -14,6 +14,7 @@ interface Room {
     users: { [id: string]: User };
     objects : ObjectsInRoom;
     characters: { [id: string]: User };
+    roomHistory: string[];
 }
 
 type ObjectsInRoom = { [id: string]: InventoryItem };
@@ -21,8 +22,9 @@ type ObjectsInRoom = { [id: string]: InventoryItem };
 interface InventoryItem {
     id: string;
     name?: string;
-    items_allowed?: InventoryItem[];
-    isImmovable?: boolean;
+    description : string;
+    combineWith?: string[];
+    cantBeTaken?: boolean;
     isSharedToRoom?: boolean;
     isUsed?: boolean;
     ownerId?: string;
@@ -33,7 +35,6 @@ interface Inventory {
 }
 
 interface Character {
-    items_allowed: InventoryItem[];
     id: string;
     name: string;
 }

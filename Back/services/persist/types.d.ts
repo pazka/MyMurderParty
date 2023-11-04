@@ -19,6 +19,7 @@ interface Room extends NewRoom, AppDatabaseEntity {
     users: { [id: string]: User };
     objects: { [id: string]: any };
     characters: { [id: string]: any };
+    roomHistory: string[];
 }
 
 interface NewUser extends NewAppDatabaseEntity {
