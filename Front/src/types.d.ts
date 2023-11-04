@@ -10,6 +10,8 @@ interface User {
 
 interface Room {
     id: string;
+    name:string;
+    password: string;
     usersId: string[];
     availableObjectsId: string[];
 }

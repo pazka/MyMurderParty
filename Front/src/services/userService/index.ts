@@ -1,6 +1,6 @@
 import config from "../config"
 import restService from "../restService";
-import { emitLogin } from "../socketService/emits";
+import { emitLogin, emitLogout } from "../socketService/emits";
 import { getGlobalState, setGlobaState } from "../storageService"
 
 export const fetchAllUsers = async () => {
@@ -23,9 +23,12 @@ const getCurrentUser = (): User | null => {
 export const getAllUsers = (): User[] => {
     return Object.values(getGlobalState().allUsers);
 }
+export const login = async  (user : User) => {
+    const storage = getGlobalState();
+    setGlobaState({ ...storage, currentUser: user })
+    emitLogin(user)
+}
 
-const initUserSession = (user : User) => {
-    let storage = getGlobalState();
-    storage.currentUser = user;
-    setGlobaState(storage);
+export const logout = async () => {
+    emitLogout();
 }

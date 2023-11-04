@@ -10,3 +10,11 @@ export const fetchAllRooms = async () => {
     storage.allRooms = allRooms;
     setGlobaState(storage);
 }
+
+export const getDefaultRoom = (): Room  => ({
+    id: "",
+    name: "",
+    password: "",
+    usersId: [],
+    availableObjectsId: []
+})

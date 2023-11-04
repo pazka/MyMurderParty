@@ -24,7 +24,7 @@ export const initSocketConnection = async (): Promise<Socket> => {
     return _socket;
 }
 
-export const getSocket = async () => {
+export const getSocket = async () : Promise<Socket> => {
     if (_socket !== null) {
         return _socket;
     }

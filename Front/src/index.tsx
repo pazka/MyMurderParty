@@ -9,6 +9,8 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
+initSocketConnection()
+
 root.render(
   <React.StrictMode>
     <App />

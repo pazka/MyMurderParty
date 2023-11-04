@@ -2,6 +2,7 @@ import { Server, Socket } from "socket.io";
 import { createNewRoom, getAllRooms, getUsersInRoom, userJoinRoom, userLeaveRoom, userShareAnObjectToRoom, userTakeAnObjectFromRoom } from "../roomService";
 import { RoomCRUD } from "../persist";
 import { pingUser } from "../userService";
+import { broadcastAllRooms } from "../socket-io";
 
 export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) => {
     let currentRoomId: string | null;
@@ -97,4 +98,5 @@ const notifyRoomUpdate = async (io: Server, roomId: string) => {
 
     io.to(roomId).emit('update-room', room);
     io.to(roomId).emit('update-room-users', users);
+    broadcastAllRooms();
 }

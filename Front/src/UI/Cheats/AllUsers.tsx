@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useGlobalStorage } from "../../services/storageService"
 import { emitLogin } from "../../services/socketService/emits"
 import { useStateWithDep } from "../../services/utils"
+import { login, logout } from "../../services/userService"
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
@@ -16,9 +17,12 @@ export default () => {
         }
     }, [])
 
-    const sendLogin = async () => {
-        setStorage({ ...storage, currentUser: user })
-        emitLogin(user)
+    const handleLogin = async () => {
+        login(user)
+    }
+
+    const handleLogout = () => {
+        logout()
     }
 
     const getLastActivityTimeString = (user: User) => {
@@ -54,7 +58,8 @@ export default () => {
             </div>
             <div>
                 <input type="text" value={user?.name ?? ""} onChange={e => setUser({ ...user ?? {}, name: e.target.value })} />
-                <button onClick={sendLogin}>Login</button>
+                <button onClick={handleLogin}>Login</button>
+                <button onClick={handleLogout}>Logout</button>
             </div>
         </div>
     )

@@ -9,7 +9,8 @@ export default (userSocket: Socket, io: Server) => {
     let currentUser: User
     const cookies = cookie.parse(userSocket.handshake.headers.cookie ?? "");
     console.log('New socket connection', userSocket.id, 'from', userSocket.handshake.address, 'with', userSocket.handshake.headers['user-agent'] , "sessionId?" , cookies.sessionId);
-
+    broadcastAllClients()
+    
     userSocket.on('login', (data: NewUser) => {
         console.log("Hello ! I'm", data);
         createOrGetNewUser(data,cookies.sessionId).then((user: User) => {

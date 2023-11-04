@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import { getAllUsers } from "./userService";
+import { getAllRooms } from "./roomService";
 
 let _io: Server | null = null;
 
@@ -10,4 +11,8 @@ export const initIo = (server : any,option : any) : Server => {
 
 export const broadcastAllClients = () => {
     getAllUsers().then((allUsers) => _io?.emit('all-users', allUsers));
+}
+
+export const broadcastAllRooms = () => {
+    getAllRooms().then((allRooms) => _io?.emit('all-rooms', allRooms));
 }

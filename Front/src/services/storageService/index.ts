@@ -8,6 +8,7 @@ export const getDefaultStorage = (): AppStorage => {
         allRooms: [],
         currentRoom: null,
         allUsers: [],
+        usersInRoom: [],
         currentUser: {
             id: "",
             name: "",

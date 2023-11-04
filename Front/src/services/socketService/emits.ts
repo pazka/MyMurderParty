@@ -3,8 +3,8 @@ import {getSocket} from "./index";
 export const emitLogin = async (user : User) => {
     (await getSocket()).emit("login", user);
 }
-export const emitLogout = async (user : User) => {
-    (await getSocket()).emit("logout", user);
+export const emitLogout = async () => {
+    (await getSocket()).emit("logout");
 }
 export const emitPing = async (user : User) => {
     (await getSocket()).emit("ping");
