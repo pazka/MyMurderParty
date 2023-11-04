@@ -1,8 +1,13 @@
 import {getSocket} from "./index";
 
-export const emitWhoAmI = async (user : User) => {
-    console.log("sendemit", user);
-    (await getSocket()).emit("who-am-i", user);
+export const emitLogin = async (user : User) => {
+    (await getSocket()).emit("login", user);
+}
+export const emitLogout = async (user : User) => {
+    (await getSocket()).emit("logout", user);
+}
+export const emitPing = async (user : User) => {
+    (await getSocket()).emit("ping");
 }
 
 export const emitJoinRoom = async (roomId: string, password: string) => {

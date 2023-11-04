@@ -12,6 +12,7 @@ export const getDefaultStorage = (): AppStorage => {
             id: "",
             name: "",
             sessionId: "",
+            lastActivity: 0,
         },
     };
 };

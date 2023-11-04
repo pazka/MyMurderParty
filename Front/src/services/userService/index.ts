@@ -1,6 +1,6 @@
 import config from "../config"
 import restService from "../restService";
-import { emitWhoAmI } from "../socketService/emits";
+import { emitLogin } from "../socketService/emits";
 import { getGlobalState, setGlobaState } from "../storageService"
 
 export const fetchAllUsers = async () => {

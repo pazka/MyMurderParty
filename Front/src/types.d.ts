@@ -4,6 +4,7 @@ interface User {
     id: string;
     sessionId: string;
     name: string;
+    lastActivity: number;
     choosenCharacterId?: string;
 }
 

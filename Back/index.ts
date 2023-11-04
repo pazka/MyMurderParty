@@ -15,8 +15,9 @@ import config from './services/config';
 import { generateSessionId, getAllUsers } from './services/userService';
 import cors from 'cors';
 import cookie from 'cookie';
+import { initIo } from './services/socket-io';
 
-const io = new Server(server, { cors: config.cors });
+const io = initIo(server, { cors: config.cors });
 
 
 const getVersion = () => {
