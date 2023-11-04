@@ -14,14 +14,13 @@ export default () => {
         emitNewRoom(newRoom)
     }
 
-    const handleJoinRoom = (room: Room) => (e:any)=> {
-        emitJoinRoom(room.id,room.password)
+    const handleJoinRoom = (room: Room) => (e: any) => {
+        emitJoinRoom(room.id, room.password)
     }
 
     const handleLeaveRoom = () => {
-        if (!storage.currentRoom) return
+        if (!storage.currentRoom) return;
         emitLeaveRoom(storage.currentRoom.id)
-        updateCurrentRoom(null);
     }
 
     return (
@@ -52,6 +51,12 @@ export default () => {
                     <ul>
                         {Object.values(storage.usersInRoom).map((user) => (
                             <li key={user.id}>User : {user.name}</li>
+                        ))}
+                    </ul>
+                    <p>found objects</p>
+                    <ul>
+                        {Object.values(storage.currentRoom.objects).map((item) => (
+                            <li key={item.id}>{item.name}{JSON.stringify(item)}</li>
                         ))}
                     </ul>
                     <RoomBroadcast />

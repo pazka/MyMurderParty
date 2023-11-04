@@ -16,7 +16,7 @@ interface Room {
     objects : ObjectsInRoom;
 }
 
-type ObjectsInRoom = { [id: string]: ObjectInRoom };
+type ObjectsInRoom = { [id: string]: InventoryItem };
 
 interface InventoryItem {
     id: string;

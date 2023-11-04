@@ -1,3 +1,4 @@
+import { enqueueSnackbar } from "notistack";
 import { isUserInARoom } from "../roomService";
 import { emitUpdateObjects } from "../socketService/emits";
 import { setGlobaState, getGlobalState, useGlobalStorage } from "../storageService";
@@ -21,7 +22,7 @@ export const getUserInventory = (): InventoryItem[] => {
 
 export const updateOneObjectInRoom = (item: InventoryItem) => {
     const state = getGlobalState();
-    if(isUserInARoom()) return;
+    if(!isUserInARoom()) return;
 
     const currentRoom = state.currentRoom as Room;
     currentRoom.objects[item.id] = item;
@@ -31,24 +32,31 @@ export const updateOneObjectInRoom = (item: InventoryItem) => {
 export const addItemToInventory = (item: InventoryItem) => {
     const state = getGlobalState();
     const currentUser = state.currentUser as User;
-    if(isUserInARoom()) return;
+    if(!isUserInARoom()) return;
 
     if (state.inventory.find((i) => i.id === item.id)) {
+        enqueueSnackbar("You already have this object", { variant: "info" });
         return;
     }
 
     item.ownerId = currentUser.id;
     updateOneObjectInRoom(item);
-
-    // set inventory object to localstorage
-    setGlobaState(state);
 }
 
 export const removeItemFromInventory = (item: InventoryItem) => {
     const state = getGlobalState();
-    state.inventory = state.inventory.filter((i) => i.id !== item.id);
-    // set inventory object to localstorage
-    setGlobaState(state);
+    if(!isUserInARoom()) return;
+
+    const currentUser = state.currentUser as User;
+    const currentRoom = state.currentRoom as Room;
+
+    if (!state.inventory.find((i) => i.id === item.id)) {
+        enqueueSnackbar("You don't have this object", { variant: "info" });
+        return;
+    }
+
+    currentRoom.objects[item.id].ownerId = undefined;
+    updateOneObjectInRoom(item);
 }
 
 export const useInventory = (): InventoryItem[] => {

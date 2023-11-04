@@ -1,14 +1,15 @@
 import { Server, Socket } from "socket.io";
 import { UserCRUD } from "../persist";
 import { createNewUser, createOrGetNewUser, deleteUser, getAllUsers, getUserBySessionId, pingUser } from "../userService";
-import { setupUserRoomEvents } from "./roomEvents";
+import { notifyRoomUpdate, resetRoomForUser, setupUserRoomEvents } from "./roomEvents";
 import cookie from 'cookie';
 import { broadcastAllClients, broadcastAllRooms } from "../socket-io";
-import { userLeaveAllRooms, userLeaveRoom } from "../roomService";
+import { getRoomsOfUser, userLeaveAllRooms, userLeaveRoom } from "../roomService";
 
 export default async (userSocket: Socket, io: Server) => {
     const cookies = cookie.parse(userSocket.handshake.headers.cookie ?? "");
     console.log('New socket connection', userSocket.id, 'from', userSocket.handshake.address, 'with', userSocket.handshake.headers['user-agent'] , "sessionId?" , cookies.sessionId);
+    resetRoomForUser(userSocket)
     
     let currentUser: User | undefined = await getUserBySessionId(cookies.sessionId);
 
@@ -19,8 +20,13 @@ export default async (userSocket: Socket, io: Server) => {
         userSocket.emit('you-are', currentUser);
     }
     
-    broadcastAllRooms();
     broadcastAllClients();
+    getRoomsOfUser(currentUser?.id ?? "").then((rooms) => {
+        rooms.forEach((room) => {
+            userSocket.join(room.id);
+            notifyRoomUpdate(io, room.id)
+        });
+    });
     
     userSocket.onAny((event, ...args) => {
         console.log(`Received ${event} with args : `, args);

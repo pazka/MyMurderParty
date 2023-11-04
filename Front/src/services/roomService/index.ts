@@ -22,11 +22,11 @@ export const getDefaultRoom = (): Room => ({
 export const isUserInARoom = (): boolean => {
     const currentUser = getGlobalState().currentUser;
     const currentRoom = getGlobalState().currentRoom;
-    
+
     if (!currentRoom) return false;
     if (!currentUser) return false;
 
-    return false;
+    return true;
 }
 
 export const getCurrentRoom = (): Room | null => {
@@ -34,12 +34,17 @@ export const getCurrentRoom = (): Room | null => {
     return currentRoom;
 }
 
-export const updateCurrentRoom = (room: Room |null) => {
+export const updateCurrentRoom = (room: Room | null) => {
     let storage = getGlobalState();
     storage.currentRoom = room;
-    if(!room) return;
 
-    const userInventory = storage.currentRoom?.objects.filter((o : ObjectsInRoom) => o.ownerId === storage.currentUser?.id);
-    storage.inventory = userInventory ?? [];
+    if (room) {
+        const objects = Object.values(room.objects ?? {});
+        const userInventory = objects.filter((o: InventoryItem) => o.ownerId === storage.currentUser?.id);
+        storage.inventory = userInventory;
+    }else{
+        storage.inventory = [];
+    }
+
     setGlobaState(storage);
 }

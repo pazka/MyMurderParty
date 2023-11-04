@@ -63,7 +63,9 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
     userSocket.on('update-room-objects', async (data: { objects: any, roomId: string }) => {
         pingUser(user.id);
 
-        if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) return;
+        if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) {
+            console.log("User is not in the room");
+            return};
 
         updateRoomObjects(user.id, data.roomId, data.objects).then(() => {
             io.to(data.roomId).emit('room-object-update', { user, objects : data.objects });
@@ -82,11 +84,15 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
     })
 }
 
-const notifyRoomUpdate = async (io: Server, roomId: string) => {
+export const notifyRoomUpdate = async (io: Server, roomId: string) => {
     const room: Room = RoomCRUD.read(roomId);
     const users: User[] = await getUsersInRoom(roomId);
 
     io.to(roomId).emit('update-room', room);
     io.to(roomId).emit('update-room-users', users);
     broadcastAllRooms();
+}
+export const resetRoomForUser = async (userSocket: Socket) => {
+    userSocket.emit('update-room', null);
+    userSocket.emit('update-room-users', []);
 }
