@@ -16,3 +16,10 @@ export const broadcastAllClients = () => {
 export const broadcastAllRooms = () => {
     getAllRooms().then((allUsers) => _io?.emit('all-rooms', allUsers));
 }
+
+export const getIo = () : Server => {
+    if(!_io){
+        throw new Error("Socket io has not been initialized");
+    }
+    return _io;
+}

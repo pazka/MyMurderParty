@@ -20,6 +20,10 @@ export const emitJoinRoom = async (roomId: string, password: string) => {
     (await getSocket()).emit("join-room", { roomId, password });
 }
 
+export const emitChooseCharacter = async (roomId: string, characterId: string) => {
+    (await getSocket()).emit("choose-character", {roomId, characterId });
+}
+
 export const emitLeaveRoom = async (roomId: string) => {
     (await getSocket()).emit("leave-room", { roomId });
 }

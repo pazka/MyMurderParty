@@ -5,15 +5,15 @@ interface User {
     sessionId: string;
     name: string;
     lastActivity: number;
-    choosenCharacterId?: string;
 }
 
 interface Room {
     id: string;
     name:string;
     password: string;
-    usersId: string[];
+    users: { [id: string]: User };
     objects : ObjectsInRoom;
+    characters: { [id: string]: User };
 }
 
 type ObjectsInRoom = { [id: string]: InventoryItem };

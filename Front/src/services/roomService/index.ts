@@ -15,8 +15,9 @@ export const getDefaultRoom = (): Room => ({
     id: "",
     name: "",
     password: "",
-    usersId: [],
-    objects: {}
+    users: {},
+    objects: {},
+    characters: {}
 })
 
 export const isUserInARoom = (): boolean => {

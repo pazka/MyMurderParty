@@ -16,15 +16,15 @@ interface NewRoom extends NewAppDatabaseEntity {
 }
 
 interface Room extends NewRoom, AppDatabaseEntity {
-    usersId: string[];
-    objects: any;
+    users: { [id: string]: User };
+    objects: { [id: string]: any };
+    characters: { [id: string]: any };
 }
 
 interface NewUser extends NewAppDatabaseEntity {
     name: string;
     sessionId: string;
     lastActivity: number;
-    choosenCharacterId?: string;
 }
 
 interface User extends NewUser, AppDatabaseEntity {

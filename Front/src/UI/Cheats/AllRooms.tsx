@@ -10,6 +10,11 @@ export default () => {
     const users = Object.values(storage.allUsers)
     const [newRoom, setNewRoom] = useState<Room>(getDefaultRoom())
 
+    const userWithCaracters: { [userId: string]: Character } = Object.entries(storage.currentRoom?.characters || {}).reduce((acc, [char, user]) => {
+        if (!user) return acc;
+        return { ...acc, [user.id]: char }
+    }, {})
+
     const handleCreateRoom = () => {
         emitNewRoom(newRoom)
     }
@@ -37,8 +42,8 @@ export default () => {
                     <div key={room.id} style={{ border: "solid 1px black" }}>
                         <p><b>{room.name}:</b>{room.id} <button onClick={handleJoinRoom(room)}>Join</button></p>
                         <ul>
-                            {Object.values(room.usersId).map((userId) => (
-                                <li key={userId}>{userId}</li>
+                            {Object.values(room.users).map((user) => (
+                                <li key={user.id}>{user.id}  </li>
                             ))}
                         </ul>
                     </div>
@@ -50,7 +55,7 @@ export default () => {
                     <p><b>{storage.currentRoom.name}:</b>{storage.currentRoom.id}</p>
                     <ul>
                         {Object.values(storage.usersInRoom).map((user) => (
-                            <li key={user.id}>User : {user.name}</li>
+                            <li key={user.id}>User : {user.name},{userWithCaracters[user.id]?.name ?? ""} </li>
                         ))}
                     </ul>
                     <p>found objects</p>
@@ -59,6 +64,13 @@ export default () => {
                             <li key={item.id}>{item.name}{JSON.stringify(item)}</li>
                         ))}
                     </ul>
+                    <p>characters</p>
+                    <ul>
+                        {Object.entries(storage.currentRoom.characters).map(([characterId,user]) => (
+                            <li key={user.id}>{characterId} : {JSON.stringify(user)}</li>
+                        ))}
+                    </ul>
+
                     <RoomBroadcast />
                 </div>
                 }

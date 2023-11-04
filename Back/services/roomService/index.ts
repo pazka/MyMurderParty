@@ -1,6 +1,7 @@
 import { RoomCRUD } from '../persist'
 import { UserCRUD } from '../persist'
-import { broadcastAllRooms } from '../socket-io';
+import { broadcastAllRooms, getIo } from '../socket-io';
+import { notifyRoomUpdate } from '../socketService/roomEvents';
 
 export const getAllRooms = async (): Promise<Room[]> => {
     const allRooms = RoomCRUD.readAll();
@@ -9,12 +10,12 @@ export const getAllRooms = async (): Promise<Room[]> => {
 
 export const getRoomsOfUser = async (userId: string): Promise<Room[]> => {
     const allRooms = await getAllRooms();
-    const roomsOfUser = allRooms.filter(r => r.usersId.includes(userId));
+    const roomsOfUser = allRooms.filter(r => r.users[userId]);
     return roomsOfUser;
 }
 
-export const createNewRoom = async (newRoom : NewRoom): Promise<Room> => {
-    if(newRoom.name.length < 3){
+export const createNewRoom = async (newRoom: NewRoom): Promise<Room> => {
+    if (newRoom.name.length < 3) {
         throw new Error("Room name must be at least 3 characters long");
     }
 
@@ -23,27 +24,27 @@ export const createNewRoom = async (newRoom : NewRoom): Promise<Room> => {
     if (allRooms.find(r => r.name === newRoom.name)) {
         throw new Error("Room with same name already exists");
     }
-    
+
     let createdRoom: Room = RoomCRUD.create(newRoom);
-    
+
     createdRoom = {
         ...createdRoom,
-        usersId: [],
+        users: {},
         objects: {}
     }
 
     RoomCRUD.update(createdRoom);
-    return createdRoom;    
+    return createdRoom;
 }
 
 export const getUsersInRoom = async (roomId: string): Promise<User[]> => {
     const room: Room = RoomCRUD.read(roomId);
     const allUsers = UserCRUD.readAll();
-    const allUsersInRoom = allUsers.filter(u => room.usersId.includes(u.id));
+    const allUsersInRoom = allUsers.filter(u => room.users[u.id]);
     return allUsersInRoom;
 }
 
-export const createNewRoomWithOneUser = async (newRoom : NewRoom, userId: string): Promise<Room> => {
+export const createNewRoomWithOneUser = async (newRoom: NewRoom, userId: string): Promise<Room> => {
     const room: Room = await createNewRoom(newRoom);
     //check that user exists
     const user: User = UserCRUD.read(userId);
@@ -51,7 +52,7 @@ export const createNewRoomWithOneUser = async (newRoom : NewRoom, userId: string
         throw new Error("User does not exist");
     }
 
-    room.usersId.push(userId);
+    room.users[userId] = user;
 
 
     RoomCRUD.update(room);
@@ -62,7 +63,7 @@ export const userJoinRoom = async (roomId: string, password: string, userId: str
     const room: Room = RoomCRUD.read(roomId);
     const user: User = UserCRUD.read(userId);
 
-    if (room.usersId.includes(userId)) { return room; }
+    if (room.users[userId]) { return room; }
 
     //check password 
     if (room.password !== password) {
@@ -76,7 +77,7 @@ export const userJoinRoom = async (roomId: string, password: string, userId: str
         throw new Error("User with same name already exists in the room");
     }
 
-    room.usersId.push(userId);
+    room.users[userId] = user;
 
     RoomCRUD.update(room);
     return room;
@@ -86,11 +87,10 @@ export const userLeaveRoom = async (roomId: string, userId: string): Promise<voi
     const room: Room = RoomCRUD.read(roomId);
     const user: User = UserCRUD.read(userId);
 
-    const userIndex = room.usersId.indexOf(userId);
-    if (userIndex < 0) {
+    if (!room.users[userId]) {
         throw new Error("User does not exist in the room");
     }
-    room.usersId.splice(userIndex, 1);
+    delete room.users[userId];
 
     RoomCRUD.update(room);
     UserCRUD.update(user);
@@ -98,17 +98,23 @@ export const userLeaveRoom = async (roomId: string, userId: string): Promise<voi
 
 export const userChoosesACharacter = async (userId: string, roomId: string, characterId: string): Promise<void> => {
     const user: User = UserCRUD.read(userId);
+    const room: Room = RoomCRUD.read(roomId);
 
-    //check that room users dosent have the same character
-    const allUsers = await getUsersInRoom(roomId);
-    if (allUsers.find(u => u.choosenCharacterId === characterId)) {
-        throw new Error("Character already chosen by another user");
+    //check if user has another character in the room
+    const possibleTakenCharId = Object.entries(room.characters).find(([charId, user]) => user.id === userId)?.[0];
+    if (possibleTakenCharId) {
+        delete room.characters[possibleTakenCharId];
     }
 
-    UserCRUD.update(user);
+    if (room.characters[characterId]) {
+        throw new Error("Character is already taken");
+    }
+
+    room.characters[characterId] = user;
+    RoomCRUD.update(room);
 }
 
-export const updateRoomObjects = async (userId : string, roomId: string, objects: any[]): Promise<void> => {
+export const updateRoomObjects = async (userId: string, roomId: string, objects: any[]): Promise<void> => {
     const room: Room = RoomCRUD.read(roomId);
     room.objects = objects;
     RoomCRUD.update(room);
@@ -117,11 +123,15 @@ export const updateRoomObjects = async (userId : string, roomId: string, objects
 export const userLeaveAllRooms = async (userId: string): Promise<void> => {
     const allRooms = await getAllRooms();
     allRooms.forEach(room => {
-        const userIndex = room.usersId.indexOf(userId);
-        if (userIndex >= 0) {
-            room.usersId.splice(userIndex, 1);
+        //check if user has another character in the room
+        const characterId = Object.entries(room.characters).find(([charId, userId]) => userId === userId)?.[0];
+        if (characterId)
+            delete room.characters[characterId];
+
+        if (room.users[userId]) {
+            delete room.users[userId];
             RoomCRUD.update(room);
         }
+        notifyRoomUpdate(getIo(), room.id);
     });
-    broadcastAllRooms();
 }

@@ -4,52 +4,53 @@ import { createNewUser, createOrGetNewUser, deleteUser, getAllUsers, getUserBySe
 import { notifyRoomUpdate, resetRoomForUser, setupUserRoomEvents } from "./roomEvents";
 import cookie from 'cookie';
 import { broadcastAllClients, broadcastAllRooms } from "../socket-io";
-import { getRoomsOfUser, userLeaveAllRooms, userLeaveRoom } from "../roomService";
+import { getRoomsOfUser, userChoosesACharacter, userLeaveAllRooms, userLeaveRoom } from "../roomService";
 
 export default async (userSocket: Socket, io: Server) => {
     const cookies = cookie.parse(userSocket.handshake.headers.cookie ?? "");
-    console.log('New socket connection', userSocket.id, 'from', userSocket.handshake.address, 'with', userSocket.handshake.headers['user-agent'] , "sessionId?" , cookies.sessionId);
+    console.log('New socket connection', userSocket.id, 'from', userSocket.handshake.address, 'with', userSocket.handshake.headers['user-agent'], "sessionId?", cookies.sessionId);
     resetRoomForUser(userSocket)
-    
+
     let currentUser: User | undefined = await getUserBySessionId(cookies.sessionId);
 
     //case user already has a session but hasn't logged in yet
-    if(currentUser){
+    if (currentUser) {
         setupUserRoomEvents(currentUser, userSocket, io);
         pingUser(currentUser.id);
         userSocket.emit('you-are', currentUser);
     }
-    
+
     broadcastAllClients();
+    broadcastAllRooms();
     getRoomsOfUser(currentUser?.id ?? "").then((rooms) => {
         rooms.forEach((room) => {
             userSocket.join(room.id);
             notifyRoomUpdate(io, room.id)
         });
     });
-    
+
     userSocket.onAny((event, ...args) => {
         console.log(`Received ${event} with args : `, args);
     });
 
     //case user session is linked ot nothing
     userSocket.on('login', (data: NewUser) => {
-        if(currentUser){
+        if (currentUser) {
             userSocket.emit('error', "You are already logged in");
             return;
         }
 
-        if((data?.name?.length ?? 0) < 3){
+        if ((data?.name?.length ?? 0) < 3) {
             userSocket.emit('error', "Name must be at least 3 characters long");
             return;
         }
 
         console.log("Hello ! I'm", data);
-        createNewUser(data,cookies.sessionId).then((user: User) => {
+        createNewUser(data, cookies.sessionId).then((user: User) => {
             console.log(user);
             currentUser = user;
             setupUserRoomEvents(currentUser, userSocket, io);
-            
+
             io.emit('new-user', currentUser);
             broadcastAllClients()
         });
@@ -69,6 +70,22 @@ export default async (userSocket: Socket, io: Server) => {
         currentUser = undefined;
         console.log('Socket deleted', userSocket.id);
         broadcastAllClients()
+        broadcastAllRooms()
+    });
+
+    userSocket.on('choose-character', (data: { roomId: string, characterId: string }) => {
+        if (!currentUser) return;
+
+        userChoosesACharacter(currentUser.id, data.roomId, data.characterId).then(x => {
+            userSocket.emit('you-are', currentUser);
+            notifyRoomUpdate(io, data.roomId);
+
+            broadcastAllClients()
+        }).catch((err: Error) => {
+            console.log(err.message);
+            userSocket.emit('error', err.message);
+        });
+
     });
 
     userSocket.on('ping', () => {

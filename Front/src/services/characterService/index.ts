@@ -1,39 +1,32 @@
 import AllUsers from "../../UI/Cheats/AllUsers";
 import { getGlobalState, setGlobaState } from "../storageService";
 import { getAllUsers } from "../userService";
-import allCharacters from "./allCharacters";
+import { TROMBINOSCOPE } from "../gameConfig";
+import { isUserInARoom } from "../roomService";
+import { emitChooseCharacter } from "../socketService/emits";
+import { enqueueSnackbar } from "notistack";
 
 export const getAllCharacters = (): Trombinoscope => {
-    return allCharacters;
-}
-
-export const getAllCharactersWithUser = (): { [characterId: string]: { character: Character, user: User } } => {
-    const allUsers = getAllUsers();
-    const allCharacters = getAllCharacters();
-    const allCharactersWithUser: { [charId: string]: { character: Character, user: User } } = {};
-    
-    allUsers.forEach((user) => {
-        if(!user.choosenCharacterId){
-            return;
-        }
-        const character = allCharacters[user.choosenCharacterId];
-        allCharactersWithUser[user.choosenCharacterId] = { character, user };
-    });
-
-    return allCharactersWithUser;
+    return TROMBINOSCOPE;
 }
 
 export const getCharacterById = (id: string): Character | null => {
-    return allCharacters[id] ?? null;
+    return TROMBINOSCOPE[id] ?? null;
 }
 
 export const chooseCharacter = (characterId: string) => {
     const storage = getGlobalState();
-    let user = {...storage.currentUser};
-    if(!user) return;
+    if (!isUserInARoom()) return;
 
-    user.choosenCharacterId = characterId;
+    let user = { ...storage.currentUser };
+    if (!user) return;
+
+    if (!TROMBINOSCOPE[characterId]) {
+        return;
+    }
+
     storage.currentUser = user as User;
-    
+    emitChooseCharacter(storage.currentRoom?.id as string, characterId)
+
     setGlobaState(storage);
 }
