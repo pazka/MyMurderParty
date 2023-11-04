@@ -1,9 +1,9 @@
 import { Server, Socket } from "socket.io";
-import { createNewRoom, getAllRooms, getRoomsOfUser, getUsersInRoom, userJoinRoom, userLeaveRoom, userShareAnObjectToRoom, userTakeAnObjectFromRoom } from "../roomService";
 import { RoomCRUD } from "../persist";
-import { pingUser } from "../userService";
-import { broadcastAllRooms } from "../socket-io";
+import { createNewRoom, getRoomsOfUser, getUsersInRoom, updateRoomObjects, userJoinRoom, userLeaveRoom } from "../roomService";
 import { ensureRoomExistOrError, ensureUserIsInARoom } from "../roomService/roomSocketService";
+import { broadcastAllRooms } from "../socket-io";
+import { pingUser } from "../userService";
 
 export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) => {
     //check if user is in a room
@@ -62,28 +62,14 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
         });
     });
 
-    userSocket.on('offer-object', async (data: { objectId: string, roomId: string }) => {
+    userSocket.on('update-room-objects', async (data: { objects: any, roomId: string }) => {
         pingUser(user.id);
 
         if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) return;
 
-        userShareAnObjectToRoom(user.id, data.roomId, data.objectId).then(() => {
-            io.to(data.roomId).emit('object-available', { user, objectId: data.objectId });
+        updateRoomObjects(user.id, data.roomId, data.objects).then(() => {
+            io.to(data.roomId).emit('room-object-update', { user, objects : data.objects });
             notifyRoomUpdate(io, data.roomId);
-        }).catch((err: Error) => {
-            console.log(err.message);
-            userSocket.emit('error', err.message);
-        });
-    });
-
-    userSocket.on('take-object', async (data: { objectId: string, roomId: string }) => {
-        pingUser(user.id);
-
-        if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) return;
-
-        userTakeAnObjectFromRoom(user.id, data.roomId, data.objectId).then(() => {
-            io.to(data.roomId ?? "").emit('object-taken', { user, objectId: data.objectId });
-            notifyRoomUpdate(io, data.roomId ?? "");
         }).catch((err: Error) => {
             console.log(err.message);
             userSocket.emit('error', err.message);

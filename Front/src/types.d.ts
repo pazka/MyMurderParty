@@ -13,7 +13,7 @@ interface Room {
     name:string;
     password: string;
     usersId: string[];
-    availableObjectsId: string[];
+    objects : any;
 }
 
 interface InventoryItem {
@@ -21,6 +21,8 @@ interface InventoryItem {
     name?: string;
     items_allowed?: InventoryItem[];
     isImmovable?: boolean;
+    isSharedToRoom?: boolean;
+    isUsed?: boolean;
 }
 
 interface Inventory {

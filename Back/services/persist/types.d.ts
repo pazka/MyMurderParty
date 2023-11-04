@@ -17,7 +17,7 @@ interface NewRoom extends NewAppDatabaseEntity {
 
 interface Room extends NewRoom, AppDatabaseEntity {
     usersId: string[];
-    availableObjectsId: string[];
+    objects: any;
 }
 
 interface NewUser extends NewAppDatabaseEntity {

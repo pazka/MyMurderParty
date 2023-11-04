@@ -29,7 +29,7 @@ export const createNewRoom = async (newRoom : NewRoom): Promise<Room> => {
     createdRoom = {
         ...createdRoom,
         usersId: [],
-        availableObjectsId: []
+        objects: {}
     }
 
     RoomCRUD.update(createdRoom);
@@ -108,30 +108,10 @@ export const userChoosesACharacter = async (userId: string, roomId: string, char
     UserCRUD.update(user);
 }
 
-export const userShareAnObjectToRoom = async (userId: string, roomId: string, objectId: string): Promise<void> => {
-    const user: User = UserCRUD.read(userId);
+export const updateRoomObjects = async (userId : string, roomId: string, objects: any[]): Promise<void> => {
     const room: Room = RoomCRUD.read(roomId);
-
-    if (!room.availableObjectsId.includes(objectId)) {
-        room.availableObjectsId.push(objectId);
-    }
-
+    room.objects = objects;
     RoomCRUD.update(room);
-    //user object inventory is managed on the front side
-}
-
-export const userTakeAnObjectFromRoom = async (userId: string, roomId: string, objectId: string): Promise<void> => {
-    const user: User = UserCRUD.read(userId);
-    const room: Room = RoomCRUD.read(roomId);
-
-    const objectIndex = room.availableObjectsId.indexOf(objectId);
-    if (objectIndex < 0) {
-        throw new Error("Object is not avaliable in the room");
-    }
-    room.availableObjectsId.splice(objectIndex, 1);
-
-    RoomCRUD.update(room);
-    //user object inventory is managed on the front side
 }
 
 export const userLeaveAllRooms = async (userId: string): Promise<void> => {
