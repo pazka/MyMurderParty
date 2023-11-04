@@ -46,7 +46,6 @@ export const addItemToInventory = (item: InventoryItem) => {
 export const removeItemFromInventory = (item: InventoryItem) => {
     const state = getGlobalState();
     if(!isUserInARoom()) return;
-
     const currentUser = state.currentUser as User;
     const currentRoom = state.currentRoom as Room;
 
@@ -56,7 +55,7 @@ export const removeItemFromInventory = (item: InventoryItem) => {
     }
 
     currentRoom.objects[item.id].ownerId = undefined;
-    updateOneObjectInRoom(item);
+    updateOneObjectInRoom(currentRoom.objects[item.id]);
 }
 
 export const useInventory = (): InventoryItem[] => {
