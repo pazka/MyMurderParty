@@ -10,7 +10,7 @@ export default () => {
     const [time, setTime] = useState(Date.now())
 
     useEffect(() => {
-        const interval = setInterval(() => setTime(Date.now()), 10000);
+        const interval = setInterval(() => setTime(Date.now()), 1000);
 
         return () => {
             clearInterval(interval)

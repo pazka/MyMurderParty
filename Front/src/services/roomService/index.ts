@@ -11,10 +11,22 @@ export const fetchAllRooms = async () => {
     setGlobaState(storage);
 }
 
-export const getDefaultRoom = (): Room  => ({
+export const getDefaultRoom = (): Room => ({
     id: "",
     name: "",
     password: "",
     usersId: [],
     availableObjectsId: []
 })
+
+export const isUserInARoom = (): boolean => {
+    const currentRoom = getGlobalState().currentRoom;
+    if (!currentRoom) return false;
+
+    return false;
+}
+
+export const getCurrentRoom = (): Room | null => {
+    const currentRoom = getGlobalState().currentRoom;
+    return currentRoom;
+}

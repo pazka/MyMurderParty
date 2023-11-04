@@ -1,12 +1,23 @@
 import { RoomCRUD } from '../persist'
 import { UserCRUD } from '../persist'
+import { broadcastAllRooms } from '../socket-io';
 
 export const getAllRooms = async (): Promise<Room[]> => {
     const allRooms = RoomCRUD.readAll();
     return allRooms;
 }
 
+export const getRoomsOfUser = async (userId: string): Promise<Room[]> => {
+    const allRooms = await getAllRooms();
+    const roomsOfUser = allRooms.filter(r => r.usersId.includes(userId));
+    return roomsOfUser;
+}
+
 export const createNewRoom = async (newRoom : NewRoom): Promise<Room> => {
+    if(newRoom.name.length < 3){
+        throw new Error("Room name must be at least 3 characters long");
+    }
+
     //check that room with same name dosen't already exist 
     const allRooms = await getAllRooms();
     if (allRooms.find(r => r.name === newRoom.name)) {
@@ -121,4 +132,16 @@ export const userTakeAnObjectFromRoom = async (userId: string, roomId: string, o
 
     RoomCRUD.update(room);
     //user object inventory is managed on the front side
+}
+
+export const userLeaveAllRooms = async (userId: string): Promise<void> => {
+    const allRooms = await getAllRooms();
+    allRooms.forEach(room => {
+        const userIndex = room.usersId.indexOf(userId);
+        if (userIndex >= 0) {
+            room.usersId.splice(userIndex, 1);
+            RoomCRUD.update(room);
+        }
+    });
+    broadcastAllRooms();
 }

@@ -46,6 +46,6 @@ export const deleteUser = async (userId: string): Promise<void> => {
     UserCRUD.delete(userId);
 }
 
-export const generateSessionId = (): string => {
+export const generateId = (): string => {
     return Array(4).fill(0).map(x=>Math.random().toString(36).substring(2, 5)).join('-');
 }

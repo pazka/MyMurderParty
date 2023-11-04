@@ -1,94 +1,100 @@
 import { Server, Socket } from "socket.io";
-import { createNewRoom, getAllRooms, getUsersInRoom, userJoinRoom, userLeaveRoom, userShareAnObjectToRoom, userTakeAnObjectFromRoom } from "../roomService";
+import { createNewRoom, getAllRooms, getRoomsOfUser, getUsersInRoom, userJoinRoom, userLeaveRoom, userShareAnObjectToRoom, userTakeAnObjectFromRoom } from "../roomService";
 import { RoomCRUD } from "../persist";
 import { pingUser } from "../userService";
 import { broadcastAllRooms } from "../socket-io";
+import { ensureRoomExistOrError, ensureUserIsInARoom } from "../roomService/roomSocketService";
 
 export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) => {
-    let currentRoomId: string | null;
+    //check if user is in a room
 
-    userSocket.on('join-room', (data: { roomId: string, password: string }) => {
+    userSocket.on('new-room', (newRoom: NewRoom) => {
+        console.log("New room creation : ", newRoom);
+
+        createNewRoom(newRoom).then(async (createdRoom: Room) => {
+            broadcastAllRooms();
+        }).catch((err: Error) => {
+            console.log(err.message);
+            userSocket.emit('error', err.message);
+        });
+    })
+
+    userSocket.on('join-room', async (data: { roomId: string, password: string }) => {
         pingUser(user.id);
 
-        userJoinRoom(data.roomId, data.password, userSocket.id).then((room: Room) => {
+        if (!await ensureRoomExistOrError(data.roomId, userSocket)) return;
+
+        userJoinRoom(data.roomId, data.password, user.id).then((room: Room) => {
 
             userSocket.join(room.id);
-            currentRoomId = room.id;
 
             io.to(room.id).emit('user-joined-room', user);
-            notifyRoomUpdate(io, currentRoomId ?? "");
+            notifyRoomUpdate(io, room.id);
         }).catch((err: Error) => {
             console.log(err.message);
             userSocket.emit('error', err.message);
         });
     });
 
-    userSocket.on('leave-room', (data: { roomId: string }) => {
+    userSocket.on('leave-room', async (data: { roomId: string }) => {
         pingUser(user.id);
-        
-        if (currentRoomId != data.roomId) {
+
+        if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) return;
+
+        const rooms = await getRoomsOfUser(user.id);
+
+        //check if user is in this room
+        const currentRoomId = rooms.find(r => r.id === data.roomId)?.id;
+        if (!currentRoomId) {
             userSocket.emit('error', "You are not in this room");
             return;
         }
 
-        userLeaveRoom(data.roomId, userSocket.id).then(() => {
+        userLeaveRoom(data.roomId, user.id).then(() => {
 
             userSocket.leave(data.roomId);
-            currentRoomId = null;
-
+            userSocket.emit('update-room', null);
             io.to(data.roomId).emit('user-left-room', user);
-            notifyRoomUpdate(io, currentRoomId ?? "");
+            notifyRoomUpdate(io, data.roomId ?? "");
         }).catch((err: Error) => {
             console.log(err.message);
             userSocket.emit('error', err.message);
         });
     });
 
-    userSocket.on('offer-object', (data: { objectId: string }) => {
+    userSocket.on('offer-object', async (data: { objectId: string, roomId: string }) => {
         pingUser(user.id);
 
-        if (!currentRoomId) {
-            userSocket.emit('error', "You are not in a room");
-            return;
-        }
-        const roomId: string = currentRoomId;
+        if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) return;
 
-        userShareAnObjectToRoom(user.id, currentRoomId, data.objectId).then(() => {
-            io.to(roomId ?? "").emit('object-available', { user, objectId: data.objectId });
-            notifyRoomUpdate(io, currentRoomId ?? "");
+        userShareAnObjectToRoom(user.id, data.roomId, data.objectId).then(() => {
+            io.to(data.roomId).emit('object-available', { user, objectId: data.objectId });
+            notifyRoomUpdate(io, data.roomId);
         }).catch((err: Error) => {
             console.log(err.message);
             userSocket.emit('error', err.message);
         });
     });
 
-    userSocket.on('take-object', (data: { objectId: string }) => {
+    userSocket.on('take-object', async (data: { objectId: string, roomId: string }) => {
         pingUser(user.id);
 
-        if (!currentRoomId) {
-            userSocket.emit('error', "You are not in a room");
-            return;
-        }
-        const roomId: string = currentRoomId;
+        if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) return;
 
-        userTakeAnObjectFromRoom(user.id, currentRoomId, data.objectId).then(() => {
-            io.to(roomId ?? "").emit('object-taken', { user, objectId: data.objectId });
-            notifyRoomUpdate(io, currentRoomId ?? "");
+        userTakeAnObjectFromRoom(user.id, data.roomId, data.objectId).then(() => {
+            io.to(data.roomId ?? "").emit('object-taken', { user, objectId: data.objectId });
+            notifyRoomUpdate(io, data.roomId ?? "");
         }).catch((err: Error) => {
             console.log(err.message);
             userSocket.emit('error', err.message);
         });
     });
 
-    userSocket.on('broadcast-to-room', (data: any) => {
+    userSocket.on('broadcast-to-room', async (data: { message: string, roomId: string } | any) => {
         pingUser(user.id);
+        if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) return;
 
-        if (!currentRoomId) {
-            userSocket.emit('error', "You are not in a room");
-            return;
-        }
-
-        io.to(currentRoomId).emit('broadcast-from-room', { sender:user, data });
+        io.to(data.roomId).emit('broadcast-from-room', { sender: user, data });
     })
 }
 

@@ -4,12 +4,14 @@ import './index.css';
 import App from './App';
 import { SnackbarProvider } from 'notistack';
 import { initSocketConnection } from './services/socketService';
+import { initLoginIfAlreadyPossible } from './services/userService';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 initSocketConnection()
+initLoginIfAlreadyPossible()
 
 root.render(
   <React.StrictMode>

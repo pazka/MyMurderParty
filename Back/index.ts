@@ -12,10 +12,10 @@ import { Server, Socket } from 'socket.io';
 import userEvents from './services/socketService/userEvents';
 import { createNewRoom, getAllRooms } from './services/roomService';
 import config from './services/config';
-import { generateSessionId, getAllUsers } from './services/userService';
+import { generateId, getAllUsers } from './services/userService';
 import cors from 'cors';
 import cookie from 'cookie';
-import { initIo } from './services/socket-io';
+import { broadcastAllClients, broadcastAllRooms, initIo } from './services/socket-io';
 
 const io = initIo(server, { cors: config.cors });
 
@@ -30,6 +30,7 @@ const getVersion = () => {
 
 const port = process.env.PORT || 8000;
 
+app.use(express.json());
 app.use(cors(config.cors))
 app.use(express.static('public'))
 
@@ -42,7 +43,7 @@ app.get('/session', (req: Request, res: Response) => {
   }
 
   //setcookie if not found
-  const sessionId = generateSessionId();
+  const sessionId = "sess_"+generateId();
   res.setHeader('Set-Cookie', cookie.serialize('sessionId', sessionId, {
     path: '/',
     httpOnly: config.debug ? false : true,
@@ -67,21 +68,10 @@ app.get('/users', (req: Request, res: Response) => {
 });
 
 app.get('/rooms', (req: Request, res: Response) => {
-  getAllRooms().then((rooms) => {
+  return getAllRooms().then((rooms) => {
     res.send(rooms);
   })
 });
-
-app.post('/room', (req: Request, res: Response) => {
-  const newRoom: NewRoom = req.body
-
-  createNewRoom(newRoom).then((createdRoom: Room) => {
-    res.status(201).send(createdRoom);
-  }).catch((err: Error) => {
-    res.status(400).send(err.message);
-  })
-})
-
 
 //Socket.io
 io.on('connection', (userSocket: Socket) => {

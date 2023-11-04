@@ -14,5 +14,5 @@ export const broadcastAllClients = () => {
 }
 
 export const broadcastAllRooms = () => {
-    getAllRooms().then((allRooms) => _io?.emit('all-rooms', allRooms));
+    getAllRooms().then((allUsers) => _io?.emit('all-rooms', allUsers));
 }

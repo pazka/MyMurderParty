@@ -1,4 +1,4 @@
-import { generateSessionId } from "../userService";
+import { generateId } from "../userService";
 
 let data: AppDatabase = {
     rooms: {},
@@ -12,7 +12,7 @@ export class BaseEntityORM<T extends AppDatabaseEntity & NewT, NewT extends NewA
     }
 
     create = (obj: NewT): T => {
-        const createdObj: T = { ...obj, id: generateSessionId()} as unknown as T;
+        const createdObj: T = { ...obj, id: "id-"+generateId()} as unknown as T;
         this.entityData[createdObj.id] = createdObj;
 
         return { ...createdObj };
