@@ -3,6 +3,7 @@ import AllCharacters from "../Cheats/AllCharacters"
 import UserInventory from "../Components/UserInventory"
 import AllUsers from "../Cheats/AllUsers"
 import AllRooms from "../Cheats/AllRooms"
+import QrCodeReader from "../Components/QrCodeReader"
 
 export const TestPage = () => {
     return <div>
@@ -12,5 +13,6 @@ export const TestPage = () => {
         <UserInventory />
         <AllObjects />
         <AllCharacters />
+        <QrCodeReader />
     </div>
 }
