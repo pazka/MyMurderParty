@@ -12,9 +12,11 @@ import { Server, Socket } from 'socket.io';
 import userEvents from './services/socketService/userEvents';
 import { createNewRoom, getAllRooms } from './services/roomService';
 import config from './services/config';
-import { getAllUsers } from './services/userService';
+import { generateSessionId, getAllUsers } from './services/userService';
 import cors from 'cors';
-const io = new Server(server , { cors: config.cors });
+import cookie from 'cookie';
+
+const io = new Server(server, { cors: config.cors });
 
 
 const getVersion = () => {
@@ -29,6 +31,29 @@ const port = process.env.PORT || 8000;
 
 app.use(cors(config.cors))
 app.use(express.static('public'))
+
+app.get('/session', (req: Request, res: Response) => {
+  console.log("Session Request : existant : " + req.headers.cookie);
+  const cookies = cookie.parse(req.headers.cookie ?? '');
+
+  if (cookies.sessionId) {
+    return res.send(cookies.sessionId);
+  }
+
+  //setcookie if not found
+  const sessionId = generateSessionId();
+  res.setHeader('Set-Cookie', cookie.serialize('sessionId', sessionId, {
+    path: '/',
+    httpOnly: config.debug ? false : true,
+    secure: config.debug ? false : true,
+    maxAge: 60 * 60 * 24 * 7, // 1 week
+    ...(config.debug ? {} : {
+      sameSite: 'strict',
+      domain: config.domain
+    })
+  }));
+  res.send(sessionId);
+});
 
 app.get('/info', (req: Request, res: Response) => {
   res.send(getVersion().join('.'));
@@ -58,7 +83,6 @@ app.post('/room', (req: Request, res: Response) => {
 
 
 //Socket.io
-
 io.on('connection', (userSocket: Socket) => {
   userEvents(userSocket, io)
 });

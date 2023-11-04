@@ -2,8 +2,8 @@ type QrCodeData = string;
 
 interface User {
     id: string;
+    sessionId: string;
     name: string;
-    socketId?: string;
     choosenCharacterId?: string;
 }
 

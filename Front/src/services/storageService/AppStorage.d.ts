@@ -4,6 +4,6 @@ interface AppStorage{
     allRooms: Room[];
     currentRoom: Room | null;
     allUsers: User[];
-    currentUser: User | null;
+    currentUser: User ;
 }
 

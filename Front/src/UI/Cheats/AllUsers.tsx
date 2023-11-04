@@ -8,6 +8,7 @@ export default () => {
     const [user, setUser] = useStateWithDep<User>(storage.currentUser)
 
     const sendLogin = async () => {
+        setStorage({ ...storage, currentUser: user })
         emitWhoAmI(user)
     }
     
@@ -15,8 +16,8 @@ export default () => {
         <div>
             <h2>All Users</h2>
             <div>
-                {storage.allUsers.map((user) => (
-                    <span key={user.id}>{user.id}:{user.name}</span>
+                {Object.values(storage.allUsers).map((user) => (
+                   <span key={user.id}>{"//"} <b>{user.name}:</b>{user.id}</span>
                 ))}
             </div>
             <h3>current user</h3>

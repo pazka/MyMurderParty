@@ -1,3 +1,5 @@
+import { generateSessionId } from "../userService";
+
 let data: AppDatabase = {
     rooms: {},
     users: {}
@@ -10,7 +12,7 @@ export class BaseEntityORM<T extends AppDatabaseEntity & NewT, NewT extends NewA
     }
 
     create = (obj: NewT): T => {
-        const createdObj: T = { ...obj, id: Math.random().toString()} as unknown as T;
+        const createdObj: T = { ...obj, id: generateSessionId()} as unknown as T;
         this.entityData[createdObj.id] = createdObj;
 
         return { ...createdObj };
@@ -21,7 +23,7 @@ export class BaseEntityORM<T extends AppDatabaseEntity & NewT, NewT extends NewA
     }
 
     readAll = (): T[] => {
-        return { ...Object.values(this.entityData) }
+        return [ ...Object.values(this.entityData) ]
     }
 
     update = (obj: T & AppDatabaseEntity): T => {

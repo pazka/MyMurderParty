@@ -8,7 +8,11 @@ export const getDefaultStorage = (): AppStorage => {
         allRooms: [],
         currentRoom: null,
         allUsers: [],
-        currentUser: null,
+        currentUser: {
+            id: "",
+            name: "",
+            sessionId: "",
+        },
     };
 };
 
@@ -20,7 +24,7 @@ const persistStorage = (storage: AppStorage) => {
 export const getGlobalState = (): AppStorage => {
     const storageString = localStorage.getItem("persist");
 
-    if (!storageString) {
+    if (!storageString || storageString.trim() === "") {
         let defaultStorage = getDefaultStorage();
         persistStorage(defaultStorage);
         return defaultStorage;

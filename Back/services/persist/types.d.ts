@@ -15,14 +15,15 @@ interface NewRoom extends NewAppDatabaseEntity {
     password: string;
 }
 
-interface Room extends NewRoom,  AppDatabaseEntity {
+interface Room extends NewRoom, AppDatabaseEntity {
     usersId: string[];
     availableObjectsId: string[];
 }
 
 interface NewUser extends NewAppDatabaseEntity {
     name: string;
-    socketId?: string;
+    sessionId: string;
+    lastActivity: number;
     choosenCharacterId?: string;
 }
 

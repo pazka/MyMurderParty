@@ -1,14 +1,35 @@
 import { io, Socket } from "socket.io-client";
 import config from "../../services/config";
+import initReceiveSocketListeners from "./receive";
+import restService from "../restService";
 
-const socket: Socket = io(config.host);
+let _socket: Socket | null = null;
 
-socket.on("connect", () => {
-    console.log("SOCKET : Connected");
-});
+export const initSocketConnection = async (): Promise<Socket> => {
+    const res = await restService(config.host + "/session");
 
-socket.on("disconnect", () => {
-    console.log("SOCKET : Disconnected");
-});
+    _socket = io(config.host, {
+        withCredentials: true
+    });
 
-export default socket;
+    _socket.on("connect", () => {
+        console.log("SOCKET : Connected");
+    });
+
+    _socket.on("disconnect", () => {
+        console.log("SOCKET : Disconnected");
+    });
+    initReceiveSocketListeners(_socket);
+
+    return _socket;
+}
+
+export const getSocket = async () => {
+    if (_socket !== null) {
+        return _socket;
+    }
+
+    //setSession
+    _socket = await initSocketConnection();
+    return _socket;
+}

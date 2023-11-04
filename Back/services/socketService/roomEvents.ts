@@ -1,11 +1,14 @@
 import { Server, Socket } from "socket.io";
 import { createNewRoom, getAllRooms, getUsersInRoom, userJoinRoom, userLeaveRoom, userShareAnObjectToRoom, userTakeAnObjectFromRoom } from "../roomService";
 import { RoomCRUD } from "../persist";
+import { pingUser } from "../userService";
 
 export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) => {
     let currentRoomId: string | null;
 
     userSocket.on('join-room', (data: { roomId: string, password: string }) => {
+        pingUser(user.id);
+
         userJoinRoom(data.roomId, data.password, userSocket.id).then((room: Room) => {
 
             userSocket.join(room.id);
@@ -20,6 +23,8 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
     });
 
     userSocket.on('leave-room', (data: { roomId: string }) => {
+        pingUser(user.id);
+        
         if (currentRoomId != data.roomId) {
             userSocket.emit('error', "You are not in this room");
             return;
@@ -39,6 +44,8 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
     });
 
     userSocket.on('offer-object', (data: { objectId: string }) => {
+        pingUser(user.id);
+
         if (!currentRoomId) {
             userSocket.emit('error', "You are not in a room");
             return;
@@ -55,6 +62,8 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
     });
 
     userSocket.on('take-object', (data: { objectId: string }) => {
+        pingUser(user.id);
+
         if (!currentRoomId) {
             userSocket.emit('error', "You are not in a room");
             return;
@@ -71,6 +80,8 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
     });
 
     userSocket.on('broadcast-to-room', (data: any) => {
+        pingUser(user.id);
+
         if (!currentRoomId) {
             userSocket.emit('error', "You are not in a room");
             return;
