@@ -6,6 +6,7 @@ import { useStateWithDep } from "../../services/utils";
 export default withErrorCaught(({ open = false }) => {
 
     const [result, setResult] = useState("");
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [openQr, setOpenQr] = useStateWithDep(open);
 
@@ -13,6 +14,7 @@ export default withErrorCaught(({ open = false }) => {
         setError(err);
     }
     const handleScan = (data) => {
+        setLoading(false);
         if (data) {
             setResult(data);
         }
@@ -27,9 +29,11 @@ export default withErrorCaught(({ open = false }) => {
                         delay={300}
                         onError={handleError}
                         onScan={handleScan}
-                        style={{ width: '20%' }}
+                        onLoad={x=>setLoading(true)}
+                        style={{ width: '100%' }}
                         showViewFinder={false}
                     />
+                    {loading && <p>loading...</p>}
                     <p>{result}</p>
                     <p>{error}</p>
                 </div>}

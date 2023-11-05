@@ -13,6 +13,12 @@ export const TestPage = () => {
         <UserInventory />
         <AllObjects />
         <AllCharacters />
-        <QrCodeReader />
+        <div style={{
+            position: 'fixed',
+            top: 0,
+            right: 0,
+        }}>
+                <QrCodeReader />
+        </div>
     </div>
 }
