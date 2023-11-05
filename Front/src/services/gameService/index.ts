@@ -1,8 +1,27 @@
+import { enqueueSnackbar } from 'notistack';
+import { getGlobalState } from '../storageService';
 import allGameConfigs from './gameConfigs/';
 import allEngines from './gameEngines';
 
 let _currentGameConfig: GameConfig = allGameConfigs['Tutorial Game'];
 const _currentGameEngine: GameEngine = allEngines['default'];
+
+export const updateCurrentGameConfigFromRoom = (room: Room | null): void => {
+    let storage = getGlobalState();
+    const oldRoom: Room | null = storage.currentRoom;
+
+    if (!room) {
+        if (oldRoom) { selectCurrentGameConfigByName('Tutorial Game') }
+    }
+
+    if (oldRoom?.gameConfigName !== room?.gameConfigName) {
+        try {
+            selectCurrentGameConfigByName(room?.gameConfigName || 'Tutorial Game');
+        } catch (e) {
+            enqueueSnackbar("Fatal Error while loading game config. Try refreshing the app.", { variant: "error" });
+        }
+    }
+}
 
 export const setCurrentGameConfig = (gameConfig: GameConfig) => {
     _currentGameConfig = gameConfig;

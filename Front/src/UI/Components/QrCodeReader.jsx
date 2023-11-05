@@ -2,44 +2,53 @@ import { useState } from "react";
 import QrReader from 'react-qr-reader';
 import { withErrorCaught } from "../../Utils/WithErrorCaught";
 import { useStateWithDep } from "../../services/utils";
+import { enqueueSnackbar } from "notistack";
+import currentConfig from "../../services/config";
 
-export default withErrorCaught(({ open = false }) => {
-
-    const [result, setResult] = useState("");
+export default ({ onTextRead, onClose }) => {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [openQr, setOpenQr] = useStateWithDep(open);
 
     const handleError = (err) => {
-        setError(err);
+        enqueueSnackbar(err, { variant: "error" });
     }
+
     const handleScan = (data) => {
+        if(!data)
+            return ;
+
         setLoading(false);
-        if (data) {
-            setResult(data);
-        }
+        onTextRead && onTextRead(data)
     }
 
     try {
         return (
             <>
-                <button onClick={x=>setOpenQr(!openQr)}>{openQr ? "close" : "open"} QrCodeReader</button>
-                {openQr && <div>
-                    <QrReader
-                        delay={300}
-                        onError={handleError}
-                        onScan={handleScan}
-                        onLoad={x=>setLoading(true)}
-                        style={{ width: '100%' }}
-                        showViewFinder={false}
-                    />
-                    {loading && <p>loading...</p>}
-                    <p>{result}</p>
-                    <p>{error}</p>
-                </div>}
+                <div className="qrreader-wrapper">
+                    <button className="qrreader-close" onClick={x => {
+                        console.log("putain");
+                        onClose && onClose()
+                    }}>X</button>
+                    {loading && <div>Loading...</div>}
+                    <div className="qrreader-body">
+                        <div className="qrreader-camera">
+                            <QrReader
+                                delay={300}
+                                onError={handleError}
+                                onScan={handleScan}
+                                onLoad={x => setLoading(true)}
+                                style={{ width: '100%' }}
+                                showViewFinder={true}
+                            />
+                            <div className="qr-viewfinder"></div>
+                        </div>
+                    </div>
+                    <div>
+                    </div>
+                </div>
             </>
         )
     } catch (err) {
-        setError(err);
+        return <p>An error occured</p>;
+        handleError(err);
     }
-})
+}

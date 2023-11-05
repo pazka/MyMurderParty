@@ -8,10 +8,10 @@ type GameConfig = {
 }
 
 interface GameEngine {
-    seeAnObject: (object: InventoryItem, Character : Character) => void;
-    takesAnObject: (object: InventoryItem, Character : Character) => void;
-    shareAnObject: (object: InventoryItem, Character : Character) => void;
-    combineObjects: (objects: InventoryItem[], Character : Character) => void;
+    seeAnObject: (objectId: string) => InventoryItem | null;
+    takesAnObject: (objectId: string) => InventoryItem | null;
+    shareAnObject: (objectId: string) => InventoryItem | null;
+    combineObjects: (objects: InventoryItem[]) => InventoryItem[] | null;
     ENGINE_NAME: string;
 }
 
@@ -24,10 +24,10 @@ interface User {
 
 interface Room {
     id: string;
-    name:string;
+    name: string;
     password: string;
     users: { [id: string]: User };
-    objects : ObjectsInRoom;
+    objects: ObjectsInRoom;
     characters: { [id: string]: User };
     roomHistory: string[];
     gameConfigName: string;
@@ -49,22 +49,23 @@ interface Character {
     id: string;
     name: string;
     type: string;
-    scenario : {
-        public : string,
-        private? : string
+    scenario: {
+        public: string,
+        private?: string
     }
 }
 
 interface InventoryItem {
     id: string;
     name: string;
-    description : string;
+    description: string;
     canBeTaken: boolean;
     canBeUsed: boolean;
+    canBeShared?: boolean;
     hasAlreadyBeenUsed?: boolean;
-    ownerId?: string ;
-    currentVariationKey?: string ;
-    variations : {
+    ownerId?: string;
+    currentVariationKey?: string;
+    variations: {
         [variation: string]: InventoryItem & any
     }
     lookActions: LookAction[];
@@ -72,21 +73,21 @@ interface InventoryItem {
 }
 
 interface LookAction {
-    conditions : {
-        needsOneOfCharacterId : string[],
-        needsOneOfCharacterType : string[],
-        needsOneOfObjectsId : string[]
+    conditions: {
+        needsOneOfCharacterId: string[],
+        needsOneOfCharacterType: string[],
+        needsOneOfObjectsId: string[]
     },
-    result : ActionResult
+    result: ActionResult
 }
 
 interface UseAction {
-    conditions : {
-        needsOneOfCharacterId : string[],
-        needsOneOfCharacterType : string[],
-        needsOneOfObjectsId : string[]
+    conditions: {
+        needsOneOfCharacterId: string[],
+        needsOneOfCharacterType: string[],
+        needsOneOfObjectsId: string[]
     },
-    result : ActionResult
+    result: ActionResult
 }
 
 interface ActionResult {
@@ -95,13 +96,19 @@ interface ActionResult {
     displayVariation?: string;
     displayItem?: string;
     deleteItems?: string[];
-    popUpMessage?: {message : text,variant? : "success" | "error" | "warning" | "info" | undefined};
+    popUpMessage?: PopUpMessage;
     triggerEndOfGame?: EndOfGameResult[];
 }
 
 interface EndOfGameResult {
-    caractersTypeId : string[];
-    hasWon : boolean;
-    popUpMessage : string;
-    variant? : "success" | "error" | "warning" | "info" | undefined;
+    caractersTypeId: string[];
+    hasWon: boolean;
+    popUpMessage: PopUpMessage;
 }
+
+interface PopUpMessage {
+    message: text,
+    variant?: MessageVariants
+};
+
+type MessageVariant = "success" | "error" | "warning" | "info"

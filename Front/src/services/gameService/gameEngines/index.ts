@@ -1,4 +1,4 @@
-import * as defaultEngine from './default';
+import defaultEngine from './default';
 
 const allEngines : { [id: string]: GameEngine } = {
     [defaultEngine.ENGINE_NAME] : defaultEngine

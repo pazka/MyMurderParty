@@ -17,7 +17,7 @@ export const FULL_INVENTORY: Inventory  = {
         },
         lookActions: [{
             conditions : {
-                needsOneOfCharacterId : [],
+                needsOneOfCharacterId : [ "SCIENTIST_ASSISTANT"],
                 needsOneOfCharacterType : [],
                 needsOneOfObjectsId : []
             },
@@ -40,7 +40,7 @@ export const FULL_INVENTORY: Inventory  = {
         },
         lookActions: [{
             conditions : {
-                needsOneOfCharacterId : [],
+                needsOneOfCharacterId : [ "SCIENTIST_ASSISTANT"],
                 needsOneOfCharacterType : [],
                 needsOneOfObjectsId : []
             },
@@ -103,7 +103,7 @@ export const FULL_INVENTORY: Inventory  = {
     "DoorOpen": {
         description : "This door is unlocked",
         id: "Door",
-        name: "Door",
+        name: "Opened Door",
         canBeTaken : false,
         canBeUsed : true,
         variations: {},
@@ -119,12 +119,12 @@ export const FULL_INVENTORY: Inventory  = {
                     {
                         caractersTypeId : [CharactersTypes.SCIENTIST],
                         hasWon : false,
-                        popUpMessage : "You lost, Normal have won !"
+                        popUpMessage : {message : "You lost, Normal have won !", variant : "error"}
                     },
                     {
                         caractersTypeId : [CharactersTypes.NORMAL],
                         hasWon : true,
-                        popUpMessage : "Normal have won !"
+                        popUpMessage : {message : "Normal have won !", variant : "success"}
                     }
                 ],
             }
@@ -139,12 +139,12 @@ export const FULL_INVENTORY: Inventory  = {
                     {
                         caractersTypeId : [CharactersTypes.SCIENTIST],
                         hasWon : true,
-                        popUpMessage : "Sicentist have won !"
+                        popUpMessage : {message : "Sicentist have won !", variant : "success"}
                     },
                     {
                         caractersTypeId : [CharactersTypes.NORMAL],
                         hasWon : false,
-                        popUpMessage : "You lost, scientist did !"
+                        popUpMessage : {message : "You lost, scientist did !", variant : "error"}
                     }
                 ],
             }

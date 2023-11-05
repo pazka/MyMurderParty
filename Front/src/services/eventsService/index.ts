@@ -26,6 +26,8 @@ export const sendEvent = (event: AvailableEvents, ...args: any[]) => {
         return;
     }
 
+    console.log("EVENT", event, args);
+
     for (const [id, callback] of Object.entries(allSubscriptions[event])) {
         callback(...args);
     }
