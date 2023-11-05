@@ -16,7 +16,7 @@ const getAllUserInRoom = (roomId: string) => {
     const allUsers: User[] = getGlobalState().allUsers
 }
 
-const getCurrentUser = (): User | null => {
+export const getCurrentUser = (): User | null => {
     return getGlobalState().currentUser;
 }
 

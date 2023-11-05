@@ -27,3 +27,26 @@ export const chooseCharacter = (characterId: string) => {
 
     setGlobaState(storage);
 }
+
+export const usersIdWithCharacterInRoom = (): { [userId: string]: Character } => {
+    const storage = getGlobalState();
+    const allCharacters = getAllCharacters();
+
+    const usersWithCharacter = Object.entries(storage.currentRoom?.characters ?? {}).reduce((acc: { [userId: string]: Character }, [characterId, user]) => {
+        const character = allCharacters[characterId];
+        if (character) {
+            acc[user.id] = character;
+        }
+        return acc;
+    }, {});
+
+    return usersWithCharacter;
+}
+
+export const getCurrentCharacter = (): Character | null => {
+    const storage = getGlobalState();
+    if (!storage.currentUser) return null;
+
+    const usersWithCharacter = usersIdWithCharacterInRoom();
+    return usersWithCharacter[storage.currentUser.id] ?? null;
+}
