@@ -2,11 +2,11 @@ import { enqueueSnackbar } from "notistack";
 import { isUserInARoom } from "../roomService";
 import { emitUpdateObjects } from "../socketService/emits";
 import { setGlobaState, getGlobalState, useGlobalStorage } from "../storageService";
-import {FULL_INVENTORY} from "../gameConfig";
+import { getCurrentGameConfig } from "../gameService";
 
 
 export const getFullInventory = (): Inventory => {
-    return FULL_INVENTORY;
+    return getCurrentGameConfig().FULL_INVENTORY;
 };
 
 export const identifyItem = (itemQrCode: QrCodeData): InventoryItem | null => {

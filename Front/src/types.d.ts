@@ -1,5 +1,10 @@
 type QrCodeData = string;
 
+type GameConfig = {
+    FULL_INVENTORY: Inventory;
+    TROMBINOSCOPE: Trombinoscope;
+}
+
 interface User {
     id: string;
     sessionId: string;

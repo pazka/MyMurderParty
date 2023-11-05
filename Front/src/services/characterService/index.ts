@@ -1,17 +1,14 @@
-import AllUsers from "../../UI/Cheats/AllUsers";
-import { getGlobalState, setGlobaState } from "../storageService";
-import { getAllUsers } from "../userService";
-import { TROMBINOSCOPE } from "../gameConfig";
-import { isUserInARoom } from "../roomService";
-import { emitChooseCharacter } from "../socketService/emits";
-import { enqueueSnackbar } from "notistack";
+import { getCurrentGameConfig } from '../gameService';
+import { isUserInARoom } from '../roomService';
+import { emitChooseCharacter } from '../socketService/emits';
+import { getGlobalState, setGlobaState } from '../storageService';
 
 export const getAllCharacters = (): Trombinoscope => {
-    return TROMBINOSCOPE;
+    return getCurrentGameConfig().TROMBINOSCOPE;
 }
 
 export const getCharacterById = (id: string): Character | null => {
-    return TROMBINOSCOPE[id] ?? null;
+    return getAllCharacters()[id] ?? null;
 }
 
 export const chooseCharacter = (characterId: string) => {
@@ -21,7 +18,7 @@ export const chooseCharacter = (characterId: string) => {
     let user = { ...storage.currentUser };
     if (!user) return;
 
-    if (!TROMBINOSCOPE[characterId]) {
+    if (!getAllCharacters()[characterId]) {
         return;
     }
 
