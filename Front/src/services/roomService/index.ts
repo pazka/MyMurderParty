@@ -1,4 +1,6 @@
+import { enqueueSnackbar } from "notistack";
 import config from "../config";
+import { setCurrentGameConfig, selectCurrentGameConfigByName, getCurrentGameConfig } from "../gameService";
 import restService from "../restService";
 import { getGlobalState, setGlobaState } from "../storageService";
 
@@ -18,7 +20,8 @@ export const getDefaultRoom = (): Room => ({
     users: {},
     objects: {},
     characters: {},
-    roomHistory: []
+    roomHistory: [],
+    gameConfigName: getCurrentGameConfig().GAME_NAME,
 })
 
 export const isUserInARoom = (): boolean => {
@@ -38,12 +41,21 @@ export const getCurrentRoom = (): Room | null => {
 
 export const updateCurrentRoom = (room: Room | null) => {
     let storage = getGlobalState();
+    const oldRoom : Room = JSON.parse(JSON.stringify(storage.currentRoom));
     storage.currentRoom = room;
 
     if (room) {
         const objects = Object.values(room.objects ?? {});
         const userInventory = objects.filter((o: InventoryItem) => o.ownerId === storage.currentUser?.id);
         storage.inventory = userInventory;
+
+        if(oldRoom?.gameConfigName !== room.gameConfigName){
+            try {
+                selectCurrentGameConfigByName(room.gameConfigName);
+            }catch(e){
+                enqueueSnackbar("Fatal Error while loading game config. Try refreshing the app.", { variant: "error" });
+            }
+        }
     }else{
         storage.inventory = [];
     }

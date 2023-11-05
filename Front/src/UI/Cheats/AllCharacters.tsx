@@ -1,6 +1,8 @@
 import { chooseCharacter, getAllCharacters } from "../../services/characterService";
+import { useGlobalStorage } from "../../services/storageService";
 
 export default () => {
+    const [storage, setStorage] = useGlobalStorage()
     const allCharacters = getAllCharacters();
 
     return (

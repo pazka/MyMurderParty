@@ -57,3 +57,5 @@ export const TROMBINOSCOPE: Trombinoscope = {
     }
 }
 
+export const GAME_NAME = "Tutorial Game"
+

@@ -5,6 +5,7 @@ import RoomBroadcast from "./RoomBroadcast"
 import currentConfig from "../../services/config"
 import { emitJoinRoom, emitLeaveRoom, emitNewRoom } from "../../services/socketService/emits"
 import { spawn } from "child_process"
+import { getAllGamesNames } from "../../services/gameService"
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
@@ -35,6 +36,11 @@ export default () => {
             <div>
                 <input type="text" value={newRoom.name} onChange={e => setNewRoom({ ...newRoom, name: e.target.value })} />
                 <input type="text" value={newRoom.password} onChange={e => setNewRoom({ ...newRoom, password: e.target.value })} />
+                <select value={newRoom.gameConfigName} name="roomGameType" id="gameType" onChange={e => setNewRoom({ ...newRoom, gameConfigName: e.target.value })}>
+                    {getAllGamesNames().map((gameName) => (
+                        <option key={gameName} value={gameName}>{gameName}</option>
+                    ))}
+                </select>
 
                 <button onClick={handleCreateRoom}>Create Room</button>
             </div>
@@ -42,6 +48,7 @@ export default () => {
                 {Object.values(storage.allRooms).map((room) => (
                     <div key={room.id} style={{ border: "solid 1px black" }}>
                         <p><b>{room.name}:</b>{room.id} <button onClick={handleJoinRoom(room)}>Join</button></p>
+                        <p>currentGame : {room.gameConfigName}</p>	
                         <ul>
                             {Object.values(room.users).map((user) => (
                                 <li key={user.id}>{user.id}  </li>

@@ -1,8 +1,9 @@
 import { addItemToInventory, getFullInventory } from "../../services/inventoryService"
-import { resetStorage } from "../../services/storageService";
+import { resetStorage, useGlobalStorage } from "../../services/storageService";
 import ObjectQrCode from "../Components/ObjectQrCode";
 
 export default () => {
+    const [storage, setStorage] = useGlobalStorage()
     const allInventory = getFullInventory();
 
     return (
