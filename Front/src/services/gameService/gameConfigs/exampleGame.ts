@@ -45,7 +45,8 @@ export const FULL_INVENTORY: Inventory  = {
                 needsOneOfObjectsId : []
             },
             result : {
-                displayVariation : "GOLDKEY_KEY.ASSITANT"
+                displayVariation : "GOLDKEY_KEY.ASSITANT",
+                popUpMessage : {message : "Your talents reveal something to the object", variant : "info"}
             }
         }],
         useActions: [],

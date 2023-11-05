@@ -6,7 +6,7 @@ import { getCurrentGameConfig } from "../gameService";
 
 
 export const getFullInventory = (): Inventory => {
-    return getCurrentGameConfig().FULL_INVENTORY;
+    return {...getCurrentGameConfig().FULL_INVENTORY};
 };
 
 export const identifyItem = (itemQrCode: QrCodeData): InventoryItem | null => {

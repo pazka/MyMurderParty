@@ -11,7 +11,7 @@ interface GameEngine {
     seeAnObject: (objectId: string) => InventoryItem | null;
     takesAnObject: (objectId: string) => InventoryItem | null;
     shareAnObject: (objectId: string) => InventoryItem | null;
-    combineObjects: (objects: InventoryItem[]) => InventoryItem[] | null;
+    useObjects: (objects: InventoryItem[]) => InventoryItem[] | null;
     ENGINE_NAME: string;
 }
 
@@ -62,6 +62,7 @@ interface InventoryItem {
     canBeTaken: boolean;
     canBeUsed: boolean;
     canBeShared?: boolean;
+    isOpenForTaking?: boolean;
     hasAlreadyBeenUsed?: boolean;
     ownerId?: string;
     currentVariationKey?: string;
@@ -111,4 +112,4 @@ interface PopUpMessage {
     variant?: MessageVariants
 };
 
-type MessageVariant = "success" | "error" | "warning" | "info"
+type MessageVariant = "success" | "error" | "warning" | "info" | "magic"
