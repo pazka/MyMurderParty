@@ -4,15 +4,14 @@ import { TestPage } from "./TestPage"
 import { sendEvent } from "../../services/eventsService"
 import { getCurrentGameConfig } from "../../services/gameService"
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
-import ObjectDisplay from "../Components/ObjectDisplay"
+import GenericObjectDisplay from "./GenericObjectDisplay"
 
 export default () => {
     const [isQrOpen, setIsQrOpen] = useState(false)
-    const [currentDisplayedObjectId, setCurrentDisplayedObject] = useState<string>()
 
     const handleObjectScanned = (objectId: string) => {
         setIsQrOpen(false)
-        setCurrentDisplayedObject(objectId)
+        sendEvent(AvailableEvents.displayObject, objectId)
     }
 
     return (
@@ -24,9 +23,7 @@ export default () => {
                 setIsQrOpen(false)
             }} />}
             <hr />
-            {
-                currentDisplayedObjectId && <ObjectDisplay objectId={currentDisplayedObjectId} />
-            }
+            <GenericObjectDisplay />
 
             <TestPage />
         </div>

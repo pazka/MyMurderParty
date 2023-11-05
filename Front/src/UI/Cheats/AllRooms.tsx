@@ -5,17 +5,15 @@ import RoomBroadcast from "./RoomBroadcast"
 import currentConfig from "../../services/config"
 import { emitDeleteRoom, emitJoinRoom, emitLeaveRoom, emitNewRoom } from "../../services/socketService/emits"
 import { spawn } from "child_process"
-import { getAllGamesNames } from "../../services/gameService"
+import { getAllGamesNames, getCurrentGameEngine } from "../../services/gameService"
+import { usersIdWithCharacterInRoom } from "../../services/characterService"
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
     const users = Object.values(storage.allUsers)
     const [newRoom, setNewRoom] = useState<Room>(getDefaultRoom())
-
-    const userWithCaracters: { [userId: string]: Character } = Object.entries(storage.currentRoom?.characters || {}).reduce((acc, [char, user]) => {
-        if (!user) return acc;
-        return { ...acc, [user.id]: char }
-    }, {})
+    const currentGameEngine = getCurrentGameEngine();
+    const usersWithCaracters = usersIdWithCharacterInRoom()
 
     const handleCreateRoom = () => {
         emitNewRoom(newRoom)
@@ -51,48 +49,52 @@ export default () => {
             <div>
                 {Object.values(storage.allRooms).map((room) => (
                     <div key={room.id} style={{ border: "solid 1px black" }}>
-                        <p><b>{room.name}:</b>{room.id} <button onClick={handleJoinRoom(room)}>Join</button> <button onClick={x=>handleDeleteRoom(room)}> delete</button></p>
-            <p>currentGame : {room.gameConfigName}</p>
-            <ul>
-                {Object.values(room.users).map((user) => (
-                    <li key={user.id}>{user.id}  </li>
-                ))}
-            </ul>
-        </div>
-    ))
-}
+                        <p><b>{room.name}:</b>{room.id} <button onClick={handleJoinRoom(room)}>Join</button> <button onClick={x => handleDeleteRoom(room)}> delete</button></p>
+                        <p>currentGame : {room.gameConfigName}</p>
+                        <ul>
+                            {Object.values(room.users).map((user) => (
+                                <li key={user.id}>{user.id}  </li>
+                            ))}
+                        </ul>
+                    </div>
+                ))
+                }
             </div >
-    <div>
-        <h2>Current Room <button onClick={handleLeaveRoom}>Leave</button></h2>
-        {storage.currentRoom && <div>
-            <p><b>{storage.currentRoom.name}:</b>{storage.currentRoom.id}</p>
-            <ul>
-                {Object.values(storage.usersInRoom).map((user) => (
-                    <li key={user.id}>User : {user.name},{userWithCaracters[user.id]?.name ?? ""} </li>
-                ))}
-            </ul>
-            <p>found objects</p>
-            <ul>
-                {Object.values(storage.currentRoom.objects).map((item) => (
-                    <li key={item.id}>{item.name}{JSON.stringify(item)}</li>
-                ))}
-            </ul>
-            <p>characters</p>
-            <ul>
-                {Object.entries(storage.currentRoom.characters).map(([characterId, user]) => (
-                    <li key={user.id}>{characterId} : {JSON.stringify(user)}</li>
-                ))}
-            </ul>
-            <p>history</p>
-            <ul>
-                {storage.currentRoom.roomHistory.map((item, i) => <span key={i}>{item}</span>)}
-            </ul>
+            <div>
+                <h2>Current Room <button onClick={handleLeaveRoom}>Leave</button></h2>
+                {storage.currentRoom && <div>
+                    <p><b>{storage.currentRoom.name}:</b>{storage.currentRoom.id}</p>
+                    <ul>
+                        {Object.values(storage.usersInRoom).map((user) => (
+                            <li key={user.id}>User : {user.name},{usersWithCaracters[user.id]?.name ?? ""} </li>
+                        ))}
+                    </ul>
+                    <p>found objects</p>
+                    <ul>
+                        {Object.values(storage.currentRoom.objects).map((item) => (
+                            <li key={item.id}>
+                                {item.name}
+                                <button onClick={x => currentGameEngine.takesAnObject(item.id)}> Take </button >
+                                {item.isOpenForTaking ? "canTake" : ""}
+                            </li>
+                        ))}
+                    </ul>
+                    <p>characters</p>
+                    <ul>
+                        {Object.entries(storage.currentRoom.characters).map(([characterId, user]) => (
+                            <li key={user.id}>{characterId} : {JSON.stringify(user)}</li>
+                        ))}
+                    </ul>
+                    <p>history</p>
+                    <ul>
+                        {storage.currentRoom.roomHistory.map((item, i) => <span key={i}>{item}</span>)}
+                    </ul>
 
 
-            <RoomBroadcast />
-        </div>
-        }
-    </div>
+                    <RoomBroadcast />
+                </div>
+                }
+            </div>
         </div >
     )
 }

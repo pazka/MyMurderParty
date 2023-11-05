@@ -3,8 +3,10 @@ import { getCurrentCharacter } from "../../characterService"
 import { getCurrentRoom } from "../../roomService"
 import { getCurrentGameConfig } from ".."
 import { getCurrentUser } from "../../userService"
-import { getFullInventory } from "../../inventoryService"
+import { addItemToInventory, getFullInventory, updateOneObjectInRoom } from "../../inventoryService"
 import { emitUpdateObjects } from "../../socketService/emits"
+import { sendEvent } from "../../eventsService"
+import { AvailableEvents } from "../../eventsService/allAvailableEvents"
 
 const validateALookAction = (action: LookAction): boolean => {
     const currentCharacter = getCurrentCharacter()
@@ -36,7 +38,7 @@ const validateAnUseAction = (action: UseAction,objectIds : string[]): boolean =>
 }
 
 
-const seeAnObject = (objectId: string): InventoryItem | null => {
+const getObjectForCharacter = (objectId: string): InventoryItem | null => {
     const currentRoom = getCurrentRoom()
     const currentUser = getCurrentUser()
     const currentCharacter = getCurrentCharacter()
@@ -49,12 +51,12 @@ const seeAnObject = (objectId: string): InventoryItem | null => {
 
     if (!currentObject) {
         enqueueSnackbar("No Object to diplay for you", {variant: "error"})
-        return null
+        return null;
     }
 
     if (currentObject.ownerId && currentObject.ownerId !== currentUser?.id && !currentObject.isOpenForTaking) {
         enqueueSnackbar("This object has already been taken, please throw away the paper tag from the room", {variant: "error"})
-        return null
+        return null;
     }
 
     //allow sharing when user already has the object
@@ -80,13 +82,13 @@ const seeAnObject = (objectId: string): InventoryItem | null => {
         }
     }
 
-    return currentObject
+    return currentObject;
 }
 
 
-const takesAnObject = (objectId: string): InventoryItem | null => {
+const takesAnObject = (objectId: string): void => {
     const currentRoom = getCurrentRoom()
-    if(!currentRoom) return null
+    if(!currentRoom) return;
 
     const currentUser = getCurrentUser()
     const currentCharacter = getCurrentCharacter()
@@ -99,31 +101,23 @@ const takesAnObject = (objectId: string): InventoryItem | null => {
 
     if (!currentObject) {
         enqueueSnackbar("No Object to take", {variant: "error"})
-        return null
+        return;
     }
 
-    if (currentObject.ownerId && currentObject.ownerId !== currentUser?.id) {
-        enqueueSnackbar("This object has already been taken, please throw away the paper tag from the room", {variant: "error"})
-        return null
-    }
-
-    if (!currentObject.canBeTaken) {
+    if (!currentObject.isOpenForTaking) {
         enqueueSnackbar("This object cannot be taken", {variant: "error"})
-        return null
+        return;
     }
 
     currentObject.isOpenForTaking = false
-    currentObject.ownerId = currentUser?.id
-    currentRoom.objects[currentObject.id] = currentObject
+    addItemToInventory(currentObject)
 
-    emitUpdateObjects(currentRoom.objects)
-
-    return currentObject
+    return;
 }
 
-const shareAnObject = (objectId: string): InventoryItem | null => {
+const shareAnObject = (objectId: string): void => {
     const currentRoom = getCurrentRoom()
-    if(!currentRoom) return null
+    if(!currentRoom) return;
 
     const baseInventoryObject = getFullInventory()[objectId]
     const possibleObjectInRoom = currentRoom?.objects[objectId]
@@ -132,25 +126,23 @@ const shareAnObject = (objectId: string): InventoryItem | null => {
 
     if (!currentObject) {
         enqueueSnackbar("No Object to share", {variant: "error"})
-        return null
+        return;
     }
 
     currentObject.isOpenForTaking = true
     currentRoom.objects[currentObject.id] = currentObject
 
-    emitUpdateObjects(currentRoom.objects)
-
-    return currentObject
+    updateOneObjectInRoom(currentObject)
 }
 
-const useObjects = (objects: InventoryItem[]): InventoryItem[] | null => {
-    return null
+const useObjects = (objects: InventoryItem[]): void => {
+
 }
 
 const ENGINE_NAME = "default"
 
 const gameEngine: GameEngine = {
-    seeAnObject,
+    getObjectForCharacter: getObjectForCharacter,
     takesAnObject,
     shareAnObject,
     useObjects,

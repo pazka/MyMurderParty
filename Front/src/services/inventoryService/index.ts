@@ -70,3 +70,24 @@ export const useInventory = (): InventoryItem[] => {
 
     return storage.inventory;
 }
+
+export const getItemWithPossibleVariation = (item: InventoryItem): InventoryItem => {
+    const state = getGlobalState();
+    const currentUser = state.currentUser as User;
+    const currentRoom = state.currentRoom as Room;
+
+    const currentVariationKey = item.currentVariationKey 
+    if (Object.values(item.variations).length == 0 || !currentVariationKey) {
+        return item;
+    }
+
+    const currentVariation = item.variations[currentVariationKey];
+    if (!currentVariation) {
+        enqueueSnackbar("You should be able to see something but can't. This is a bug 🤬", { variant: "error" });
+        return item;
+    }
+
+    //put all fields from variation to item
+    const newItemOverwritenByVariation = {...item, ...currentVariation};
+    return newItemOverwritenByVariation;
+}

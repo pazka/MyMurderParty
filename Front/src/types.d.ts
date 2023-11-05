@@ -8,10 +8,10 @@ type GameConfig = {
 }
 
 interface GameEngine {
-    seeAnObject: (objectId: string) => InventoryItem | null;
-    takesAnObject: (objectId: string) => InventoryItem | null;
-    shareAnObject: (objectId: string) => InventoryItem | null;
-    useObjects: (objects: InventoryItem[]) => InventoryItem[] | null;
+    getObjectForCharacter: (objectId: string) => InventoryItem | null;
+    takesAnObject: (objectId: string) => void;
+    shareAnObject: (objectId: string) => void;
+    useObjects: (objects: InventoryItem[]) => void;
     ENGINE_NAME: string;
 }
 

@@ -1,3 +1,4 @@
 export enum AvailableEvents {
-    "displayPopUp"
+    "displayPopUp",
+    "displayObject"
 }
