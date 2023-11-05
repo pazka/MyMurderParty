@@ -3,17 +3,23 @@ export const FULL_INVENTORY: Inventory = {
         description : "ok",
         id: "ExampleItem",
         name: "Example",
-        combineWith: ["ExampleItem"],
-        cantBeTaken: true,
-        isSharedToRoom: false,
-        isUsed: true
+        canBeTaken : false,
+        canBeUsed : true,
+        variations: {},
+        lookActions: [],
+        useActions: [],
     }
 }
 
 export const TROMBINOSCOPE: Trombinoscope = {
     "NOBODY": {
         "id": "lol",
-        "name": "qsdqsdsqd"
+        "name": "qsdqsdsqd",
+        "type": "qsdqsd",
+        "scenario": {
+            "public": "qsdqsd",
+            "private": "qsdqsd"
+        }
     }
 }
 
