@@ -88,6 +88,7 @@ export const getItemWithPossibleVariation = (item: InventoryItem): InventoryItem
     }
 
     //put all fields from variation to item
+    console.log("variation",item, currentVariation);
     const newItemOverwritenByVariation = {...item, ...currentVariation};
     return newItemOverwritenByVariation;
 }

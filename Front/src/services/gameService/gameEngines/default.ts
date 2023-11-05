@@ -11,10 +11,11 @@ import { AvailableEvents } from "../../eventsService/allAvailableEvents"
 const validateALookAction = (action: LookAction): boolean => {
     const currentCharacter = getCurrentCharacter()
 
-    if (action.conditions.needsOneOfCharacterId && !action.conditions.needsOneOfCharacterId.includes(currentCharacter?.id ?? "")) {
+    if (!action.conditions.needsOneOfCharacterId.includes(currentCharacter?.id ?? "")) {
         return false
     }
-    if (action.conditions.needsOneOfCharacterType && !action.conditions.needsOneOfCharacterType.includes(currentCharacter?.type ?? "")) {
+
+    if (!action.conditions.needsOneOfCharacterType.includes(currentCharacter?.type ?? "")) {
         return false
     }
 
@@ -24,13 +25,15 @@ const validateALookAction = (action: LookAction): boolean => {
 const validateAnUseAction = (action: UseAction,objectIds : string[]): boolean => {
     const currentCharacter = getCurrentCharacter()
 
-    if (action.conditions.needsOneOfCharacterId && !action.conditions.needsOneOfCharacterId.includes(currentCharacter?.id ?? "")) {
+    if (!action.conditions.needsOneOfCharacterId.includes(currentCharacter?.id ?? "")) {
         return false
     }
-    if (action.conditions.needsOneOfCharacterType && !action.conditions.needsOneOfCharacterType.includes(currentCharacter?.type ?? "")) {
+
+    if (!action.conditions.needsOneOfCharacterType.includes(currentCharacter?.type ?? "")) {
         return false
     }
-    if(action.conditions.needsOneOfObjectsId && !action.conditions.needsOneOfObjectsId.some(id => objectIds.includes(id))) {
+    
+    if(!action.conditions.needsOneOfObjectsId.some(id => objectIds.includes(id))) {
         return false
     }
 
@@ -104,7 +107,7 @@ const takesAnObject = (objectId: string): void => {
         return;
     }
 
-    if (!currentObject.isOpenForTaking) {
+    if (currentObject.ownerId && !currentObject.isOpenForTaking) {
         enqueueSnackbar("This object cannot be taken", {variant: "error"})
         return;
     }

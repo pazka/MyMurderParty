@@ -18,7 +18,6 @@ export const TROMBINOSCOPE: Trombinoscope = {
         "name": "Secrétaire du scientifique",
         "scenario": {
             public: "Vous êtes la secrétaire du scientifique. Vous le connaisiez mieux que personne.",
-
         },
         "type": CharactersTypes.NORMAL
     }
