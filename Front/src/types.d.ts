@@ -11,6 +11,7 @@ interface GameEngine {
     getObjectForCharacter: (objectId: string) => InventoryItem | null;
     takesAnObject: (objectId: string) => void;
     shareAnObject: (objectId: string) => void;
+    stopSharingAnObject: (objectId: string) => void;
     useObjects: (objects: InventoryItem[]) => void;
     ENGINE_NAME: string;
 }
@@ -98,6 +99,8 @@ interface ActionResult {
     displayItem?: string;
     deleteItems?: string[];
     popUpMessage?: PopUpMessage;
+    notifyMessage?: PopUpMessage;
+    broadcastMessage?: PopUpMessage;
     triggerEndOfGame?: EndOfGameResult[];
 }
 

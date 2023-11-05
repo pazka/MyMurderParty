@@ -1,3 +1,5 @@
+import { sendEvent } from "../../services/eventsService";
+import { AvailableEvents } from "../../services/eventsService/allAvailableEvents";
 import { getCurrentGameEngine } from "../../services/gameService";
 import { addItemToInventory, getFullInventory } from "../../services/inventoryService"
 import { resetStorage, useGlobalStorage } from "../../services/storageService";
@@ -20,6 +22,7 @@ export default () => {
                 {Object.values(allInventory).map((inventoryItem: InventoryItem) => (
                     <div >
                         <button onClick={e => currentGameEngine.takesAnObject(inventoryItem.id)}> Take item</button>
+                        <button onClick={e => sendEvent(AvailableEvents.displayObject,inventoryItem.id)}>Look at item</button>
                         <ObjectQrCode objectId={inventoryItem.id} />
                     </div>
                 ))}

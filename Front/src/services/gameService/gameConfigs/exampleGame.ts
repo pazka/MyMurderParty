@@ -71,7 +71,7 @@ export const FULL_INVENTORY: Inventory = {
             },
             result: {
                 displayVariation: "GOLDKEY_KEY.ASSITANT",
-                popUpMessage: { message: "Your talents reveal something to the object", variant: "info" }
+                notifyMessage: { message: "Your talents reveal something to the object", variant: "info" }
             }
         }],
         useActions: [],

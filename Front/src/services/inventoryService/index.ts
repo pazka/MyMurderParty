@@ -4,7 +4,6 @@ import { emitUpdateObjects } from "../socketService/emits";
 import { setGlobaState, getGlobalState, useGlobalStorage } from "../storageService";
 import { getCurrentGameConfig } from "../gameService";
 
-
 export const getFullInventory = (): Inventory => {
     return {...getCurrentGameConfig().FULL_INVENTORY};
 };

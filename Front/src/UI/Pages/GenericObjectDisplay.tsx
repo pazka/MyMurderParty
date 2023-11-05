@@ -7,47 +7,52 @@ import { useState } from "react"
 import { useEvent } from "../../services/eventsService"
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
 import { getItemWithPossibleVariation } from "../../services/inventoryService"
+import { getCurrentRoom } from "../../services/roomService"
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
-    const [objectId, setObjectId] = useState<string | null>()
-    const currentRoom = storage.currentRoom as Room
+    const [objectToDisplay, setObjectToDisplay] = useState<InventoryItem | null>(null)
+    const currentRoom = getCurrentRoom()
     const currentGameEngine = getCurrentGameEngine()
 
+    const handleDisplayObjectFromId =(objectId : string)=>{
+        if (!objectId) {
+            return null
+        }
+    
+        if (!currentRoom) {
+            enqueueSnackbar("No Room to display", { variant: "error" })
+            return null
+        }
+    
+        let object: InventoryItem | null = currentGameEngine.getObjectForCharacter(objectId)
+        if(object)
+            object = getItemWithPossibleVariation(object)
+
+        setObjectToDisplay(object)
+    }
+
     useEvent(AvailableEvents.displayObject, (objectId: string) => {
-        setObjectId(objectId)
+        handleDisplayObjectFromId(objectId)
     })
 
-    if (!objectId) {
+    if (!objectToDisplay) {
         return null
     }
-
-    if (!currentRoom) {
-        enqueueSnackbar("No Room to display", { variant: "error" })
-        return null
-    }
-
-    let object: InventoryItem | null = currentGameEngine.getObjectForCharacter(objectId)
-
-    if (!object) {
-        return <p>Nothing</p>
-    }
-
-    object = getItemWithPossibleVariation(object)
 
     return <div>
-        <h1>{object.name}</h1>
+        <h1>{objectToDisplay.name}</h1>
 
-        <Markdown>{object.description}</Markdown>
+        <Markdown>{objectToDisplay.description}</Markdown>
 
-        {object.canBeTaken && <button onClick={() => {
-            currentGameEngine.takesAnObject(objectId)
+        {objectToDisplay.canBeTaken && <button onClick={() => {
+            currentGameEngine.takesAnObject(objectToDisplay.id)
         }}>Take Object</button>}
 
-        {object.canBeShared && <button onClick={() => {
-            currentGameEngine.shareAnObject(objectId)
+        {objectToDisplay.canBeShared && <button onClick={() => {
+            currentGameEngine.shareAnObject(objectToDisplay.id)
         }}>Share the Object</button>}
 
-        <button onClick={x => setObjectId(null)}>Close</button>
+        <button onClick={x => setObjectToDisplay(null)}>Close</button>
     </div>
 }

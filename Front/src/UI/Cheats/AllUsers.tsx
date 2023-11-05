@@ -3,11 +3,14 @@ import { useGlobalStorage } from "../../services/storageService"
 import { emitLogin } from "../../services/socketService/emits"
 import { useStateWithDep } from "../../services/utils"
 import { login, logout } from "../../services/userService"
+import { getCurrentCharacter } from "../../services/characterService"
+import Markdown from "react-markdown"
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
-    const [user, setUser] = useStateWithDep<User>(storage.currentUser)
+    const [currentUser, setUser] = useStateWithDep<User | null>(storage.currentUser)
     const [time, setTime] = useState(Date.now())
+    const currentCharacter = getCurrentCharacter()
 
     useEffect(() => {
         const interval = setInterval(() => setTime(Date.now()), 1000);
@@ -18,7 +21,8 @@ export default () => {
     }, [])
 
     const handleLogin = async () => {
-        login(user)
+        if (!currentUser) return;
+        login(currentUser)
     }
 
     const handleLogout = () => {
@@ -54,10 +58,14 @@ export default () => {
             </div>
             <h3>current user</h3>
             <div>
-                {JSON.stringify(storage.currentUser)}
+                <p>{currentUser?.name}</p>
+                <p>{currentCharacter?.name ?? "<No character>"}</p>
+                {currentCharacter && <Markdown>{currentCharacter.scenario.public}</Markdown>}
+                private scenario : 
+                {currentCharacter && <Markdown>{currentCharacter.scenario.private}</Markdown>}
             </div>
             <div>
-                <input type="text" value={user?.name ?? ""} onChange={e => setUser({ ...user ?? {}, name: e.target.value })} />
+                <input type="text" value={currentUser?.name ?? ""} onChange={e => setUser({ ...currentUser ?? {}, name: e.target.value })} />
                 <button onClick={handleLogin}>Login</button>
                 <button onClick={handleLogout}>Logout</button>
             </div>

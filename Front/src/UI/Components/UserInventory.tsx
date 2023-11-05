@@ -14,7 +14,8 @@ export default () => {
                 {inventory.map((inventoryItem) => (
                     <li >
                         {inventoryItem.id}
-                        <button onClick={x => currentGameEngine.shareAnObject(inventoryItem.id)}>Share</button>
+                        {inventoryItem.isOpenForTaking && <button onClick={x => currentGameEngine.stopSharingAnObject(inventoryItem.id)}>Stop Sharing</button>}
+                        {!inventoryItem.isOpenForTaking && <button onClick={x => currentGameEngine.shareAnObject(inventoryItem.id)}>Share</button>}
                         <button onClick={x => sendEvent(AvailableEvents.displayObject, inventoryItem.id)}>Look</button>
                     </li>
                 ))}
