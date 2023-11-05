@@ -59,3 +59,4 @@ export const TROMBINOSCOPE: Trombinoscope = {
 
 export const GAME_NAME = "Tutorial Game"
 
+export const GAME_DESCRIPTION = "This is a tutorial game. It's purpose is to show you how to create a game."

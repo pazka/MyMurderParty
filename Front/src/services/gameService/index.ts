@@ -1,24 +1,30 @@
 import allGameConfigs from './gameConfigs/';
+import allEngines from './gameEngines';
 
-let _currentGameConfig : GameConfig = allGameConfigs['Tutorial Game'];
+let _currentGameConfig: GameConfig = allGameConfigs['Tutorial Game'];
+const _currentGameEngine: GameEngine = allEngines['default'];
 
-export function setCurrentGameConfig(gameConfig : GameConfig){
+export const setCurrentGameConfig = (gameConfig: GameConfig) => {
     _currentGameConfig = gameConfig;
 }
-export function selectCurrentGameConfigByName(gameConfigName : string){
+export const selectCurrentGameConfigByName = (gameConfigName: string) => {
     const newGameConfig = (allGameConfigs as any)[gameConfigName];
 
-    if(!newGameConfig){
+    if (!newGameConfig) {
         throw new Error(`Game config ${gameConfigName} not found`);
     }
 
     _currentGameConfig = newGameConfig;
 }
 
-export function getCurrentGameConfig() : GameConfig{
+export const getCurrentGameConfig = (): GameConfig => {
     return _currentGameConfig;
 }
 
-export function getAllGamesNames() : string[]{
+export const getAllGamesNames = (): string[] => {
     return Object.keys(allGameConfigs);
+}
+
+export const getCurrentGameEngine = (): GameEngine => {
+    return _currentGameEngine;
 }

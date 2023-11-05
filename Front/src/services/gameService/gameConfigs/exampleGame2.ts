@@ -19,3 +19,5 @@ export const TROMBINOSCOPE: Trombinoscope = {
 
 export const GAME_NAME = "Tutorial Game 2"
 
+
+export const GAME_DESCRIPTION = "testrs"

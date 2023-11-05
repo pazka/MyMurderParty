@@ -4,6 +4,15 @@ type GameConfig = {
     FULL_INVENTORY: Inventory;
     TROMBINOSCOPE: Trombinoscope;
     GAME_NAME: string;
+    GAME_DESCRIPTION: string;
+}
+
+interface GameEngine {
+    seeAnObject: (object: InventoryItem, Character : Character) => void;
+    takesAnObject: (object: InventoryItem, Character : Character) => void;
+    shareAnObject: (object: InventoryItem, Character : Character) => void;
+    combineObjects: (objects: InventoryItem[], Character : Character) => void;
+    ENGINE_NAME: string;
 }
 
 interface User {
