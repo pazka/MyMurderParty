@@ -30,7 +30,8 @@ export const createNewRoom = async (newRoom: NewRoom): Promise<Room> => {
     createdRoom = {
         ...createdRoom,
         users: {},
-        objects: {}
+        objects: {},
+        characters: {},
     }
 
     RoomCRUD.update(createdRoom);
@@ -137,4 +138,9 @@ export const userLeaveAllRooms = async (userId: string): Promise<void> => {
         }
         notifyRoomUpdate(getIo(), room.id);
     });
+}
+
+export const deleteRoom = async (roomId: string): Promise<void> => {
+    RoomCRUD.delete(roomId);
+    broadcastAllRooms();
 }

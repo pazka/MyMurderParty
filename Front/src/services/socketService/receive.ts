@@ -38,6 +38,10 @@ export default (socket: Socket) => {
         setGlobaState(storage);
     })
 
+    socket.on("room-deleted", ({ by: User }: { by: User }) => {
+        enqueueSnackbar("Room deleted by " + User.name, { variant: "info" });
+    })
+
     socket.on("error", (message: string) => {
         if (message) {
             enqueueSnackbar(message, { variant: "error" });

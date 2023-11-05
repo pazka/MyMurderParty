@@ -21,7 +21,11 @@ export const emitJoinRoom = async (roomId: string, password: string) => {
 }
 
 export const emitChooseCharacter = async (roomId: string, characterId: string) => {
-    (await getSocket()).emit("choose-character", {roomId, characterId });
+    (await getSocket()).emit("choose-character", { roomId, characterId });
+}
+
+export const emitDeleteRoom = async (roomId: string, password: string) => {
+    (await getSocket()).emit("delete-room", { roomId, password });
 }
 
 export const emitLeaveRoom = async (roomId: string) => {
@@ -29,13 +33,13 @@ export const emitLeaveRoom = async (roomId: string) => {
 }
 
 export const emitUpdateObjects = async (objects: ObjectsInRoom) => {
-    if(!isUserInARoom()) return;
+    if (!isUserInARoom()) return;
     const roomId = getCurrentRoom()?.id;
     (await getSocket()).emit("update-room-objects", { objects, roomId });
 }
 
 export const emitBroadcastTextToRoom = async (text: string) => {
-    if(!isUserInARoom()) return;
+    if (!isUserInARoom()) return;
     const roomId = getCurrentRoom()?.id;
     (await getSocket()).emit("broadcast-to-room", { message: text, roomId });
 }

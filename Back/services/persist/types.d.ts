@@ -13,6 +13,7 @@ interface AppDatabaseEntity extends NewAppDatabaseEntity {
 interface NewRoom extends NewAppDatabaseEntity {
     name: string;
     password: string;
+    gameConfigName: string;
 }
 
 interface Room extends NewRoom, AppDatabaseEntity {

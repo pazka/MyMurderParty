@@ -87,6 +87,27 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
         io.to(data.roomId).emit('broadcast-from-room', { sender: user, data });
         notifyRoomUpdate(io, data.roomId);
     })
+
+    userSocket.on('delete-room', async (data: { roomId: string, password: string }) => {
+        pingUser(user.id);
+        if (!await ensureRoomExistOrError(data.roomId, userSocket)) return;
+
+        const room: Room = RoomCRUD.read(data.roomId);
+        if (room.password !== data.password) {
+            userSocket.emit('error', "Wrong password");
+            return;
+        }
+
+        io.to(data.roomId).emit('room-deleted', { by: user });
+        
+        //make all user who joined room leave 
+        Object.keys(room.users).forEach(userId => {
+            userLeaveRoom(data.roomId, userId);
+        });
+
+        RoomCRUD.delete(data.roomId);
+        broadcastAllRooms();
+    })
 }
 
 export const notifyRoomUpdate = async (io: Server, roomId: string) => {
@@ -97,6 +118,7 @@ export const notifyRoomUpdate = async (io: Server, roomId: string) => {
     io.to(roomId).emit('update-room-users', users);
     broadcastAllRooms();
 }
+
 export const resetRoomForUser = async (userSocket: Socket) => {
     userSocket.emit('update-room', null);
     userSocket.emit('update-room-users', []);
