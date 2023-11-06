@@ -43,3 +43,9 @@ export const emitBroadcastTextToRoom = async (text: string) => {
     const roomId = getCurrentRoom()?.id;
     (await getSocket()).emit("broadcast-to-room", { message: text, roomId });
 }
+
+export const emitBroadcastEndOfGameToRoom = async (endOfGameResults: EndOfGameResult[]) => {
+    if (!isUserInARoom()) return;
+    const roomId = getCurrentRoom()?.id;
+    (await getSocket()).emit("broadcast-to-room", {endOfGameResults,roomId});
+}

@@ -1,10 +1,11 @@
 import { useState } from "react"
 import QrCodeReader from "../Components/QrCodeReader"
 import { TestPage } from "./TestPage"
-import { sendEvent } from "../../services/eventsService"
-import { getCurrentGameConfig } from "../../services/gameService"
+import { sendEvent, useEvent } from "../../services/eventsService"
+import { getCurrentGameConfig, getCurrentGameEngine } from "../../services/gameService"
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
 import GenericObjectDisplay from "./GenericObjectDisplay"
+import { getCurrentCharacter } from "../../services/characterService"
 
 export default () => {
     const [isQrOpen, setIsQrOpen] = useState(false)
@@ -13,6 +14,10 @@ export default () => {
         setIsQrOpen(false)
         sendEvent(AvailableEvents.displayObject, objectId)
     }
+
+    useEvent(AvailableEvents.endOfGame, (endOfGameResults: EndOfGameResult[]) => {
+        getCurrentGameEngine().executeEndOfGame(endOfGameResults)
+    })
 
     return (
         <div>

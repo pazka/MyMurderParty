@@ -13,6 +13,7 @@ interface GameEngine {
     shareAnObject: (objectId: string) => void;
     stopSharingAnObject: (objectId: string) => void;
     useObjects: (objects: InventoryItem[]) => void;
+    executeEndOfGame: (endOfGameResults : EndOfGameResult[]) => void;
     ENGINE_NAME: string;
 }
 

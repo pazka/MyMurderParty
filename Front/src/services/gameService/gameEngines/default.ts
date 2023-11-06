@@ -4,9 +4,11 @@ import { getCurrentRoom } from "../../roomService"
 import { getCurrentGameConfig } from ".."
 import { getCurrentUser } from "../../userService"
 import { addItemToInventory, addItemsToInventory, getFullInventory, getRoomObjectOrInventoryObject, getUserInventory, updateObjectsInRoom, updateOneObjectInRoom } from "../../inventoryService"
-import { emitBroadcastTextToRoom, emitUpdateObjects } from "../../socketService/emits"
+import { emitBroadcastEndOfGameToRoom, emitBroadcastTextToRoom, emitUpdateObjects } from "../../socketService/emits"
 import { sendEvent } from "../../eventsService"
 import { AvailableEvents } from "../../eventsService/allAvailableEvents"
+import { subscribe } from "diagnostics_channel"
+import { CharactersTypes } from "../gameConfigs/exampleGame"
 
 const validateALookAction = (action: LookAction): boolean => {
     const currentCharacter = getCurrentCharacter()
@@ -97,11 +99,7 @@ const executeAnAction = (action: ActionResult, currentObject: InventoryItem): In
     }
 
     if (action.triggerEndOfGame) {
-        for (const endOfGameResult of action.triggerEndOfGame) {
-            if (endOfGameResult.caractersTypeId.includes(getCurrentCharacter()?.type ?? "")) {
-                //TODO : trigger end of game
-            }
-        }
+        emitBroadcastEndOfGameToRoom(action.triggerEndOfGame)
     }
 
     return currentObject
@@ -289,6 +287,22 @@ const useObjects = (objects: InventoryItem[]): void => {
     return;
 }
 
+const executeEndOfGame = (endOfGameResults: EndOfGameResult[]): void => {
+    const currentRoom = getCurrentRoom()
+    if (!currentRoom) return;
+
+    const currentUser = getCurrentUser()
+    const currentCharacter = getCurrentCharacter()
+    const currentGameConfig = getCurrentGameConfig()
+    const currentType = currentCharacter?.type ?? CharactersTypes.NORMAL
+
+    for (const endOfGameResult of endOfGameResults) {
+        if(endOfGameResult.caractersTypeId.includes(currentType)){
+            sendEvent(AvailableEvents.displayPopUp, endOfGameResult.popUpMessage)
+        }
+    }
+}
+
 
 const ENGINE_NAME = "default"
 
@@ -298,6 +312,7 @@ const gameEngine: GameEngine = {
     shareAnObject,
     stopSharingAnObject,
     useObjects,
+    executeEndOfGame,
     ENGINE_NAME
 }
 

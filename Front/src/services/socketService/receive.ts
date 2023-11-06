@@ -2,6 +2,8 @@ import { getGlobalState, setGlobaState } from "../storageService";
 import { enqueueSnackbar } from 'notistack'
 import { Socket } from "socket.io-client"
 import { updateCurrentRoom } from "../roomService";
+import { sendEvent } from "../eventsService";
+import { AvailableEvents } from "../eventsService/allAvailableEvents";
 
 
 export default (socket: Socket) => {
@@ -51,6 +53,10 @@ export default (socket: Socket) => {
     socket.on("broadcast-from-room", ({ sender, data }: { sender: User, data: any }) => {
         if (data.message) {
             enqueueSnackbar(data.message, { variant: data.variant ?? "info" });
+        }
+
+        if(data.endOfGameResults){
+            sendEvent(AvailableEvents.endOfGame, data.endOfGameResults)
         }
     })
 }
