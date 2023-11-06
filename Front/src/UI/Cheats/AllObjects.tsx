@@ -5,7 +5,7 @@ import { addItemToInventory, getFullInventory } from "../../services/inventorySe
 import { resetStorage, useGlobalStorage } from "../../services/storageService";
 import ObjectQrCode from "../Components/ObjectQrCode";
 
-export default () => {
+export default ({readonly}:{readonly : boolean}) => {
     const [storage, setStorage] = useGlobalStorage()
     const allInventory = getFullInventory();
     const currentGameEngine = getCurrentGameEngine();
@@ -21,9 +21,9 @@ export default () => {
             }}>
                 {Object.values(allInventory).map((inventoryItem: InventoryItem) => (
                     <div >
-                        <button onClick={e => currentGameEngine.takesAnObject(inventoryItem.id)}> Take item</button>
-                        <button onClick={e => sendEvent(AvailableEvents.displayObject,inventoryItem.id)}>Look at item</button>
-                        <ObjectQrCode objectId={inventoryItem.id} />
+                        {!readonly && <button onClick={e => currentGameEngine.takesAnObject(inventoryItem.id)}> Take item</button>}
+                        {!readonly && <button onClick={e => sendEvent(AvailableEvents.displayObject,inventoryItem.id)}>Look at item</button>}
+                        <ObjectQrCode objectId={inventoryItem.id} name={inventoryItem.name}/>
                     </div>
                 ))}
             </div>

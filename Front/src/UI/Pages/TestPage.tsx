@@ -11,7 +11,7 @@ export const TestPage = () => {
         <AllUsers />
         <AllRooms />
         <UserInventory />
-        <AllObjects />
+        <AllObjects readonly/>
         <AllCharacters />
     </div>
 }

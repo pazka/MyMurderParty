@@ -6,7 +6,7 @@ import Markdown from "react-markdown"
 import { useState } from "react"
 import { useEvent } from "../../services/eventsService"
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
-import { getItemWithPossibleVariation } from "../../services/inventoryService"
+import { getItemWithPossibleVariation, getUserInventory, getUserInventoryFromRoom } from "../../services/inventoryService"
 import { getCurrentRoom } from "../../services/roomService"
 
 export default () => {
@@ -14,6 +14,7 @@ export default () => {
     const [objectToDisplay, setObjectToDisplay] = useState<InventoryItem | null>(null)
     const currentRoom = getCurrentRoom()
     const currentGameEngine = getCurrentGameEngine()
+    const userInventory = getUserInventory()
 
     const handleDisplayObjectFromId =(objectId : string)=>{
         if (!objectId) {
@@ -52,6 +53,23 @@ export default () => {
         {objectToDisplay.canBeShared && <button onClick={() => {
             currentGameEngine.shareAnObject(objectToDisplay.id)
         }}>Share the Object</button>}
+
+        {objectToDisplay.canBeUsed && <button onClick={() => {
+            currentGameEngine.useObjects([objectToDisplay])
+        }}>Use the Object</button>}
+
+        <div>
+            {userInventory.map((inventoryItem) => {
+                if (inventoryItem.id === objectToDisplay.id) {
+                    return null
+                }
+
+                return <button onClick={() => {
+                    currentGameEngine.useObjects([objectToDisplay, inventoryItem])
+                }}>{inventoryItem.name}</button>
+            
+            })}
+        </div>
 
         <button onClick={x => setObjectToDisplay(null)}>Close</button>
     </div>
