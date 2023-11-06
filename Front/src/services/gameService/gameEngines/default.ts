@@ -3,7 +3,7 @@ import { getCurrentCharacter } from "../../characterService"
 import { getCurrentRoom } from "../../roomService"
 import { getCurrentGameConfig } from ".."
 import { getCurrentUser } from "../../userService"
-import { addItemToInventory, addItemsToInventory, getFullInventory, getRoomObjectOrInventoryObject, getUserInventory, updateObjectsInRoom, updateOneObjectInRoom } from "../../inventoryService"
+import { addItemToInventory, addItemsToInventory, getFullInventory, getFullyProcessedItem, getRoomObjectOrInventoryObject, getUserInventory, updateObjectsInRoom, updateOneObjectInRoom } from "../../inventoryService"
 import { emitBroadcastEndOfGameToRoom, emitBroadcastTextToRoom, emitUpdateObjects } from "../../socketService/emits"
 import { sendEvent } from "../../eventsService"
 import { AvailableEvents } from "../../eventsService/allAvailableEvents"
@@ -27,25 +27,25 @@ const validateALookAction = (action: LookAction): boolean => {
 const validateAnUseAction = (action: UseAction, objectIds: string[]): boolean => {
     const currentCharacter = getCurrentCharacter()
 
-    if (!action.conditions.needsOneOfCharacterId.includes(currentCharacter?.id ?? "")) {
+    if (action.conditions.needsOneOfCharacterId.length > 0 && !action.conditions.needsOneOfCharacterId.includes(currentCharacter?.id ?? "")) {
         return false
     }
 
-    if (!action.conditions.needsOneOfCharacterType.includes(currentCharacter?.type ?? "")) {
+    if (action.conditions.needsOneOfCharacterType.length > 0 && !action.conditions.needsOneOfCharacterType.includes(currentCharacter?.type ?? "")) {
         return false
     }
 
-    if (!action.conditions.needsOneOfObjectsId.some(id => objectIds.includes(id))) {
+    if (action.conditions.needsOneOfObjectsId.length > 0 && !action.conditions.needsOneOfObjectsId.some(id => objectIds.includes(id))) {
         return false
     }
 
     return true
 }
 
-const executeAnAction = (action: ActionResult, currentObject: InventoryItem): InventoryItem => {
+const executeAnAction = (action: ActionResult, currentObject: InventoryItem, noMessage: boolean): InventoryItem => {
     if (!currentObject) {
-       enqueueSnackbar("Can't execute an object action on no object, this is a bug 😖", { variant: "error" })
-       return currentObject;
+        enqueueSnackbar("Can't execute an object action on no object, this is a bug 😖", { variant: "error" })
+        return currentObject;
     }
 
     if (action.displayVariationId) {
@@ -62,25 +62,25 @@ const executeAnAction = (action: ActionResult, currentObject: InventoryItem): In
         for (const objectId of action.deleteItemIds) {
             currentObjects[objectId].isDeleted = true
         }
-        enqueueSnackbar(`${deletedObjects.map(o=>o.name).join(', ')} were deleted, please remove the tags`, { variant: "info" })
+        !noMessage && enqueueSnackbar(`${deletedObjects.map(o => o.name).join(', ')} were deleted, please remove the tags`, { variant: "info" })
         updateObjectsInRoom(currentObjects)
     }
 
     if (action.replaceByItemId) {
-        if(!getFullInventory()[action.replaceByItemId]){
-            enqueueSnackbar("The new object dosen't exist, probably a bad Id, this is a bug 😖", { variant: "error" })
+        if (!getFullInventory()[action.replaceByItemId]) {
+            !noMessage && enqueueSnackbar("The new object dosen't exist, probably a bad Id, this is a bug 😖", { variant: "error" })
             return currentObject;
         }
         const newObject = getFullInventory()[action.replaceByItemId]
-        enqueueSnackbar(`${currentObject.name} has been replaced by ${newObject.name}`, { variant: "info" })
+        !noMessage && enqueueSnackbar(`${currentObject.name} has been replaced by ${newObject.name}`, { variant: "info" })
         currentObject.replacedById = action.replaceByItemId
         updateOneObjectInRoom(currentObject)
     }
 
     if (action.giveItemIds) {
-        const objectsToAdd : InventoryItem[]= []
+        const objectsToAdd: InventoryItem[] = []
         for (const objectId of action.giveItemIds) {
-            enqueueSnackbar(`You received ${getFullInventory()[objectId].name}`, { variant: "success" })
+            !noMessage && enqueueSnackbar(`You received ${getFullInventory()[objectId].name}`, { variant: "success" })
             objectsToAdd.push(getRoomObjectOrInventoryObject(objectId))
         }
         addItemsToInventory(objectsToAdd)
@@ -91,7 +91,7 @@ const executeAnAction = (action: ActionResult, currentObject: InventoryItem): In
     }
 
     if (action.notifyMessage) {
-        enqueueSnackbar(action.notifyMessage.message, { variant: action.notifyMessage.variant })
+        !noMessage && enqueueSnackbar(action.notifyMessage.message, { variant: action.notifyMessage.variant })
     }
 
     if (action.broadcastMessage) {
@@ -105,9 +105,7 @@ const executeAnAction = (action: ActionResult, currentObject: InventoryItem): In
     return currentObject
 }
 
-
-
-const getObjectForCharacter = (objectId: string): InventoryItem | null => {
+const getObjectForCharacter = (objectId: string, noMessage: boolean = false): InventoryItem | null => {
     const currentRoom = getCurrentRoom()
     const currentUser = getCurrentUser()
     const currentCharacter = getCurrentCharacter()
@@ -116,17 +114,23 @@ const getObjectForCharacter = (objectId: string): InventoryItem | null => {
     let currentObject = getRoomObjectOrInventoryObject(objectId);
 
     if (!currentObject) {
-        enqueueSnackbar("No Object to diplay for you", { variant: "error" })
+        if (!noMessage) {
+            enqueueSnackbar("No Object to diplay for you", { variant: "error" })
+        }
         return null;
     }
 
-    if(currentObject.isDeleted){
-        enqueueSnackbar("This object has been deleted, you shouldn't be able to look at it, please throw away the paper tag", { variant: "error" })
+    if (currentObject.isDeleted) {
+        if (!noMessage) {
+            enqueueSnackbar("This object has been deleted, you shouldn't be able to look at it, please throw away the paper tag", { variant: "error" })
+        }
         return null;
     }
 
     if (currentObject.ownerId && currentObject.ownerId !== currentUser?.id && !currentObject.isOpenForTaking) {
-        enqueueSnackbar("You shouldn't be able to look at this object. It has already been taken and is not shared by someone, please throw away the paper tag from the room", { variant: "error" })
+        if (!noMessage) {
+            enqueueSnackbar("You shouldn't be able to look at this object. It has already been taken and is not shared by someone, please throw away the paper tag from the room", { variant: "error" })
+        }
         return null;
     }
 
@@ -137,13 +141,13 @@ const getObjectForCharacter = (objectId: string): InventoryItem | null => {
     }
 
     //add lookAction analysis for this object
-    const appliableLookActionResults = currentObject.lookActions.filter(validateALookAction).map(lookAction => lookAction.result)
+    const appliableLookActionResults = currentObject.lookActions.filter(validateALookAction).map(lookAction => lookAction.results).flat()
     console.log("ENGINE : appliableLookActionResults", appliableLookActionResults)
 
     delete currentObject.currentVariationKey
 
     for (const lookActionResult of appliableLookActionResults) {
-        currentObject = executeAnAction(lookActionResult,currentObject)
+        currentObject = executeAnAction(lookActionResult, currentObject, noMessage)
     }
 
     return currentObject;
@@ -167,8 +171,8 @@ const takesAnObject = (objectId: string): void => {
         enqueueSnackbar("No Object to take", { variant: "error" })
         return;
     }
-    
-    if(currentObject.isDeleted){
+
+    if (currentObject.isDeleted) {
         enqueueSnackbar("This object has been deleted, you shouldn't be able to look at it, please throw away the paper tag", { variant: "error" })
         return;
     }
@@ -202,8 +206,8 @@ const shareAnObject = (objectId: string): void => {
         enqueueSnackbar("No Object to share", { variant: "error" })
         return;
     }
-    
-    if(currentObject.isDeleted){
+
+    if (currentObject.isDeleted) {
         enqueueSnackbar("This object has been deleted, you shouldn't be able to look at it, please throw away the paper tag", { variant: "error" })
         return;
     }
@@ -226,8 +230,8 @@ const stopSharingAnObject = (objectId: string): void => {
         enqueueSnackbar("No Object to stop sharing", { variant: "error" })
         return;
     }
-    
-    if(currentObject.isDeleted){
+
+    if (currentObject.isDeleted) {
         enqueueSnackbar("This object has been deleted, you shouldn't be able to look at it, please throw away the paper tag", { variant: "error" })
         return;
     }
@@ -235,6 +239,38 @@ const stopSharingAnObject = (objectId: string): void => {
     currentObject.isOpenForTaking = false;
 
     updateOneObjectInRoom(currentObject)
+}
+
+export const isObjectUsableAlone = (objectId: string): boolean => {
+    const object = getFullyProcessedItem(objectId, true);
+    if (!object) return false;
+
+    //check if an action is possible without any other object and if the current caracter can do it
+    if (!object.useActions) return false;
+
+    const useActions = object.useActions.filter((useAction) => validateAnUseAction(useAction, []))
+
+    if (useActions.length === 0) return false;
+
+    const useActionWithNoObjectNeeded = useActions.find((useAction) => {
+        return useAction.conditions.needsOneOfObjectsId.length === 0
+    })
+
+    return useActionWithNoObjectNeeded ? true : false;
+}
+
+
+export const isObjectUsableWithAnotherObject = (objectId: string): boolean => {
+    const object = getObjectForCharacter(objectId, true);
+    if (!object) return false;
+
+    //check if an action is possible with another object and if the current caracter can do it
+    if (!object.useActions) return false;
+
+    const useActionsWithObjects = object.useActions.filter((useAction) => useAction.conditions.needsOneOfObjectsId.length > 0)
+    if (useActionsWithObjects.length === 0) return false;
+
+    return true;
 }
 
 const useObjects = (objects: InventoryItem[]): void => {
@@ -245,10 +281,8 @@ const useObjects = (objects: InventoryItem[]): void => {
     const currentCharacter = getCurrentCharacter()
     const currentGameConfig = getCurrentGameConfig()
 
-    const objectsOfActionModifiedByRoom = objects.map(o => getRoomObjectOrInventoryObject(o.id))
-    
-    if(objects.some(o=>o.isDeleted)){
-        const deletedObjects = objects.filter(o=>o.isDeleted).map(o=>o.name).join(", ")
+    if (objects.some(o => o.isDeleted)) {
+        const deletedObjects = objects.filter(o => o.isDeleted).map(o => o.name).join(", ")
         enqueueSnackbar(`Those objects [${deletedObjects}] has been deleted, you shouldn't be able to look at them, please throw away the paper tag`, { variant: "error" })
         return;
     }
@@ -256,16 +290,17 @@ const useObjects = (objects: InventoryItem[]): void => {
     const objectsWithResults: ({
         object: InventoryItem;
         results: ActionResult[];
-    })[] = objectsOfActionModifiedByRoom.map(o => {
-        const appliableUseActions = o
+    })[] = objects.map(o => {
+        const applicableUseActions = o
             .useActions
-            .filter(a => validateAnUseAction(a, objectsOfActionModifiedByRoom.map(o => o.id)))
-            .map(a => a.result)
+            .filter(a => validateAnUseAction(a, objects.map(o => o.id)))
+            .map(a => a.results).flat()
 
-        if (appliableUseActions.length === 0) {
-            return { object: o, results: appliableUseActions }
+        if (applicableUseActions.length === 0) {
+            return null;
         }
-        return null;
+
+        return { object: o, results: applicableUseActions }
     }).filter(x => x != null) as ({
         object: InventoryItem;
         results: ActionResult[];
@@ -280,7 +315,7 @@ const useObjects = (objects: InventoryItem[]): void => {
 
     for (const objectWithResults of objectsWithResults) {
         for (const useActionResult of objectWithResults.results) {
-            executeAnAction(useActionResult, objectWithResults.object)
+            executeAnAction(useActionResult, objectWithResults.object, false)
         }
     }
 
@@ -297,7 +332,7 @@ const executeEndOfGame = (endOfGameResults: EndOfGameResult[]): void => {
     const currentType = currentCharacter?.type ?? CharactersTypes.NORMAL
 
     for (const endOfGameResult of endOfGameResults) {
-        if(endOfGameResult.caractersTypeId.includes(currentType)){
+        if (endOfGameResult.caractersTypeId.includes(currentType)) {
             sendEvent(AvailableEvents.displayPopUp, endOfGameResult.popUpMessage)
         }
     }
@@ -312,6 +347,8 @@ const gameEngine: GameEngine = {
     shareAnObject,
     stopSharingAnObject,
     useObjects,
+    isObjectUsableAlone,
+    isObjectUsableWithAnotherObject,
     executeEndOfGame,
     ENGINE_NAME
 }

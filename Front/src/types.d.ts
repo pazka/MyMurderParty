@@ -8,11 +8,13 @@ type GameConfig = {
 }
 
 interface GameEngine {
-    getObjectForCharacter: (objectId: string) => InventoryItem | null;
+    getObjectForCharacter: (objectId: string,noMessage : boolean) => InventoryItem | null;
     takesAnObject: (objectId: string) => void;
     shareAnObject: (objectId: string) => void;
     stopSharingAnObject: (objectId: string) => void;
     useObjects: (objects: InventoryItem[]) => void;
+    isObjectUsableAlone: (objectId: string) => boolean;
+    isObjectUsableWithAnotherObject: (objectId: string) => boolean;
     executeEndOfGame: (endOfGameResults : EndOfGameResult[]) => void;
     ENGINE_NAME: string;
 }
@@ -83,7 +85,7 @@ interface LookAction {
         needsOneOfCharacterType: string[],
         needsOneOfObjectsId: string[]
     },
-    result: ActionResult
+    results: ActionResult[]
 }
 
 interface UseAction {
@@ -92,7 +94,7 @@ interface UseAction {
         needsOneOfCharacterType: string[],
         needsOneOfObjectsId: string[]
     },
-    result: ActionResult
+    results: ActionResult[]
 }
 
 interface ActionResult {

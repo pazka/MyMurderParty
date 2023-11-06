@@ -2,13 +2,15 @@ import { useState } from "react"
 import QrCodeReader from "../Components/QrCodeReader"
 import { TestPage } from "./TestPage"
 import { sendEvent, useEvent } from "../../services/eventsService"
-import { getCurrentGameConfig, getCurrentGameEngine } from "../../services/gameService"
+import { getCurrentGameConfig, getCurrentGameEngine, useGameEngine } from "../../services/gameService"
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
 import GenericObjectDisplay from "./GenericObjectDisplay"
 import { getCurrentCharacter } from "../../services/characterService"
+import ObjectCombinator from "./ObjectCombinator"
 
 export default () => {
     const [isQrOpen, setIsQrOpen] = useState(false)
+    const currentGameEngine = useGameEngine()
 
     const handleObjectScanned = (objectId: string) => {
         setIsQrOpen(false)
@@ -16,7 +18,7 @@ export default () => {
     }
 
     useEvent(AvailableEvents.endOfGame, (endOfGameResults: EndOfGameResult[]) => {
-        getCurrentGameEngine().executeEndOfGame(endOfGameResults)
+        currentGameEngine.executeEndOfGame(endOfGameResults)
     })
 
     return (
@@ -29,6 +31,7 @@ export default () => {
             }} />}
             <hr />
             <GenericObjectDisplay />
+            <ObjectCombinator />
 
             <TestPage />
         </div>

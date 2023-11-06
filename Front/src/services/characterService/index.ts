@@ -1,10 +1,22 @@
+import { useEffect, useState } from 'react';
 import { getCurrentGameConfig } from '../gameService';
 import { isUserInARoom } from '../roomService';
 import { emitChooseCharacter } from '../socketService/emits';
-import { getGlobalState, setGlobaState } from '../storageService';
+import { getGlobalState, setGlobaState, useGlobalStorage } from '../storageService';
 
 export const getAllCharacters = (): Trombinoscope => {
     return getCurrentGameConfig().TROMBINOSCOPE;
+}
+
+export const useGameConfig = () :GameConfig=> {
+    const [storage] = useGlobalStorage();
+    const [gameConfig,setGameConfig] = useState<GameConfig>(getCurrentGameConfig());
+
+    useEffect(() => {
+        setGameConfig(getCurrentGameConfig());
+    }, [storage.currentRoom?.gameConfigName])
+
+    return gameConfig;
 }
 
 export const getCharacterById = (id: string): Character | null => {

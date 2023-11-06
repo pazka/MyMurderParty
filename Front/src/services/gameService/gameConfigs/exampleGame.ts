@@ -46,11 +46,22 @@ export const FULL_INVENTORY: Inventory = {
                 needsOneOfCharacterType: [],
                 needsOneOfObjectsId: []
             },
-            result: {
+            results: [{
                 displayVariationId: "SILVER_KEY.ASSITANT"
-            }
+            }]
         }],
-        useActions: [],
+        useActions: [
+            {
+                conditions: {
+                    needsOneOfCharacterId: [],
+                    needsOneOfCharacterType: [],
+                    needsOneOfObjectsId: []
+                },
+                results: [{
+                    notifyMessage: { message: "The key scream ??!?", variant: "magic" }
+                }]
+            }
+        ],
     },
     "Gold Key": {
         id: "Gold Key",
@@ -69,10 +80,10 @@ export const FULL_INVENTORY: Inventory = {
                 needsOneOfCharacterType: [],
                 needsOneOfObjectsId: []
             },
-            result: {
+            results: [{
                 displayVariationId: "GOLDKEY_KEY.ASSITANT",
                 notifyMessage: { message: "Your talents reveal something to the object", variant: "info" }
-            }
+            }]
         }],
         useActions: [],
     },
@@ -90,10 +101,10 @@ export const FULL_INVENTORY: Inventory = {
                 needsOneOfCharacterType: [],
                 needsOneOfObjectsId: ["Silver Key", "Gold Key"]
             },
-            result: {
+            results: [{
                 replaceByItemId: "ChestOpen",
                 giveItemIds: ["Gold Key"]
-            }
+            }]
         }],
     },
     "ChestOpen": {
@@ -121,14 +132,14 @@ export const FULL_INVENTORY: Inventory = {
                 needsOneOfCharacterType: [],
                 needsOneOfObjectsId: ["Gold Key"]
             },
-            result: {
+            results: [{
                 replaceByItemId: "DoorOpen",
-            }
+            }]
         }],
     },
     "DoorOpen": {
         description: "This door is unlocked",
-        id: "Door",
+        id: "DoorOpen",
         name: "Opened Door",
         canBeTaken: false,
         canBeUsed: true,
@@ -140,7 +151,7 @@ export const FULL_INVENTORY: Inventory = {
                 needsOneOfCharacterType: [CharactersTypes.NORMAL],
                 needsOneOfObjectsId: []
             },
-            result: {
+            results: [{
                 triggerEndOfGame: [
                     {
                         caractersTypeId: [CharactersTypes.SCIENTIST],
@@ -153,14 +164,14 @@ export const FULL_INVENTORY: Inventory = {
                         popUpMessage: { message: "Normal have won !", variant: "success" }
                     }
                 ],
-            }
+            }]
         }, {
             conditions: {
                 needsOneOfCharacterId: [],
                 needsOneOfCharacterType: [CharactersTypes.SCIENTIST],
                 needsOneOfObjectsId: []
             },
-            result: {
+            results: [{
                 triggerEndOfGame: [
                     {
                         caractersTypeId: [CharactersTypes.SCIENTIST],
@@ -173,7 +184,7 @@ export const FULL_INVENTORY: Inventory = {
                         popUpMessage: { message: "You lost, scientist did !", variant: "error" }
                     }
                 ],
-            }
+            }]
         }],
     },
     "Drawer": {

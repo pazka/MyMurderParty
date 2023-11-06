@@ -2,8 +2,9 @@ import { enqueueSnackbar } from "notistack";
 import config from "../config";
 import { setCurrentGameConfig, selectCurrentGameConfigByName, getCurrentGameConfig, updateCurrentGameConfigFromRoom } from "../gameService";
 import restService from "../restService";
-import { getGlobalState, setGlobaState } from "../storageService";
+import { getGlobalState, setGlobaState, useGlobalStorage } from "../storageService";
 import { getUserInventoryFromRoom } from "../inventoryService";
+import { useEffect, useState } from "react";
 
 export const fetchAllRooms = async () => {
     const response = await restService(config.host + "/rooms");
@@ -38,6 +39,17 @@ export const isUserInARoom = (): boolean => {
 export const getCurrentRoom = (): Room | null => {
     const currentRoom = getGlobalState().currentRoom;
     return currentRoom;
+}
+
+export const useCurrentRoom = (): Room | null => {
+    const [storage] = useGlobalStorage();
+    const [room, setRoom] = useState<Room | null>(null);
+
+    useEffect(() => {
+        setRoom(storage.currentRoom);
+    }, [storage.currentRoom])
+
+    return room;
 }
 
 export const updateCurrentRoom = (room: Room | null) => {

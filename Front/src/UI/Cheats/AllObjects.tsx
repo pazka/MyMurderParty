@@ -1,6 +1,6 @@
 import { sendEvent } from "../../services/eventsService";
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents";
-import { getCurrentGameEngine } from "../../services/gameService";
+import { getCurrentGameEngine, useGameEngine } from "../../services/gameService";
 import { addItemToInventory, getFullInventory } from "../../services/inventoryService"
 import { resetStorage, useGlobalStorage } from "../../services/storageService";
 import ObjectQrCode from "../Components/ObjectQrCode";
@@ -8,7 +8,7 @@ import ObjectQrCode from "../Components/ObjectQrCode";
 export default ({readonly}:{readonly : boolean}) => {
     const [storage, setStorage] = useGlobalStorage()
     const allInventory = getFullInventory();
-    const currentGameEngine = getCurrentGameEngine();
+    const currentGameEngine = useGameEngine();
 
     return (
         <div >

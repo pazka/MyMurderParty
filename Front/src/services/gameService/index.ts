@@ -1,7 +1,8 @@
 import { enqueueSnackbar } from 'notistack';
-import { getGlobalState } from '../storageService';
+import { getGlobalState, useGlobalStorage } from '../storageService';
 import allGameConfigs from './gameConfigs/';
 import allEngines from './gameEngines';
+import { useEffect, useState } from 'react';
 
 let _currentGameConfig: GameConfig = allGameConfigs['Tutorial Game'];
 const _currentGameEngine: GameEngine = allEngines['default'];
@@ -46,4 +47,16 @@ export const getAllGamesNames = (): string[] => {
 
 export const getCurrentGameEngine = (): GameEngine => {
     return _currentGameEngine;
+}
+
+export const useGameEngine = (): GameEngine => {
+    const [storage] = useGlobalStorage();
+    const [engine,setEngine] = useState<GameEngine>(getCurrentGameEngine());
+
+    useEffect(() => {
+        setEngine(getCurrentGameEngine());
+
+    }, [storage.currentRoom?.gameConfigName])
+
+    return engine;
 }

@@ -2,7 +2,7 @@ import { enqueueSnackbar } from "notistack";
 import { getCurrentRoom, isUserInARoom } from "../roomService";
 import { emitUpdateObjects } from "../socketService/emits";
 import { setGlobaState, getGlobalState, useGlobalStorage } from "../storageService";
-import { getCurrentGameConfig } from "../gameService";
+import { getCurrentGameConfig, getCurrentGameEngine } from "../gameService";
 
 export const getFullInventory = (): Inventory => {
     return { ...getCurrentGameConfig().FULL_INVENTORY };
@@ -11,12 +11,16 @@ export const getFullInventory = (): Inventory => {
 export const identifyItem = (itemQrCode: QrCodeData): InventoryItem | null => {
     return getFullInventory()[itemQrCode] ?? null;
 };
+export const getUserInventoryFromStorage = (storage:AppStorage): InventoryItem[] => {
+    // get invntory object from localstorage
+    return storage.inventory.map((o) => getFullyProcessedItem(o.id,true)).filter(x => x) as InventoryItem[];
+}
 
 export const getUserInventory = (): InventoryItem[] => {
     // get invntory object from localstorage
 
     const state = getGlobalState();
-    return state.inventory;
+    return state.inventory.map((o) => getFullyProcessedItem(o.id,true)).filter(x => x) as InventoryItem[];
 }
 
 export const updateObjectsInRoom = (roomObjects: Inventory) => {
@@ -101,7 +105,7 @@ export const removeItemFromInventory = (item: InventoryItem) => {
 export const useInventory = (): InventoryItem[] => {
     const [storage] = useGlobalStorage();
 
-    return storage.inventory;
+    return getUserInventoryFromStorage(storage);
 }
 
 export const getItemWithPossibleVariation = (item: InventoryItem): InventoryItem => {
@@ -130,12 +134,24 @@ export const getRoomObjectOrInventoryObject = (objectId: string): InventoryItem 
     const currentRoom = getCurrentRoom()
     
     let object = getFullInventory()[objectId]
+    
     if(currentRoom?.objects[objectId]){
         object = currentRoom?.objects[objectId]
     }
-    if(object.replacedById){
+
+    if(object?.replacedById){
         object = getRoomObjectOrInventoryObject(object.replacedById)
     }
 
     return object;
+}
+
+export const getFullyProcessedItem = (objectId: string,noMessage : boolean): InventoryItem | null=> {
+    const itemForCharacter = getCurrentGameEngine().getObjectForCharacter(objectId,noMessage);
+    if(!itemForCharacter){
+        return null;
+    }
+
+    const itemWithPossibleVariation = getItemWithPossibleVariation(itemForCharacter);
+    return itemWithPossibleVariation;
 }

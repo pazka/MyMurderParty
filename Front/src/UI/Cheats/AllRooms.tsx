@@ -5,14 +5,14 @@ import RoomBroadcast from "./RoomBroadcast"
 import currentConfig from "../../services/config"
 import { emitDeleteRoom, emitJoinRoom, emitLeaveRoom, emitNewRoom } from "../../services/socketService/emits"
 import { spawn } from "child_process"
-import { getAllGamesNames, getCurrentGameEngine } from "../../services/gameService"
+import { getAllGamesNames, getCurrentGameEngine, useGameEngine } from "../../services/gameService"
 import { usersIdWithCharacterInRoom } from "../../services/characterService"
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
     const users = Object.values(storage.allUsers)
     const [newRoom, setNewRoom] = useState<Room>(getDefaultRoom())
-    const currentGameEngine = getCurrentGameEngine();
+    const currentGameEngine = useGameEngine();
     const usersWithCaracters = usersIdWithCharacterInRoom()
 
     const handleCreateRoom = () => {

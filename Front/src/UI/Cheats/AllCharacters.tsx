@@ -1,9 +1,9 @@
-import { chooseCharacter, getAllCharacters } from "../../services/characterService";
+import { chooseCharacter, getAllCharacters, useGameConfig } from "../../services/characterService";
 import { useGlobalStorage } from "../../services/storageService";
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
-    const allCharacters = getAllCharacters();
+    const allCharacters = useGameConfig().TROMBINOSCOPE;
 
     return (
         <div>
