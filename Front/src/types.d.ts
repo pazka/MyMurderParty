@@ -62,6 +62,7 @@ interface InventoryItem {
     description: string;
     canBeTaken: boolean;
     canBeUsed: boolean;
+    isDeleted?: boolean;
     canBeShared?: boolean;
     isOpenForTaking?: boolean;
     hasAlreadyBeenUsed?: boolean;
@@ -70,6 +71,7 @@ interface InventoryItem {
     variations: {
         [variation: string]: InventoryItem & any
     }
+    replacedById?: string;
     lookActions: LookAction[];
     useActions: UseAction[];
 }
@@ -93,11 +95,11 @@ interface UseAction {
 }
 
 interface ActionResult {
-    giveItems?: string[];
-    replaceByItem?: string;
-    displayVariation?: string;
-    displayItem?: string;
-    deleteItems?: string[];
+    giveItemIds?: string[];
+    replaceByItemId?: string;
+    displayVariationId?: string;
+    displayItemId?: string;
+    deleteItemIds?: string[];
     popUpMessage?: PopUpMessage;
     notifyMessage?: PopUpMessage;
     broadcastMessage?: PopUpMessage;

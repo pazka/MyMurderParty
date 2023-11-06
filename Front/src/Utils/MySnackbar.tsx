@@ -11,4 +11,4 @@ const SnackbarCloseButton : SnackbarAction = (snackbarKey: SnackbarKey ) => {
   );
 }
 
-export default ()=><SnackbarProvider maxSnack={3} action={SnackbarCloseButton} />
+export default ()=><SnackbarProvider maxSnack={5} action={SnackbarCloseButton} />

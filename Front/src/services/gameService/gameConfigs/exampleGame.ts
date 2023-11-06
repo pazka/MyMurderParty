@@ -47,7 +47,7 @@ export const FULL_INVENTORY: Inventory = {
                 needsOneOfObjectsId: []
             },
             result: {
-                displayVariation: "SILVER_KEY.ASSITANT"
+                displayVariationId: "SILVER_KEY.ASSITANT"
             }
         }],
         useActions: [],
@@ -70,7 +70,7 @@ export const FULL_INVENTORY: Inventory = {
                 needsOneOfObjectsId: []
             },
             result: {
-                displayVariation: "GOLDKEY_KEY.ASSITANT",
+                displayVariationId: "GOLDKEY_KEY.ASSITANT",
                 notifyMessage: { message: "Your talents reveal something to the object", variant: "info" }
             }
         }],
@@ -91,8 +91,8 @@ export const FULL_INVENTORY: Inventory = {
                 needsOneOfObjectsId: ["Silver Key", "Gold Key"]
             },
             result: {
-                replaceByItem: "ChestOpen",
-                giveItems: ["Gold Key"]
+                replaceByItemId: "ChestOpen",
+                giveItemIds: ["Gold Key"]
             }
         }],
     },
@@ -122,7 +122,7 @@ export const FULL_INVENTORY: Inventory = {
                 needsOneOfObjectsId: ["Gold Key"]
             },
             result: {
-                replaceByItem: "DoorOpen",
+                replaceByItemId: "DoorOpen",
             }
         }],
     },
