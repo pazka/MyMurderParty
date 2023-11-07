@@ -6,14 +6,32 @@ import AllRooms from "../Cheats/AllRooms"
 import QrCodeReader from "../Components/QrCodeReader"
 import { sendEvent } from "../../services/eventsService"
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
+import Button from "../Components/common/Button"
+import { openPopUp } from "../../services/utils"
 
+const testSendEvent = () => {
+    openPopUp({
+            message: `## test
+
+____
+another test
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget ultricies ultrices, nunc nunc aliquam nunc, vitae aliqu 
+qsdLorem ipsum dolor sit amet, **consectetur adipiscing elit**. Nullam euismod, nisl eget ultricies ultrices, nun`,
+            variant: ["info", "success", "error", "warning", "magic"][Math.floor(Math.random() * 5)],
+            confirmCallback: (x: any) => x,
+            cancelCallback: (x: any) => x,
+        }
+    )
+}
 export const TestPage = () => {
     return <div>
         <h1>Test Page</h1>
         <AllUsers />
         <AllRooms />
-        <UserInventoryObjects onObjectClick={(o:InventoryItem)=>sendEvent(AvailableEvents.displayObject,o.id)} />
-        <AllObjects readonly/>
+        <UserInventoryObjects onObjectClick={(o: InventoryItem) => sendEvent(AvailableEvents.displayObject, o.id)} />
+        <AllObjects readonly />
         <AllCharacters />
-    </div>
+        <Button onClick={testSendEvent}> Display PopUp</Button>
+    </div >
 }

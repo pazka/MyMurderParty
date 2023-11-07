@@ -9,6 +9,7 @@ import { sendEvent } from "../../eventsService"
 import { AvailableEvents } from "../../eventsService/allAvailableEvents"
 import { subscribe } from "diagnostics_channel"
 import { CharactersTypes } from "../gameConfigs/exampleGame"
+import { openPopUp } from "../../utils"
 
 const validateALookAction = (action: LookAction): boolean => {
     const currentCharacter = getCurrentCharacter()
@@ -87,7 +88,7 @@ const executeAnAction = (action: ActionResult, currentObject: InventoryItem, noM
     }
 
     if (action.popUpMessage) {
-        sendEvent(AvailableEvents.displayPopUp, action.popUpMessage)
+        openPopUp(action.popUpMessage)
     }
 
     if (action.notifyMessage) {
@@ -333,7 +334,7 @@ const executeEndOfGame = (endOfGameResults: EndOfGameResult[]): void => {
 
     for (const endOfGameResult of endOfGameResults) {
         if (endOfGameResult.caractersTypeId.includes(currentType)) {
-            sendEvent(AvailableEvents.displayPopUp, endOfGameResult.popUpMessage)
+            openPopUp(endOfGameResult.popUpMessage)
         }
     }
 }

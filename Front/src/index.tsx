@@ -5,6 +5,7 @@ import './index.scss';
 import App from './App';
 import { initSocketConnection } from './services/socketService';
 import MySnackbar from './Utils/MySnackbar';
+import PopUps from './UI/Components/PopUps';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -16,5 +17,6 @@ root.render(
   <React.StrictMode>
     <App />
     <MySnackbar />
+    <PopUps />
   </React.StrictMode>
 );

@@ -5,6 +5,7 @@ import { useStateWithDep } from "../../services/utils";
 import { enqueueSnackbar } from "notistack";
 import currentConfig from "../../services/config";
 import Button from "../Components/common/Button"
+import './QrCode.scss';
 
 export default ({ onTextRead, onClose }) => {
     const [loading, setLoading] = useState(false);

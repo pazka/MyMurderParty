@@ -118,6 +118,8 @@ interface EndOfGameResult {
 interface PopUpMessage {
     message: text,
     variant?: MessageVariants
+    confirmCallback?: (arg? : any) => void;
+    cancelCallback?: (arg? : any) => void;
 };
 
 type MessageVariant = "success" | "error" | "warning" | "info" | "magic"
