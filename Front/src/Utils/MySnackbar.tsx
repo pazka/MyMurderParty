@@ -1,13 +1,14 @@
 
 import { SnackbarAction, SnackbarKey, SnackbarProvider, useSnackbar } from 'notistack';
+import Button from '../UI/Components/common/Button';
 
 const SnackbarCloseButton : SnackbarAction = (snackbarKey: SnackbarKey ) => {
   const { closeSnackbar } = useSnackbar();
 
   return (
-    <button onClick={() => closeSnackbar(snackbarKey)}>
+    <Button onClick={() => closeSnackbar(snackbarKey)}>
       close
-    </button>
+    </Button>
   );
 }
 

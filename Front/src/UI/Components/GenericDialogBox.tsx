@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useEvent } from "../../services/eventsService"
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
 import Markdown from "react-markdown"
+import Button from "./common/Button"
 
 export default () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -20,7 +21,7 @@ export default () => {
         <div className={"dialog-box-backdrop"}></div>
         <div className={`dialog-box-content background-${variant}`}>
             <Markdown>{message}</Markdown>
-            <button onClick={x => setIsOpen(false)}>Close</button>
+            <Button onClick={x => setIsOpen(false)}>Close</Button>
         </div>
     </div>
 }

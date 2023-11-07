@@ -7,6 +7,7 @@ import { emitDeleteRoom, emitJoinRoom, emitLeaveRoom, emitNewRoom } from "../../
 import { spawn } from "child_process"
 import { getAllGamesNames, getCurrentGameEngine, useGameEngine } from "../../services/gameService"
 import { usersIdWithCharacterInRoom } from "../../services/characterService"
+import Button from "../Components/common/Button"
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
@@ -44,12 +45,12 @@ export default () => {
                     ))}
                 </select>
 
-                <button onClick={handleCreateRoom}>Create Room</button>
+                <Button onClick={handleCreateRoom}>Create Room</Button>
             </div>
             <div>
                 {Object.values(storage.allRooms).map((room) => (
                     <div key={room.id} style={{ border: "solid 1px black" }}>
-                        <p><b>{room.name}:</b>{room.id} <button onClick={handleJoinRoom(room)}>Join</button> <button onClick={x => handleDeleteRoom(room)}> delete</button></p>
+                        <p><b>{room.name}:</b>{room.id} <Button onClick={handleJoinRoom(room)}>Join</Button> <Button onClick={x => handleDeleteRoom(room)}> delete</Button></p>
                         <p>currentGame : {room.gameConfigName}</p>
                         <ul>
                             {Object.values(room.users).map((user) => (
@@ -61,7 +62,7 @@ export default () => {
                 }
             </div >
             <div>
-                <h2>Current Room <button onClick={handleLeaveRoom}>Leave</button></h2>
+                <h2>Current Room <Button onClick={handleLeaveRoom}>Leave</Button></h2>
                 {storage.currentRoom && <div>
                     <p><b>{storage.currentRoom.name}:</b>{storage.currentRoom.id}</p>
                     <ul>
@@ -74,7 +75,7 @@ export default () => {
                         {Object.values(storage.currentRoom.objects).map((item) => (
                             <li key={item.id}>
                                 {item.name}
-                                <button onClick={x => currentGameEngine.takesAnObject(item.id)}> Take </button >
+                                <Button onClick={x => currentGameEngine.takesAnObject(item.id)}> Take </Button >
                                 {item.isOpenForTaking ? "canTake" : ""}
                             </li>
                         ))}

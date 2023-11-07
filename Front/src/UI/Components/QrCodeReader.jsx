@@ -4,6 +4,7 @@ import { withErrorCaught } from "../../Utils/WithErrorCaught";
 import { useStateWithDep } from "../../services/utils";
 import { enqueueSnackbar } from "notistack";
 import currentConfig from "../../services/config";
+import Button from "../Components/common/Button"
 
 export default ({ onTextRead, onClose }) => {
     const [loading, setLoading] = useState(false);
@@ -24,10 +25,10 @@ export default ({ onTextRead, onClose }) => {
         return (
             <>
                 <div className="qrreader-wrapper">
-                    <button className="qrreader-close" onClick={x => {
+                    <Button className="qrreader-close" onClick={x => {
                         console.log("putain");
                         onClose && onClose()
-                    }}>X</button>
+                    }}>X</Button>
                     {loading && <div>Loading...</div>}
                     <div className="qrreader-body">
                         <div className="qrreader-camera">

@@ -1,5 +1,6 @@
 "use strict";
-const fs = require('fs');
+import fs from "fs";
+
 const getVersion = () => {
     const versionTxt = fs.readFileSync('./version.txt');
     const version = versionTxt.toString();

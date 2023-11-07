@@ -1,0 +1,43 @@
+@font-face {
+  font-family: 'handwriting';
+  src: url('./fonts/Caveat/Caveat-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 1 999;
+}
+
+@font-face {
+  font-family: 'typewriter';
+  src: url('./fonts/Piazzolla/Piazzolla-VariableFont_opsz,wght.ttf') format('truetype');
+  font-weight: 1 999;
+}
+
+@font-face {
+  font-family: 'impact';
+  src: url('./fonts/Tilt_Warp/TiltWarp-Regular-VariableFont_XROT,YROT.ttf') format('truetype');
+  font-weight: 1 999;
+}
+
+p {
+  font-family: 'handwriting';
+  font-size: 1.5rem;
+}
+
+span,
+ul,
+li {
+  font-family: 'handwriting';
+  font-size: 1.5rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'typewriter';
+}
+
+button {
+  font-family: 'impact';
+  font-weight: bolder;
+}

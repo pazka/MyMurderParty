@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './fonts.scss';
 import './index.scss';
 import App from './App';
 import { initSocketConnection } from './services/socketService';

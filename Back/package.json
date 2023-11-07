@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "copy-files": "cross-env cp *.txt ./dist/",
-    "build:major": "cross-env node version.js 0 && npm run build",
-    "build:minor": "cross-env node version.js 1 && npm run build",
-    "build:fix": "cross-env node version.js 2 && npm  run build",
+    "build:major": "cross-env node version.mjs 0 && npm run build",
+    "build:minor": "cross-env node version.mjs 1 && npm run build",
+    "build:fix": "cross-env node version.mjs 2 && npm  run build",
     "build": "cross-env npx tsc && npm run copy-files",
     "start": "node dist/index.js",
     "dev": "nodemon index.ts"

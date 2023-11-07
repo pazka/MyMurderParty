@@ -7,6 +7,7 @@ import { AvailableEvents } from "../../services/eventsService/allAvailableEvents
 import GenericObjectDisplay from "./GenericObjectDisplay"
 import { getCurrentCharacter } from "../../services/characterService"
 import ObjectCombinator from "./ObjectCombinator"
+import Button from "../Components/common/Button"
 
 export default () => {
     const [isQrOpen, setIsQrOpen] = useState(false)
@@ -25,7 +26,7 @@ export default () => {
         <div>
             <h1>Game Page</h1>
 
-            <button onClick={x => setIsQrOpen(true)}>Identify Objet</button>
+            <Button onClick={x => setIsQrOpen(true)}>Identify Objet</Button>
             {isQrOpen && <QrCodeReader onTextRead={handleObjectScanned} onClose={() => {
                 setIsQrOpen(false)
             }} />}

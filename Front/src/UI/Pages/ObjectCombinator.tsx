@@ -4,6 +4,7 @@ import { useGlobalStorage } from "../../services/storageService"
 import { useEvent } from "../../services/eventsService"
 import { getCurrentGameEngine, useGameEngine } from "../../services/gameService"
 import { getUserInventory, useInventory } from "../../services/inventoryService"
+import Button from "../Components/common/Button"
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
@@ -49,10 +50,10 @@ export default () => {
                 return null
             }
 
-            return <button onClick={() => {
+            return <Button onClick={() => {
                 currentGameEngine.useObjects([objectToDisplay, inventoryItemToCombine])
-            }}>{inventoryItem.name}</button>
+            }}>{inventoryItem.name}</Button>
         })}
-        <button onClick={handleClosePanel}>Close</button>
+        <Button onClick={handleClosePanel}>Close</Button>
     </div>
 }

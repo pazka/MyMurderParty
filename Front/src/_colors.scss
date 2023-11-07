@@ -1,0 +1,39 @@
+
+@function toRgb($color) {
+    $red : red($color);
+    $green : green($color);
+    $blue : blue($color);
+
+    @return rgb($red, $green, $blue);
+}
+
+$color-text-light: rgb(0, 0, 0);
+$color-text-dark: rgb(255,255,255);
+
+$color-primary: #390099;
+$color-primary-dark: toRgb(darken($color-primary, 20%));
+$color-primary-light: toRgb(lighten($color-primary, 20%));
+
+$color-secondary: #9E0059;
+$color-secondary-dark: toRgb(darken($color-secondary, 20%));
+$color-secondary-light: toRgb(lighten($color-secondary, 20%));
+
+$color-success: #ffbc42;
+$color-success-dark: toRgb(darken($color-success, 20%));
+$color-success-light: toRgb(lighten($color-success, 20%));
+
+$color-error: #FF0054;
+$color-error-dark: toRgb(darken($color-error, 20%));
+$color-error-light: toRgb(lighten($color-error, 20%));
+
+$color-warning: #93e1d8;
+$color-warning-dark: toRgb(darken($color-warning, 20%));
+$color-warning-light: toRgb(lighten($color-warning, 20%));
+
+$color-info: #bde0fe;
+$color-info-dark: toRgb(darken($color-info, 20%));
+$color-info-light: toRgb(lighten($color-info, 20%));
+
+$color-magic: #ff758f;
+$color-magic-dark: toRgb(darken($color-magic, 20%));
+$color-magic-light: toRgb(lighten($color-magic, 20%));

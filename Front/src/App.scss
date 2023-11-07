@@ -1,15 +1,5 @@
 // declare color based on SUCCESS,ERROR,WARNING,INFO
-
-$color-success: #28a745;
-$color-success-dark: #1e7e34;
-$color-error: #dc3545;
-$color-error-dark: #701a23;
-$color-warning: #ffc107;
-$color-warning-dark: #8d6a01;
-$color-info: #17a2b8;
-$color-info-dark: #0a4e58;
-$color-magic: #9f20be;
-$color-magic-dark: #440544;
+@import './colors';
 
 .background-success {
     background-color: $color-success;
@@ -101,6 +91,6 @@ $color-magic-dark: #440544;
         cursor: pointer;
     }
     & > *:hover {
-        background-color: #e6e6e6;
+        background-color: $color-warning;
     }
 }

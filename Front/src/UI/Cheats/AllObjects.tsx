@@ -3,7 +3,8 @@ import { AvailableEvents } from "../../services/eventsService/allAvailableEvents
 import { getCurrentGameEngine, useGameEngine } from "../../services/gameService";
 import { addItemToInventory, getFullInventory } from "../../services/inventoryService"
 import { resetStorage, useGlobalStorage } from "../../services/storageService";
-import ObjectQrCode from "../Components/ObjectQrCode";
+import ObjectQrCode from "../Components/common/ObjectQrCode";
+import Button from "../Components/common/Button";
 
 export default ({readonly}:{readonly : boolean}) => {
     const [storage, setStorage] = useGlobalStorage()
@@ -13,7 +14,7 @@ export default ({readonly}:{readonly : boolean}) => {
     return (
         <div >
             <h1>All objects</h1>
-            <button onClick={x => resetStorage()}>Reset storage</button>
+            <Button onClick={x => resetStorage()}>Reset storage</Button>
             <div style={{
                 width: "100%",
                 display: "flex",
@@ -21,8 +22,8 @@ export default ({readonly}:{readonly : boolean}) => {
             }}>
                 {Object.values(allInventory).map((inventoryItem: InventoryItem) => (
                     <div >
-                        {!readonly && <button onClick={e => currentGameEngine.takesAnObject(inventoryItem.id)}> Take item</button>}
-                        {!readonly && <button onClick={e => sendEvent(AvailableEvents.displayObject,inventoryItem.id)}>Look at item</button>}
+                        {!readonly && <Button onClick={e => currentGameEngine.takesAnObject(inventoryItem.id)}> Take item</Button>}
+                        {!readonly && <Button onClick={e => sendEvent(AvailableEvents.displayObject,inventoryItem.id)}>Look at item</Button>}
                         <ObjectQrCode objectId={inventoryItem.id} name={inventoryItem.name}/>
                     </div>
                 ))}

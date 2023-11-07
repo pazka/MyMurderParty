@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 export const getVersion = () => {
     const versionTxt = fs.readFileSync('./version.txt')
@@ -22,6 +22,6 @@ export const increaseVersion = (level) => {
 }
 
 //if executed as main script, increase version patch
-if (require.main === module) {
+if (this === undefined) {
     increaseVersion(process.argv[2] || 2);
 }
