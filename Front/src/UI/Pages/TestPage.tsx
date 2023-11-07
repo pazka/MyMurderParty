@@ -8,6 +8,7 @@ import { sendEvent } from "../../services/eventsService"
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
 import Button from "../Components/common/Button"
 import { openPopUp } from "../../services/utils"
+import { enqueueSnackbar } from "notistack"
 
 const testSendEvent = () => {
     openPopUp({
@@ -24,6 +25,11 @@ qsdLorem ipsum dolor sit amet, **consectetur adipiscing elit**. Nullam euismod, 
         }
     )
 }
+
+const testNotistack = () => {
+    enqueueSnackbar("test", { variant: ["info", "success", "error", "warning"][Math.floor(Math.random() * 4)] as any })
+}
+
 export const TestPage = () => {
     return <div>
         <h1>Test Page</h1>
@@ -33,5 +39,6 @@ export const TestPage = () => {
         <AllObjects readonly />
         <AllCharacters />
         <Button onClick={testSendEvent}> Display PopUp</Button>
+        <Button onClick={testNotistack}> Display Notistack</Button>
     </div >
 }

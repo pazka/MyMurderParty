@@ -1,35 +1,48 @@
 @import '../../colors';
 
 .primary {
-    background-color: $color-background;
+    background: linear-gradient($color-background,$color-background-light);
     border-color: $color-background-dark;
 }
 
 .success {
-    background-color: $color-success;
+    background: linear-gradient($color-success,$color-success-light);
     border-color: $color-success-dark;
 }
 
 .error {
-    background-color: $color-error;
+    background: linear-gradient($color-error,$color-error-light);
     border-color: $color-error-dark;
 }
 
 .warning {
-    background-color: $color-warning;
+    background: linear-gradient($color-warning-light,$color-warning);
     border-color: $color-warning-dark;
 }
 
 .info {
-    background-color: $color-info;
+    background: linear-gradient($color-info,$color-info-light);
     border-color: $color-info-dark;
 }
 
 .magic {
-    background-color: $color-magic;
+    background: linear-gradient($color-magic, $color-magic-light);
     border-color: $color-magic-dark;
 }
 
+.dialog-box-icon-wrapper{
+    width: 0px;
+    height: 0px;
+}
+
+.dialog-box-icon-content{
+    //sjould be display at the top left corner
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 3%;
+    font-size: larger;
+}
 
 .dialog-box-wrapper {
     z-index: 1000;

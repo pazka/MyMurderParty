@@ -21,6 +21,16 @@ export default () => {
         })
     }
 
+    const icons: { [variant: string]: string } = {
+        "success": "✅",
+        "error": "❌",
+        "info": "🔎",
+        "warning": "⚠️",
+        "magic": "✨",
+        "primary": "",
+        "secondary": "",
+    }
+
     if (Object.keys(openedPopUps).length == 0) return null
 
     return <>
@@ -29,6 +39,11 @@ export default () => {
                 <div className={"dialog-box-wrapper"}>
                     <div className={"dialog-box-backdrop"}></div>
                     <div className={`dialog-box-body ${popUpMessage.variant}`}>
+                    <div className="dialog-box-icon-wrapper">
+                        <div className="dialog-box-icon-content">
+                            <span>{icons[popUpMessage.variant] ?? ""}</span>
+                        </div>
+                    </div>
                         <div className={`dialog-box-content`}>
                             <Markdown>{popUpMessage.message}</Markdown>
                         </div>
@@ -38,7 +53,8 @@ export default () => {
                             {popUpMessage.confirmCallback && <Button variant="primary" onClick={x => { handleClosePopUp(id); popUpMessage.confirmCallback?.() }}>Confirm</Button>}
                         </div>
                     </div>
-                </div>))
+                </div >
+            ))
         }
     </>
 }
