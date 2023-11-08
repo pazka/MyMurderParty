@@ -8,7 +8,7 @@ import { useGameEngine } from '../../services/gameService';
 import { getFullyProcessedItem, getItemWithPossibleVariation, useInventory } from '../../services/inventoryService';
 import { useCurrentRoom } from '../../services/roomService';
 import { useGlobalStorage } from '../../services/storageService';
-import Button from "../Components/common/Button"
+
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
@@ -46,26 +46,26 @@ export default () => {
 
         <Markdown>{objectToDisplay.description}</Markdown>
 
-        {objectToDisplay.canBeTaken && <Button onClick={() => {
+        {objectToDisplay.canBeTaken && <button onClick={() => {
             sendEvent(AvailableEvents.displayObject,null)
             currentGameEngine.takesAnObject(objectToDisplay.id)
-        }}>Take Object</Button>}
+        }}>Take Object</button>}
 
-        {objectToDisplay.canBeShared && <Button onClick={() => {
+        {objectToDisplay.canBeShared && <button onClick={() => {
             sendEvent(AvailableEvents.displayObject,null)
             currentGameEngine.shareAnObject(objectToDisplay.id)
-        }}>Share the Object</Button>}
+        }}>Share the Object</button>}
 
-        {currentGameEngine.isObjectUsableAlone(objectToDisplay.id) && <Button onClick={() => {
+        {currentGameEngine.isObjectUsableAlone(objectToDisplay.id) && <button onClick={() => {
             sendEvent(AvailableEvents.displayObject,null)
             currentGameEngine.useObjects([objectToDisplay])
-        }}>Use the Object</Button>}
+        }}>Use the Object</button>}
 
-        {currentGameEngine.isObjectUsableWithAnotherObject(objectToDisplay.id)  && <Button onClick={() => {
+        {currentGameEngine.isObjectUsableWithAnotherObject(objectToDisplay.id)  && <button onClick={() => {
             sendEvent(AvailableEvents.displayObject,null)
             sendEvent(AvailableEvents.displayUsePanel, objectToDisplay.id)
-        }}>Use with something else</Button>}
+        }}>Use with something else</button>}
 
-        <Button onClick={x => setObjectToDisplay(null)}>Close</Button>
+        <button onClick={x => setObjectToDisplay(null)}>Close</button>
     </div>
 }

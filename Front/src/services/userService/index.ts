@@ -25,7 +25,7 @@ export const getAllUsers = (): User[] => {
 }
 export const login = async  (user : User) => {
     const storage = getGlobalState();
-    setGlobaState({ ...storage, currentUser: user })
+   // setGlobaState({ ...storage, currentUser: user })
     emitLogin(user)
 }
 

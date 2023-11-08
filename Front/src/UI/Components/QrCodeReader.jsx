@@ -4,7 +4,7 @@ import { withErrorCaught } from "../../Utils/WithErrorCaught";
 import { useStateWithDep } from "../../services/utils";
 import { enqueueSnackbar } from "notistack";
 import currentConfig from "../../services/config";
-import Button from "../Components/common/Button"
+
 import './QrCode.scss';
 
 export default ({ onTextRead, onClose }) => {
@@ -26,10 +26,10 @@ export default ({ onTextRead, onClose }) => {
         return (
             <>
                 <div className="qrreader-wrapper">
-                    <Button className="qrreader-close" onClick={x => {
+                    <button className="qrreader-close" onClick={x => {
                         console.log("putain");
                         onClose && onClose()
-                    }}>X</Button>
+                    }}>X</button>
                     {loading && <div>Loading...</div>}
                     <div className="qrreader-body">
                         <div className="qrreader-camera">

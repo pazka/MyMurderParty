@@ -6,7 +6,7 @@ import AllRooms from "../Cheats/AllRooms"
 import QrCodeReader from "../Components/QrCodeReader"
 import { sendEvent } from "../../services/eventsService"
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
-import Button from "../Components/common/Button"
+
 import { openPopUp } from "../../services/utils"
 import { enqueueSnackbar } from "notistack"
 
@@ -38,7 +38,7 @@ export const TestPage = () => {
         <UserInventoryObjects onObjectClick={(o: InventoryItem) => sendEvent(AvailableEvents.displayObject, o.id)} />
         <AllObjects readonly />
         <AllCharacters />
-        <Button onClick={testSendEvent}> Display PopUp</Button>
-        <Button onClick={testNotistack}> Display Notistack</Button>
+        <button onClick={testSendEvent}> Display PopUp</button>
+        <button onClick={testNotistack}> Display Notistack</button>
     </div >
 }

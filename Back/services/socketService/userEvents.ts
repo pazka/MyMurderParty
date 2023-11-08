@@ -16,8 +16,8 @@ export default async (userSocket: Socket, io: Server) => {
     //case user already has a session but hasn't logged in yet
     if (currentUser) {
         setupUserRoomEvents(currentUser, userSocket, io);
-        pingUser(currentUser.id);
         userSocket.emit('you-are', currentUser);
+        pingUser(currentUser.id);
     }
 
     broadcastAllClients();
@@ -52,6 +52,7 @@ export default async (userSocket: Socket, io: Server) => {
             setupUserRoomEvents(currentUser, userSocket, io);
 
             io.emit('new-user', currentUser);
+            userSocket.emit('you-are', currentUser);
             broadcastAllClients()
         });
     });

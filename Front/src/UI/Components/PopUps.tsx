@@ -1,10 +1,11 @@
+import '../Components/PopUps.scss';
 
-import { useEvent } from "../../services/eventsService"
-import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
-import Markdown from "react-markdown"
-import Button from "./common/Button"
-import '../Components/PopUps.scss'
-import { useState } from "react"
+import { useState } from 'react';
+import Markdown from 'react-markdown';
+
+import { useEvent } from '../../services/eventsService';
+import { AvailableEvents } from '../../services/eventsService/allAvailableEvents';
+
 
 export default () => {
     const [openedPopUps, setOpenedPopUps] = useState<{ [id: string]: PopUpMessage }>({})
@@ -48,9 +49,9 @@ export default () => {
                             <Markdown>{popUpMessage.message}</Markdown>
                         </div>
                         <div className={`dialog-box-actions`}>
-                            {!popUpMessage.cancelCallback && <Button variant="primary" onClick={x => handleClosePopUp(id)}>Close</Button>}
-                            {popUpMessage.cancelCallback && <Button variant="secondary" onClick={x => { handleClosePopUp(id); popUpMessage.cancelCallback?.() }}>Cancel</Button>}
-                            {popUpMessage.confirmCallback && <Button variant="primary" onClick={x => { handleClosePopUp(id); popUpMessage.confirmCallback?.() }}>Confirm</Button>}
+                            {!popUpMessage.cancelCallback && <button  onClick={x => handleClosePopUp(id)}>Close</button>}
+                            {popUpMessage.cancelCallback && <button className="secondary" onClick={x => { handleClosePopUp(id); popUpMessage.cancelCallback?.() }}>Cancel</button>}
+                            {popUpMessage.confirmCallback && <button  onClick={x => { handleClosePopUp(id); popUpMessage.confirmCallback?.() }}>Confirm</button>}
                         </div>
                     </div>
                 </div >

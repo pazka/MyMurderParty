@@ -5,7 +5,7 @@ import { useStateWithDep } from "../../services/utils"
 import { login, logout } from "../../services/userService"
 import { getCurrentCharacter } from "../../services/characterService"
 import Markdown from "react-markdown"
-import Button from "../Components/common/Button"
+
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
@@ -67,8 +67,8 @@ export default () => {
             </div>
             <div>
                 <input type="text" value={currentUser?.name ?? ""} onChange={e => setUser({ ...currentUser ?? {}, name: e.target.value })} />
-                <Button onClick={handleLogin}>Login</Button>
-                <Button onClick={handleLogout}>Logout</Button>
+                <button onClick={handleLogin}>Login</button>
+                <button onClick={handleLogout}>Logout</button>
             </div>
         </div>
     )

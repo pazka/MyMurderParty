@@ -54,5 +54,6 @@ export const deleteUser = async (userId: string): Promise<void> => {
 }
 
 export const generateId = (): string => {
+    //3 MAJ letters + 1 dash + 3 numbers
     return Array(4).fill(0).map(x=>Math.random().toString(36).substring(2, 5)).join('-');
 }

@@ -1,0 +1,93 @@
+@import 'colors';
+
+$primary-color: $color-primary;
+$primary-color-dark: $color-primary-dark;
+$primary-color-light: $color-primary-light;
+$primary-text-color: $color-text-dark;
+
+$secondary-color: $color-secondary;
+$secondary-color-dark: $color-secondary-dark;
+$secondary-color-light: $color-secondary-light;
+$secondary-text-color: $color-text-dark;
+
+input[type=text],
+select,
+textarea {
+	appearance: none;
+	border: none;
+	outline: none;
+	border-bottom: .2em solid $primary-color;
+	background: rgba($primary-color, .2);
+	border-radius: .2em .2em 0 0;
+	padding: .4em 1em;
+	width: auto;
+	min-width: 50%;
+	max-width: 100%;
+	color: $primary-color-dark;
+	font-size: large;
+
+	&::placeholder {
+		color: $primary-color-dark;
+	}
+}
+
+select,
+textarea {
+
+}
+
+
+
+button {
+	background-image: none;
+	border-radius: 4px;
+	box-sizing: border-box;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	margin: 0 5px 10px 0;
+	overflow: visible;
+	padding: 12px 40px;
+	text-align: center;
+	text-transform: none;
+	touch-action: manipulation;
+	user-select: none;
+	-webkit-user-select: none;
+	vertical-align: middle;
+	white-space: nowrap;
+
+	background-size: 200% 100%;
+	background-position: 100% 0;
+	transition: all 0.2s ease-in-out;
+
+	&:hover {
+		background-position: 0 0;
+		transition: all 0.2s ease-in-out;
+	}
+
+	background-image: linear-gradient(to left, $primary-color-light, $primary-color-dark);
+	background-color: $primary-color;
+	border: 1px solid $primary-color;
+	box-shadow: $primary-color-dark 4px 4px 0 0,
+	$primary-color 4px 4px 0 1px;
+	color: $primary-text-color;
+
+	&.secondary {
+		background-image: linear-gradient(to left, $secondary-color-light, $secondary-color-dark);
+		background-color: $secondary-color;
+		border: 1px solid $secondary-color;
+		box-shadow: $secondary-color-dark 4px 4px 0 0, $secondary-color 4px 4px 0 1px;
+		color: $secondary-text-color;
+	}
+}
+
+button:disabled{
+	background-image: none;
+	background-color: $color-disabled;
+	border: 1px solid $color-disabled;
+	box-shadow: $color-disabled-dark 4px 4px 0 0;
+	color: $color-text-light;
+	transition: all 0.2s ease-in-out;
+}
