@@ -6,6 +6,8 @@ import App from './App';
 import { initSocketConnection } from './services/socketService';
 import MySnackbar from './Utils/MySnackbar';
 import PopUps from './UI/Components/PopUps';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,8 +17,12 @@ const root = ReactDOM.createRoot(
 initSocketConnection()
 root.render(
   <React.StrictMode>
-    <App />
-    <MySnackbar />
-    <PopUps />
+    <BrowserRouter>
+      <div className='app-root'>
+        <App />
+      </div>
+      <MySnackbar />
+      <PopUps />
+    </BrowserRouter>
   </React.StrictMode>
 );

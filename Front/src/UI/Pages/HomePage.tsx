@@ -1,7 +1,9 @@
+import { useGlobalStorage } from "../../services/storageService"
+
 export default () => {
-    return (
-        <div>
-            <h1>Home Page</h1>
-        </div>
-    )
+    const [storage] = useGlobalStorage()
+    
+    return <div>
+        Hello I'm home page
+    </div>
 }
