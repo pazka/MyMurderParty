@@ -46,3 +46,10 @@ button {
   font-family: 'impact';
   font-weight: bolder;
 }
+
+.small-text{
+    width: 5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
