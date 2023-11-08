@@ -7,7 +7,7 @@ import { getAllGamesNames } from '../../services/gameService';
 import { getDefaultRoom } from '../../services/roomService';
 import { emitDeleteRoom, emitJoinRoom, emitLeaveRoom, emitNewRoomAndJoin } from '../../services/socketService/emits';
 import { useGlobalStorage } from '../../services/storageService';
-import Select from '../Components/common/Select';
+import Select from '../Components/Common/Select';
 import { logout } from '../../services/userService';
 
 export default () => {

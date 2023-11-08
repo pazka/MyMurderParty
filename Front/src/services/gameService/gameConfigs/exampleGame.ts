@@ -35,6 +35,7 @@ export const FULL_INVENTORY: Inventory = {
         description: "It can open stuff.",
         canBeTaken: true,
         canBeUsed: true,
+        toPrintIrl:true,
         variations: {
             "SILVER_KEY.ASSITANT": {
                 description: "It's bad and can only open one object"
@@ -69,6 +70,7 @@ export const FULL_INVENTORY: Inventory = {
         description: "It can open stuff.",
         canBeTaken: true,
         canBeUsed: true,
+        toPrintIrl:true,
         variations: {
             "GOLDKEY_KEY.ASSITANT": {
                 description: "It's very good and can only probably open anything"
@@ -93,6 +95,7 @@ export const FULL_INVENTORY: Inventory = {
         name: "Chest",
         canBeTaken: false,
         canBeUsed: true,
+        toPrintIrl:true,
         variations: {},
         lookActions: [],
         useActions: [{
@@ -126,6 +129,7 @@ export const FULL_INVENTORY: Inventory = {
         canBeUsed: true,
         variations: {},
         lookActions: [],
+        toPrintIrl:true,
         useActions: [{
             conditions: {
                 needsOneOfCharacterId: [],
@@ -193,6 +197,7 @@ export const FULL_INVENTORY: Inventory = {
         name: "Drawer",
         canBeTaken: false,
         canBeUsed: true,
+        toPrintIrl:true,
         variations: {},
         lookActions: [],
         useActions: [],
@@ -203,6 +208,7 @@ export const FULL_INVENTORY: Inventory = {
         name: "Example",
         canBeTaken: false,
         canBeUsed: true,
+        toPrintIrl:true,
         variations: {},
         lookActions: [],
         useActions: [],

@@ -77,6 +77,7 @@ interface InventoryItem {
     replacedById?: string;
     lookActions: LookAction[];
     useActions: UseAction[];
+    toPrintIrl?: boolean;
 }
 
 interface LookAction {

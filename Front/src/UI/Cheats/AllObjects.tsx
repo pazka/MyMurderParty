@@ -3,7 +3,7 @@ import { AvailableEvents } from "../../services/eventsService/allAvailableEvents
 import { getCurrentGameEngine, useGameEngine } from "../../services/gameService";
 import { addItemToInventory, getFullInventory } from "../../services/inventoryService"
 import { resetStorage, useGlobalStorage } from "../../services/storageService";
-import ObjectQrCode from "../Components/common/ObjectQrCode";
+import ObjectQrCode from "../Components/Common/ObjectQrCode";
 ;
 
 export default ({readonly}:{readonly : boolean}) => {

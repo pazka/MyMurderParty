@@ -1,5 +1,10 @@
+import UserInventoryObjects from "../Components/UserInventoryObjects"
+
 export default () => {
     return <div>
-        PartyRoom
+        <div>
+
+        </div>
+        <UserInventoryObjects onObjectClick={x=>x}/>
     </div>
 }

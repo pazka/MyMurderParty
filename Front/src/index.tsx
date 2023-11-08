@@ -9,6 +9,7 @@ import MySnackbar from './Utils/MySnackbar';
 import PopUps from './UI/Components/PopUps';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TestPage } from './UI/Pages/TestPage';
+import GameModeObjectsPrinting from './UI/Pages/GameModeObjectsPrinting';
 
 
 const root = ReactDOM.createRoot(
@@ -21,6 +22,8 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
+        <Route path="/objects/" element={<GameModeObjectsPrinting/>} />
+        <Route path="/objects/:gamemodeName" element={<GameModeObjectsPrinting/>} />
         <Route path="/test" element={<TestPage />} />
         <Route path="/*" element={
           <div className='app-root'>
