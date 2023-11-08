@@ -43,10 +43,10 @@ const setupUserRoomEvents = (user, userSocket, io) => {
         var _a;
         (0, userService_1.pingUser)(user.id);
         const rooms = yield (0, roomService_1.getRoomsOfUser)(user.id);
-        //check if user is in this room
+        //check if user is in this party
         const currentRoomId = (_a = rooms.find(r => r.id === data.roomId)) === null || _a === void 0 ? void 0 : _a.id;
         if (!currentRoomId) {
-            userSocket.emit('error', "You are not in this room");
+            userSocket.emit('error', "You are not in this party");
             return;
         }
         (0, roomService_1.userLeaveRoom)(data.roomId, user.id).then(() => {
@@ -63,7 +63,7 @@ const setupUserRoomEvents = (user, userSocket, io) => {
     userSocket.on('update-room-objects', (data) => __awaiter(void 0, void 0, void 0, function* () {
         (0, userService_1.pingUser)(user.id);
         if (!(yield (0, roomSocketService_1.ensureUserIsInARoom)(user.id, data.roomId, userSocket))) {
-            console.log("User is not in the room");
+            console.log("User is not in the party");
             return;
         }
         ;

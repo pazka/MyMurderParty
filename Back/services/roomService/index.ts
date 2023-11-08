@@ -39,7 +39,10 @@ export const createNewRoom = async (newRoom: NewRoom): Promise<Room> => {
 }
 
 export const getUsersInRoom = async (roomId: string): Promise<User[]> => {
-    const room: Room = RoomCRUD.read(roomId);
+    const room = RoomCRUD.read(roomId);
+    if (!room) {
+        return [];
+    }
     const allUsers = UserCRUD.readAll();
     const allUsersInRoom = allUsers.filter(u => room.users[u.id]);
     return allUsersInRoom;
@@ -48,7 +51,8 @@ export const getUsersInRoom = async (roomId: string): Promise<User[]> => {
 export const createNewRoomWithOneUser = async (newRoom: NewRoom, userId: string): Promise<Room> => {
     const room: Room = await createNewRoom(newRoom);
     //check that user exists
-    const user: User = UserCRUD.read(userId);
+    const user = UserCRUD.read(userId);
+
     if (!user) {
         throw new Error("User does not exist");
     }
@@ -61,8 +65,12 @@ export const createNewRoomWithOneUser = async (newRoom: NewRoom, userId: string)
 }
 
 export const userJoinRoom = async (roomId: string, password: string, userId: string): Promise<Room> => {
-    const room: Room = RoomCRUD.read(roomId);
-    const user: User = UserCRUD.read(userId);
+    const room = RoomCRUD.read(roomId);
+    const user = UserCRUD.read(userId);
+
+    if(!room || !user){
+        throw new Error("User or room does not exist");
+    }
 
     if (room.users[userId]) { return room; }
 
@@ -71,28 +79,32 @@ export const userJoinRoom = async (roomId: string, password: string, userId: str
         throw new Error("Wrong password");
     }
 
-    //check if there is already a user with the same name in the room
+    //check if there is already a user with the same name in the party
     const allUsersInRoom = await getUsersInRoom(roomId)
 
     if (allUsersInRoom.find(u => u.name === user.name)) {
-        throw new Error("User with same name already exists in the room");
+        throw new Error("User with same name already exists in the party");
     }
 
     room.users[userId] = user;
-    room.roomHistory.push(`${user.name} joined the room`);
+    room.roomHistory.push(`${user.name} joined the party`);
 
     RoomCRUD.update(room);
     return room;
 }
 
 export const userLeaveRoom = async (roomId: string, userId: string): Promise<void> => {
-    const room: Room = RoomCRUD.read(roomId);
-    const user: User = UserCRUD.read(userId);
+    const room = RoomCRUD.read(roomId);
+    const user = UserCRUD.read(userId);
+
+    if(!room || !user){
+        return ;
+    }
 
     if (!room.users[userId]) {
-        throw new Error("User does not exist in the room");
+        throw new Error("User does not exist in the party");
     }
-    room.roomHistory.push(`${user.name} left the room`);
+    room.roomHistory.push(`${user.name} left the party`);
     delete room.users[userId];
 
     RoomCRUD.update(room);
@@ -100,10 +112,14 @@ export const userLeaveRoom = async (roomId: string, userId: string): Promise<voi
 }
 
 export const userChoosesACharacter = async (userId: string, roomId: string, characterId: string): Promise<void> => {
-    const user: User = UserCRUD.read(userId);
-    const room: Room = RoomCRUD.read(roomId);
+    const room = RoomCRUD.read(roomId);
+    const user = UserCRUD.read(userId);
 
-    //check if user has another character in the room
+    if(!room || !user){
+        return ;
+    }
+
+    //check if user has another character in the party
     const possibleTakenCharId = Object.entries(room.characters).find(([charId, user]) => user.id === userId)?.[0];
     if (possibleTakenCharId) {
         delete room.characters[possibleTakenCharId];
@@ -119,7 +135,12 @@ export const userChoosesACharacter = async (userId: string, roomId: string, char
 }
 
 export const updateRoomObjects = async (userId: string, roomId: string, objects: any[]): Promise<void> => {
-    const room: Room = RoomCRUD.read(roomId);
+    const room = RoomCRUD.read(roomId);
+
+    if(!room){
+        return ;
+    }
+
     room.objects = objects;
     RoomCRUD.update(room);
 }
@@ -127,7 +148,7 @@ export const updateRoomObjects = async (userId: string, roomId: string, objects:
 export const userLeaveAllRooms = async (userId: string): Promise<void> => {
     const allRooms = await getAllRooms();
     allRooms.forEach(room => {
-        //check if user has another character in the room
+        //check if user has another character in the party
         const characterId = Object.entries(room.characters).find(([charId, userId]) => userId === userId)?.[0];
         if (characterId)
             delete room.characters[characterId];

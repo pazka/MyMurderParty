@@ -8,18 +8,22 @@ import { getRoomsOfUser, userChoosesACharacter, userLeaveAllRooms, userLeaveRoom
 
 export default async (userSocket: Socket, io: Server) => {
     const cookies = cookie.parse(userSocket.handshake.headers.cookie ?? "");
-    console.log('New socket connection', userSocket.id, 'from', userSocket.handshake.address, 'with', userSocket.handshake.headers['user-agent'], "sessionId?", cookies.sessionId);
+    console.log('New socket connection', userSocket.id, 'from', userSocket.handshake.address, 'with', userSocket.handshake.headers['user-agent'], "\n sessionId?", cookies.sessionId);
     resetRoomForUser(userSocket)
 
     let currentUser: User | undefined = await getUserBySessionId(cookies.sessionId);
 
     //case user already has a session but hasn't logged in yet
     if (currentUser) {
+        console.log("user exist to us, and the already set session is valid, we will set its login and sroom events")
         setupUserRoomEvents(currentUser, userSocket, io);
         userSocket.emit('you-are', currentUser);
         pingUser(currentUser.id);
+    }else{
+        console.log("user does NOT exist to us, we setup it's socket connection but not login and room events")
     }
 
+    userSocket.emit('you-are', null);
     broadcastAllClients();
     broadcastAllRooms();
     getRoomsOfUser(currentUser?.id ?? "").then((rooms) => {
@@ -36,7 +40,7 @@ export default async (userSocket: Socket, io: Server) => {
     //case user session is linked ot nothing
     userSocket.on('login', (data: NewUser) => {
         if (currentUser) {
-            userSocket.emit('error', "You are already logged in");
+            userSocket.emit('you-are', currentUser);
             return;
         }
 

@@ -12,14 +12,16 @@ export class BaseEntityORM<T extends AppDatabaseEntity & NewT, NewT extends NewA
     }
 
     create = (obj: NewT): T => {
-        const createdObj: T = { ...obj, id: "id-"+generateId()} as unknown as T;
+        const createdObj: T = { ...obj, id: generateId()} as unknown as T;
         this.entityData[createdObj.id] = createdObj;
 
         return { ...createdObj };
     }
 
-    read = (id: string): T => {
-        return { ...this.entityData[id] }
+    read = (id: string): T | null=> {
+        const obj = this.entityData[id];
+        if (!obj) return null;
+        return { ... obj}
     }
 
     readAll = (): T[] => {

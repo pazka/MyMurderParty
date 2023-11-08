@@ -69,13 +69,13 @@ const userJoinRoom = (roomId, password, userId) => __awaiter(void 0, void 0, voi
     if (room.password !== password) {
         throw new Error("Wrong password");
     }
-    //check if there is already a user with the same name in the room
+    //check if there is already a user with the same name in the party
     const allUsersInRoom = yield (0, exports.getUsersInRoom)(roomId);
     if (allUsersInRoom.find(u => u.name === user.name)) {
-        throw new Error("User with same name already exists in the room");
+        throw new Error("User with same name already exists in the party");
     }
     room.users[userId] = user;
-    room.roomHistory.push(`${user.name} joined the room`);
+    room.roomHistory.push(`${user.name} joined the party`);
     persist_1.RoomCRUD.update(room);
     return room;
 });
@@ -84,9 +84,9 @@ const userLeaveRoom = (roomId, userId) => __awaiter(void 0, void 0, void 0, func
     const room = persist_1.RoomCRUD.read(roomId);
     const user = persist_2.UserCRUD.read(userId);
     if (!room.users[userId]) {
-        throw new Error("User does not exist in the room");
+        throw new Error("User does not exist in the party");
     }
-    room.roomHistory.push(`${user.name} left the room`);
+    room.roomHistory.push(`${user.name} left the party`);
     delete room.users[userId];
     persist_1.RoomCRUD.update(room);
     persist_2.UserCRUD.update(user);
@@ -96,7 +96,7 @@ const userChoosesACharacter = (userId, roomId, characterId) => __awaiter(void 0,
     var _a;
     const user = persist_2.UserCRUD.read(userId);
     const room = persist_1.RoomCRUD.read(roomId);
-    //check if user has another character in the room
+    //check if user has another character in the party
     const possibleTakenCharId = (_a = Object.entries(room.characters).find(([charId, user]) => user.id === userId)) === null || _a === void 0 ? void 0 : _a[0];
     if (possibleTakenCharId) {
         delete room.characters[possibleTakenCharId];
@@ -119,7 +119,7 @@ const userLeaveAllRooms = (userId) => __awaiter(void 0, void 0, void 0, function
     const allRooms = yield (0, exports.getAllRooms)();
     allRooms.forEach(room => {
         var _a;
-        //check if user has another character in the room
+        //check if user has another character in the party
         const characterId = (_a = Object.entries(room.characters).find(([charId, userId]) => userId === userId)) === null || _a === void 0 ? void 0 : _a[0];
         if (characterId)
             delete room.characters[characterId];

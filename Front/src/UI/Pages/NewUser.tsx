@@ -13,21 +13,18 @@ export default () => {
     const handleLogin = (e: any) => {
         e.preventDefault()
 
-        if (!currentUser) return;
+        if (!currentUser) return false;
+
         login(currentUser)
         return;
-    }
-
-    const handleLogout = () => {
-        logout()
     }
 
     return <div className="section panel" id="new-user-from">
         <p className="clean-font">Welcome ! Who are you ?</p>
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={(e: any) => e.preventDefault()} id="createuser">
             <input id="username" type="text" placeholder='Your Name' value={currentUser?.name ?? ""} onChange={e => setUser({ ...currentUser ?? {}, name: e.target.value })} />
-            <button type='submit'>That's me !</button>
+            <button type='submit' onClick={handleLogin}>That's me !</button>
         </form>
 
 

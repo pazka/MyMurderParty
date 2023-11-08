@@ -24,7 +24,7 @@ const ensureUserIsInARoom = (userId, roomId, userSocket) => __awaiter(void 0, vo
         return false;
     }
     if (!rooms.find(r => r.id === roomId)) {
-        userSocket.emit('error', "You are not in this room");
+        userSocket.emit('error', "You are not in this party");
         return false;
     }
     return true;

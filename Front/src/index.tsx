@@ -8,6 +8,7 @@ import { initSocketConnection } from './services/socketService';
 import MySnackbar from './Utils/MySnackbar';
 import PopUps from './UI/Components/PopUps';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { TestPage } from './UI/Pages/TestPage';
 
 
 const root = ReactDOM.createRoot(
@@ -19,11 +20,16 @@ initSocketConnection()
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <div className='app-root'>
-        <App />
-      </div>
-      <MySnackbar />
-      <PopUps />
+      <Routes>
+        <Route path="/test" element={<TestPage />} />
+        <Route path="/*" element={
+          <div className='app-root'>
+            <App />
+            <MySnackbar />
+            <PopUps />
+          </div>}>
+        </Route>
+      </Routes>
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -16,6 +16,10 @@ export const emitNewRoom = async (room: Room) => {
     (await getSocket()).emit("new-room", room);
 }
 
+export const emitNewRoomAndJoin = async (room: Room) => {
+    (await getSocket()).emit("new-room-and-join", room);
+}
+
 export const emitJoinRoom = async (roomId: string, password: string) => {
     (await getSocket()).emit("join-room", { roomId, password });
 }

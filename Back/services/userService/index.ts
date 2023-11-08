@@ -27,8 +27,8 @@ export const createOrGetNewUser = async (newUser: NewUser,sessionId : string): P
     }
 }
 
-export const getUser = async (userId: string): Promise<User> => {
-    const user: User = UserCRUD.read(userId);
+export const getUser = async (userId: string): Promise<User|null> => {
+    const user = UserCRUD.read(userId);
     return user;
 }
 
@@ -43,7 +43,8 @@ export const updateUser = async (user: User): Promise<User> => {
 }
 
 export const pingUser = async (userId: string, disconnected: boolean = false): Promise<void> => {
-    const user: User = UserCRUD.read(userId);
+    const user = UserCRUD.read(userId);
+    if (!user) return;
     user.lastActivity = Date.now();
     if (disconnected) user.lastActivity = -1;
     UserCRUD.update(user);
@@ -54,6 +55,16 @@ export const deleteUser = async (userId: string): Promise<void> => {
 }
 
 export const generateId = (): string => {
-    //3 MAJ letters + 1 dash + 3 numbers
-    return Array(4).fill(0).map(x=>Math.random().toString(36).substring(2, 5)).join('-');
+    //3 CAPS letters + 1 dash + 3 numbers
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const numbers = "0123456789";
+    let id = "";
+    for (let i = 0; i < 3; i++) {
+        id += letters[Math.floor(Math.random() * letters.length)];
+    }
+    id += "-";
+    for (let i = 0; i < 3; i++) {
+        id += numbers[Math.floor(Math.random() * numbers.length)];
+    }
+    return id;
 }

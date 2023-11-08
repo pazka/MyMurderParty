@@ -17,7 +17,7 @@ export const ensureUserIsInARoom = async (userId: string,roomId : string, userSo
     }
 
     if (!rooms.find(r => r.id === roomId)) {
-        userSocket.emit('error', "You are not in this room");
+        userSocket.emit('error', "You are not in this party");
         return false;
     }
     

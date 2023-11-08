@@ -19,6 +19,27 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
         });
     })
 
+    userSocket.on('new-room-and-join', (newRoom: NewRoom) => {
+        createNewRoom(newRoom).then(async (createdRoom: Room) => {
+            console.log("New room creation : ", createdRoom);
+            broadcastAllRooms();
+            userJoinRoom(createdRoom.id, createdRoom.password, user.id).then((room: Room) => {
+                console.log("User joined room : ", room);
+
+                userSocket.join(room.id);
+
+                io.to(room.id).emit('user-joined-room', user);
+                notifyRoomUpdate(io, room.id);
+            }).catch((err: Error) => {
+                console.log(err.message);
+                userSocket.emit('error', err.message);
+            });
+        }).catch((err: Error) => {
+            console.log(err.message);
+            userSocket.emit('error', err.message);
+        });
+    })
+
     userSocket.on('join-room', async (data: { roomId: string, password: string }) => {
         pingUser(user.id);
 
@@ -41,10 +62,10 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
 
         const rooms = await getRoomsOfUser(user.id);
 
-        //check if user is in this room
+        //check if user is in this party
         const currentRoomId = rooms.find(r => r.id === data.roomId)?.id;
         if (!currentRoomId) {
-            userSocket.emit('error', "You are not in this room");
+            userSocket.emit('error', "You are not in this party");
             return;
         }
 
@@ -64,11 +85,12 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
         pingUser(user.id);
 
         if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) {
-            console.log("User is not in the room");
-            return};
+            console.log("User is not in the party");
+            return
+        };
 
         updateRoomObjects(user.id, data.roomId, data.objects).then(() => {
-            io.to(data.roomId).emit('room-object-update', { user, objects : data.objects });
+            io.to(data.roomId).emit('room-object-update', { user, objects: data.objects });
             notifyRoomUpdate(io, data.roomId);
         }).catch((err: Error) => {
             console.log(err.message);
@@ -80,7 +102,13 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
         pingUser(user.id);
         if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) return;
 
-        const room: Room = RoomCRUD.read(data.roomId);
+        const room = RoomCRUD.read(data.roomId);
+
+        if (!room) {
+            userSocket.emit('error', "Room does not exist");
+            return;
+        }
+
         room.roomHistory.push(`${user.name} : ${data.message}`);
         RoomCRUD.update(room);
 
@@ -92,14 +120,19 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
         pingUser(user.id);
         if (!await ensureRoomExistOrError(data.roomId, userSocket)) return;
 
-        const room: Room = RoomCRUD.read(data.roomId);
+        const room = RoomCRUD.read(data.roomId);
+
+        if (!room) {
+            userSocket.emit('error', "Room does not exist");
+            return;
+        }
         if (room.password !== data.password) {
             userSocket.emit('error', "Wrong password");
             return;
         }
 
         io.to(data.roomId).emit('room-deleted', { by: user });
-        
+
         //make all user who joined room leave 
         Object.keys(room.users).forEach(userId => {
             userLeaveRoom(data.roomId, userId);
@@ -111,7 +144,12 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
 }
 
 export const notifyRoomUpdate = async (io: Server, roomId: string) => {
-    const room: Room = RoomCRUD.read(roomId);
+    const room = RoomCRUD.read(roomId);
+
+    if (!room) {
+        return;
+    }
+
     const users: User[] = await getUsersInRoom(roomId);
 
     io.to(roomId).emit('update-room', room);

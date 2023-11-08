@@ -1,0 +1,16 @@
+@import "../../colors";
+
+#roomidlabel{
+    border-style : solid solid none none;
+    border-color : $color-primary $color-primary $color-primary $color-primary;
+    border-radius : 5px 0px 0px 5px;
+    background-color: rgba($color-primary,0.2);
+    padding: 0.2em;;
+}
+
+#form-2 {
+    &>*{
+        width: 80%;
+        margin-top: 1em;
+    }
+}
