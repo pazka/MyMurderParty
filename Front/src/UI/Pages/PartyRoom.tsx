@@ -24,14 +24,12 @@ export default () => {
 
     return <>
         <div className="head panel">
-            <div>
+            <div className="character">
                 <CharacterMiniature charId="1" />
             </div>
-            <div >
                 <button className="qr-scan object" onClick={x => sendEvent(AvailableEvents.beginQrScan)}>
                     🔎
                 </button>
-            </div>
             <div>
                 <button className="secondary">📜 Scenario</button>
                 <button className="secondary">📩 Party events</button>

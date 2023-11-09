@@ -25,6 +25,11 @@ html {
 
 body,
 div#root {
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    display: flex;
+
     width: 100%;
     height: 100%;
     background: #000000;
@@ -33,13 +38,15 @@ div#root {
 }
 
 div.app-root {
-    width: 100%;
+    width: min(100%, max(50%,700px));
     height: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
     border-radius: 20px;
 
     &>* {
+        width:100%;
         flex: 0 1 auto;
     }
 }

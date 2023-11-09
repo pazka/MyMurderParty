@@ -1,17 +1,15 @@
-import React, { useEffect } from 'react';
-import logo from './logo.svg';
 import './App.scss';
-import { TestPage } from './UI/Pages/TestPage';
-import GamePage from './UI/Pages/GamePage';
-import PopUps from './UI/Components/PopUps';
+
+import React, { useEffect } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+
 import { useGlobalStorage } from './services/storageService';
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
-import HomePage from './UI/Pages/HomePage';
-import { NewRoom } from './UI/Pages/NewRoom';
-import NewUser from './UI/Pages/NewUser';
 import HomeHeader from './UI/Components/Headers/HomeHeader';
 import RoomHeader from './UI/Components/Headers/RoomHeader';
 import ChooseRoom from './UI/Pages/ChooseRoom';
+import HomePage from './UI/Pages/HomePage';
+import { NewRoom } from './UI/Pages/NewRoom';
+import NewUser from './UI/Pages/NewUser';
 import PartyRoom from './UI/Pages/PartyRoom';
 
 function App() {

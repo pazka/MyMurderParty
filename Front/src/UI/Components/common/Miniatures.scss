@@ -3,11 +3,9 @@
 
 $span-inset: 2em;
 
+
 .miniature-wrapper {
-    height: auto;
-    width: 5em;
     border-radius: 0.5em;
-    font-size: 0.8em;
     display: flex;
     flex-direction: column;
 
@@ -26,17 +24,6 @@ $span-inset: 2em;
             border-radius: 1em;
             z-index: 61;
 
-        }
-
-
-        .__shadow {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            box-shadow: inset 3px 3px 10px 0 #000000;
-            border-radius: 20px;
-            top: 0;
-            left: 0;
         }
     }
 
@@ -64,4 +51,29 @@ $span-inset: 2em;
             background: linear-gradient(to right, rgba($color-object-dark, 0.4) 0%, rgba(255, 0, 0, 0) 30%, rgba(255, 0, 0, 0) 70%, rgba($color-object-dark, 0.4) 100%) $color-object;
         }
     }
+}
+
+
+.character-wrapper {
+    $span-inset: 1em;
+
+    span {
+        font-weight: bolder;
+        padding-top: $span-inset;
+        width: 100%;
+        height: 50%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding: 0 0.2em;
+    }
+    
+    .img-wrapper {
+        margin-bottom: -$span-inset;
+
+        img {
+
+        }
+    }
+
+    height: 100%;
 }

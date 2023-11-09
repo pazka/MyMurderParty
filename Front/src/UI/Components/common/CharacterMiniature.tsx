@@ -22,7 +22,7 @@ export default ({ charId, isUser }: { charId: string, isUser?: boolean }) => {
         }
     }, [])
 
-    return <div className='miniature-wrapper'>
+    return <div className='miniature-wrapper character-wrapper'>
         <div className='img-wrapper'>
             <img src={url} />
             <div className="shadow"></div>
