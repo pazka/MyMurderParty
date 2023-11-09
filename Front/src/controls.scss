@@ -92,9 +92,9 @@ button {
 	background-image: linear-gradient(to left, $primary-color-light, $primary-color-dark);
 	background-color: $primary-color;
 	border: 1px solid $primary-color;
-	box-shadow: $primary-color-dark 4px 4px 0 0,
-	$primary-color 4px 4px 0 1px;
+	box-shadow: $primary-color-dark 4px 4px 0 0, $primary-color 4px 4px 0 1px;
 	color: $primary-text-color;
+	text-shadow: 0 5px 5px rgba($primary-color-light, 0.4);
 
 	&.secondary {
 		background-image: linear-gradient(to left, $secondary-color-light, $secondary-color-dark);
@@ -102,6 +102,14 @@ button {
 		border: 1px solid $secondary-color;
 		box-shadow: $secondary-color-dark 4px 4px 0 0, $secondary-color 4px 4px 0 1px;
 		color: $secondary-text-color;
+		text-shadow: 0 5px 5px rgba($secondary-color-light, 0.4);
+	}
+
+	&.object{
+		border: 1px solid $color-object;
+		background: linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba($color-object-light, 0.4) 50%, rgba(0, 0, 0, 0.4) 100%) $color-object-light;
+        box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.25) inset, 0px 0px 1px 2px rgba(255, 255, 255, 0.25) inset, 0px -5px 50px -15px rgba($color-object-dark, 1) inset, 0px 0px 4px rgba(0, 0, 0, 0.2), 0px 1px 2px rgba(0, 0, 0, 0.5);
+		text-shadow: 0 5px 5px rgba($color-object-light, 0.4);
 	}
 }
 

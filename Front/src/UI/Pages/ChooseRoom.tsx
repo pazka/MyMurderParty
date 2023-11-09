@@ -27,7 +27,7 @@ export default () => {
             return;
         }
 
-        
+
         console.log("letsgo")
 
         emitJoinRoom(roomId, "")
@@ -77,7 +77,7 @@ export default () => {
         <form onSubmit={e => e.preventDefault()} className="section panel" id='joinroom'>
             <span style={{ display: "inherit" }}>
                 <label id="roomidlabel" htmlFor="roomID" >Room ID</label>
-                <input  id="roomID" type="text" placeholder='ABC-123' value={roomId} onChange={(e: any) => handleSetRoomId(e.target.value)} />
+                <input id="roomID" type="text" placeholder='ABC-123' value={roomId} onChange={(e: any) => handleSetRoomId(e.target.value)} />
             </span>
             <button type='submit' disabled={!isRoomIdValid()} onClick={handleJoinRoom}>Join a party</button>
         </form>

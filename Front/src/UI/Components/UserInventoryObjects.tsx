@@ -10,7 +10,7 @@ export default ({ onObjectClick }: { onObjectClick: (object:InventoryItem)=>void
     const currentGameEngine = useGameEngine();
 
     return (
-        <div className="section">
+        <div className="section object-list">
                 {allItems.map((inventoryItem,i) => (
                     <ObjectMiniature key={i} objectId={inventoryItem.id} onClick={onObjectClick}/>
                 ))}

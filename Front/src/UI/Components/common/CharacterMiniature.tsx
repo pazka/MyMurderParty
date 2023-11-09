@@ -5,15 +5,15 @@ import who_man from '../../../images/who_man.jpg';
 import { useEffect, useState } from 'react';
 import { useGlobalStorage } from '../../../services/storageService';
 
-export default ({ charId,isUser }: { charId: string,isUser? :boolean }) => {
+export default ({ charId, isUser }: { charId: string, isUser?: boolean }) => {
     const gameConfig = getCurrentGameConfig();
     const character = gameConfig.TROMBINOSCOPE[charId];
     const [storage] = useGlobalStorage();
     const currentUser = storage.currentUser;
     const usedCharacters = storage.currentRoom?.characters ?? {};
 
-    const [url, setUrl] = useState<string|undefined>(character?.imageUrl);
-    const [name, setName] = useState<string|undefined>(character?.name);
+    const [url, setUrl] = useState<string | undefined>(character?.imageUrl);
+    const [name, setName] = useState<string | undefined>(character?.name);
 
     useEffect(() => {
         if (!character) {
@@ -23,8 +23,11 @@ export default ({ charId,isUser }: { charId: string,isUser? :boolean }) => {
     }, [])
 
     return <div className='miniature-wrapper'>
-        <img width={100} src={url} />
-        {usedCharacters[charId] && <span>{usedCharacters[charId].name}</span> }
+        <div className='img-wrapper'>
+            <img src={url} />
+            <div className="shadow"></div>
+        </div>
+        {usedCharacters[charId] && <span>{usedCharacters[charId].name}</span>}
         <span>{name}</span>
     </div>
 }

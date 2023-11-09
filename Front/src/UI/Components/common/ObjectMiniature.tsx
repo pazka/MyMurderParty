@@ -9,11 +9,14 @@ export default ({
     objectId: string,
     onClick: (item: InventoryItem) => void
 }) => {
-    const item = getFullyProcessedItem(objectId,true);
+    const item = getFullyProcessedItem(objectId, true);
     if (!item) return null;
 
-    return <div onClick={() => onClick(item)} >
-        {item?.name}
-        <img width={50} src={item.imageUrl} />
+    return <div className='miniature-wrapper object-item' onClick={() => onClick(item)} >
+        <div className='img-wrapper'>
+            <img src={item.imageUrl} />
+            <div className="shadow"></div>
+        </div>
+        <span className="secondary">{item.name}</span>
     </div>
 }

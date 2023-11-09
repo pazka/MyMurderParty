@@ -22,13 +22,13 @@ export default () => {
         sendEvent(AvailableEvents.displayObject, objectId)
     })
 
-    return <div>
-        <div className="head panel secondary">
+    return <>
+        <div className="head panel">
             <div>
                 <CharacterMiniature charId="1" />
             </div>
             <div >
-                <button className="qr-scan" onClick={x => sendEvent(AvailableEvents.beginQrScan)}>
+                <button className="qr-scan object" onClick={x => sendEvent(AvailableEvents.beginQrScan)}>
                     🔎
                 </button>
             </div>
@@ -37,7 +37,9 @@ export default () => {
                 <button className="secondary">📩 Party events</button>
             </div>
         </div>
-        {!currentObjectIdDisplayed && <UserInventoryObjects onObjectClick={i=>sendEvent(AvailableEvents.displayObject, i.id)} />}
-        {currentObjectIdDisplayed && <ObjectDetails objectId={currentObjectIdDisplayed} />}
-    </div>
+        <div className="party-active-content">
+            {!currentObjectIdDisplayed && <UserInventoryObjects onObjectClick={i => sendEvent(AvailableEvents.displayObject, i.id)} />}
+            {currentObjectIdDisplayed && <ObjectDetails objectId={currentObjectIdDisplayed} />}
+        </div>
+    </>
 }
