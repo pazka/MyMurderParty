@@ -4,12 +4,13 @@ import { withErrorCaught } from "../../Utils/WithErrorCaught";
 import { useStateWithDep } from "../../services/utils";
 import { enqueueSnackbar } from "notistack";
 import currentConfig from "../../services/config";
+import magnifyingGlass from './../../images/magnifying-glass.png'
 
 import './QrCode.scss';
 import { sendEvent, useEvent } from "../../services/eventsService";
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents";
 
-export default ({ onScan }) => {
+export default () => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -38,11 +39,8 @@ export default ({ onScan }) => {
         return (
             <>
                 <div className="qrreader-wrapper">
-                    <button className="qrreader-close" onClick={x => {
-                        setOpen(false)
-                    }}>X</button>
-                    {loading && <div>Loading...</div>}
                     <div className="qrreader-body">
+                        <img src={magnifyingGlass} alt="" />
                         <div className="qrreader-camera">
                             <div className="qr-viewfinder-wrapper">
                                 <div></div>
@@ -57,8 +55,9 @@ export default ({ onScan }) => {
                             />
                         </div>
                     </div>
-                    <div>
-                    </div>
+                    <button className="qrreader-close" onClick={x => {
+                        setOpen(false)
+                    }}>Close</button>
                 </div>
             </>
         )
