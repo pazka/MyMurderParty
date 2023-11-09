@@ -1,12 +1,16 @@
+@import '../../colors';
 
 .qrreader-wrapper {
     position: fixed;
-    width: 100vmax;
-    height: 100vmax;
+    width: 100%;
+    height: 100%;
     top: 0;
     left: 0;
+    display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
+    background: rgba($color-background-dark, 0.8);
 }
 
 .qrreader-body {
@@ -14,13 +18,72 @@
     height: 70%;
 }
 
-.qrreader-camera {}
+@keyframes loading-shadow {
+    0% {
+        box-shadow: rgba($color-background-dark, 1) 0px 0px 6vw 6vw inset,
+            rgba($color-secondary-light, 0.4) 3vw -3vw 3vw 3vw inset;
+    }
 
-.qr-viewfinder {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-width: rgba(0, 0, 0, 0.5);
+    25% {
+        box-shadow: rgba($color-background-dark, 1) 0px 0px 6vw 6vw inset,
+            rgba($color-secondary-light, 0.4) 3vw 3vw 3vw 3vw inset;
+    }
+
+    50% {
+        box-shadow: rgba($color-background-dark, 1) 0px 0px 6vw 6vw inset,
+            rgba($color-secondary-light, 0.4) -3vw 3vw 3vw 3vw inset;
+    }
+
+    75% {
+        box-shadow: rgba($color-background-dark, 1) 0px 0px 6vw 6vw inset,
+            rgba($color-secondary-light, 0.4) -3vw -3vw 3vw 3vw inset;
+    }
+
+    100% {
+        box-shadow: rgba($color-background-dark, 1) 0px 0px 6vw 6vw inset,
+            rgba($color-secondary-light, 0.4) 3vw -3vw 3vw 3vw inset;
+    }
+}
+
+@keyframes test {
+    0% {
+        border: solid 9em aqua;
+    }
+
+    100% {
+        border: solid 9em rgb(255, 51, 0);
+    }
+
+}
+
+.qrreader-camera {
+    border-radius: 100%;
+    width : 50vw;
+    height: 50vw;
+
+    & * {
+        border-radius: 100%;
+    }
+
+    animation: loading-shadow 2s infinite;
+
+    video {
+        z-index: 1001;
+    }
+
+    .qr-viewfinder-wrapper {
+        position : absolute;
+        width: 0;
+        height: 0;
+        
+        div {
+            position: relative;
+            width : 50vw;
+            height: 50vw;
+            border: 1vw solid rgba($color-background-dark, 1) !important;
+            animation: loading-shadow 2s infinite;
+            z-index: 1002;
+        }
+    }
+
 }

@@ -20,7 +20,7 @@ textarea {
 	background: rgba($primary-color, .2);
 	border-radius: .2em .2em 0 0;
 	padding: .4em 1em;
-	color: $primary-color-dark;
+	color: $color-text-dark;
 	font-size: large;
 
 	&::placeholder {
@@ -33,6 +33,7 @@ input,textarea,.select-wrapper{
 	width: auto;
 	min-width: 40%;
 	max-width: 100%;
+	color: $color-text-dark;
 }
 
 select{
@@ -43,6 +44,7 @@ select{
 	position: absolute;
 	width:0;
 	height:0;
+	color: $color-text-dark;
 	
 	&::after {
 		content: '▼';
@@ -110,6 +112,7 @@ button {
 		background: linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba($color-object-light, 0.4) 50%, rgba(0, 0, 0, 0.4) 100%) $color-object-light;
         box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.25) inset, 0px 0px 1px 2px rgba(255, 255, 255, 0.25) inset, 0px -5px 50px -15px rgba($color-object-dark, 1) inset, 0px 0px 4px rgba(0, 0, 0, 0.2), 0px 1px 2px rgba(0, 0, 0, 0.5);
 		text-shadow: 0 5px 5px rgba($color-object-light, 0.4);
+        color : $color-text-light;
 	}
 }
 

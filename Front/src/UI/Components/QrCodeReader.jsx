@@ -9,7 +9,7 @@ import './QrCode.scss';
 import { sendEvent, useEvent } from "../../services/eventsService";
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents";
 
-export default () => {
+export default ({ onScan }) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -28,6 +28,7 @@ export default () => {
 
         setLoading(false);
         setOpen(false);
+        sendEvent(AvailableEvents.endQrScan, data)
     }
 
     if (!open)
@@ -43,15 +44,17 @@ export default () => {
                     {loading && <div>Loading...</div>}
                     <div className="qrreader-body">
                         <div className="qrreader-camera">
+                            <div className="qr-viewfinder-wrapper">
+                                <div></div>
+                            </div>
                             <QrReader
                                 delay={300}
                                 onError={handleError}
                                 onScan={handleScan}
                                 onLoad={x => setLoading(true)}
                                 style={{ width: '100%' }}
-                                showViewFinder={true}
+                                showViewFinder={false}
                             />
-                            <div className="qr-viewfinder"></div>
                         </div>
                     </div>
                     <div>

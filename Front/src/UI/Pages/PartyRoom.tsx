@@ -16,10 +16,16 @@ export default () => {
     const currentGameEngine = getCurrentGameEngine();
     const currentGameConfgi = getCurrentGameConfig();
     const currenRoom = useCurrentRoom();
-    const [currentObjectIdDisplayed, setCurrentObjectIdDisplayed] = useState<string | undefined>(undefined);
+    const [currentObjectIdDisplayed, setCurrentObjectIdDisplayed] = useState<string | null>(null);
 
     useEvent(AvailableEvents.endQrScan, (objectId: string) => {
+        console.log("endQrScan", objectId)
         sendEvent(AvailableEvents.displayObject, objectId)
+    })
+
+    useEvent(AvailableEvents.displayObject, (objectId: string | null) => {
+        console.log("displayObject", objectId)
+        setCurrentObjectIdDisplayed(objectId)
     })
 
     return <>
@@ -27,10 +33,10 @@ export default () => {
             <div className="character">
                 <CharacterMiniature charId="1" />
             </div>
-                <button className="qr-scan object" onClick={x => sendEvent(AvailableEvents.beginQrScan)}>
-                    🔎
-                </button>
-            <div>
+            <button className="qr-scan object" onClick={x => sendEvent(AvailableEvents.beginQrScan)}>
+                🔎
+            </button>
+            <div className="head-actions">
                 <button className="secondary">📜 Scenario</button>
                 <button className="secondary">📩 Party events</button>
             </div>

@@ -37,18 +37,20 @@ $span-inset: 2em;
         justify-content: flex-end;
 
         font-size: 1em;
-        border: solid 0.1em $color-primary;
+        border: solid 0.1em $color-secondary;
         border-top: none;
         border-radius: 0em 0em 0.5em 0.5em;
-        background: linear-gradient(to right, rgba($color-primary, 0.5) 0%, rgba(255, 0, 0, 0) 48%, rgba($color-primary, 0.5) 100%) $color-magic;
+        background: linear-gradient(to right, rgba($color-secondary, 0.5) 0%, rgba(255, 0, 0, 0) 48%, rgba($color-secondary, 0.5) 100%) $color-secondary-light;
 
         border-width: 0 0.1em 0.1em 0.1em;
         z-index: 60;
         font-weight: 700;
+        color : $color-text-dark;
 
         &.secondary {
             border: solid 0.1em $color-object;
             background: linear-gradient(to right, rgba($color-object-dark, 0.4) 0%, rgba(255, 0, 0, 0) 30%, rgba(255, 0, 0, 0) 70%, rgba($color-object-dark, 0.4) 100%) $color-object;
+            color : $color-text-light;
         }
     }
 }

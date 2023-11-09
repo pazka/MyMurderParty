@@ -10,7 +10,7 @@
 }
 
 html {
-    height: 100vmax;
+    height: 100vh;
     width: 100vw;
     overflow: hidden;
     background: #000000;
@@ -35,6 +35,7 @@ div#root {
     background: #000000;
     background: linear-gradient(to right, rgba($color-background, 0.4) 0%, rgba($color-background-light, 0.5) 50%, rgba($color-background, 0.4) 100%) $color-primary-dark;
     box-shadow: 0px 0px 5em 1px rgba($color-background-dark, 0.25) inset, 0px 0px 1px 2px rgba($color-primary-dark, 0.25) inset, 0px -5px 50px -15px rgba($color-background-dark, 1) inset, 0px 0px 5em rgba(0, 0, 0, 0.2), 0px 1px 2px rgba(0, 0, 0, 0.5);
+    color : $color-text-dark;
 }
 
 div.app-root {

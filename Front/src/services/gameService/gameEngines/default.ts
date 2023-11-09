@@ -143,7 +143,6 @@ const getObjectForCharacter = (objectId: string, noMessage: boolean = false): In
 
     //add lookAction analysis for this object
     const appliableLookActionResults = currentObject.lookActions.filter(validateALookAction).map(lookAction => lookAction.results).flat()
-    console.log("ENGINE : appliableLookActionResults", appliableLookActionResults)
 
     delete currentObject.currentVariationKey
 
@@ -312,7 +311,6 @@ const useObjects = (objects: InventoryItem[]): void => {
         return;
     }
 
-    console.log(`ENGINE : Found ${objectsWithResults.length} object who have match actions to execute`, objectsWithResults)
 
     for (const objectWithResults of objectsWithResults) {
         for (const useActionResult of objectWithResults.results) {
