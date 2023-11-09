@@ -8,6 +8,14 @@ $span-inset: 2em;
     border-radius: 0.5em;
     display: flex;
     flex-direction: column;
+    transition: all 0.2s ease-in-out;
+
+    &:hover,
+    &:active {
+        box-shadow: 2px 2px 0.5em .2em rgba($color-object-light, 0.8);
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
 
     .img-wrapper {
         height: 80%;
@@ -45,12 +53,12 @@ $span-inset: 2em;
         border-width: 0 0.1em 0.1em 0.1em;
         z-index: 60;
         font-weight: 700;
-        color : $color-text-dark;
+        color: $color-text-dark;
 
         &.secondary {
             border: solid 0.1em $color-object;
             background: linear-gradient(to right, rgba($color-object-dark, 0.4) 0%, rgba(255, 0, 0, 0) 30%, rgba(255, 0, 0, 0) 70%, rgba($color-object-dark, 0.4) 100%) $color-object;
-            color : $color-text-light;
+            color: $color-text-light;
         }
     }
 }
@@ -58,6 +66,8 @@ $span-inset: 2em;
 
 .character-wrapper {
     $span-inset: 1em;
+    box-shadow: 2px 2px 0.5em .2em rgba($color-secondary-dark, 0.6);
+    transition: all 0.2s ease-in-out;
 
     span {
         display: flex;
@@ -70,15 +80,35 @@ $span-inset: 2em;
         text-overflow: ellipsis;
         white-space: nowrap;
         padding: 0 0.2em;
+
+        border-color: $color-secondary;
+        border-width: 0.1em;
+        border-style: solid;
+        border-top: none;
+        border-radius: 0.5em 0.5em 0.5em 0.5em;
     }
-    
+
     .img-wrapper {
         margin-bottom: -$span-inset;
 
         img {
+            max-width: 98%;
+            border-color: $color-secondary;
+            border-width: 0.1em;
+            border-style: solid;
+            border-bottom: none;
 
+            border-radius: 0.5em 0.5em 0 0;
+            box-shadow: 0 -1px 0 2px $color-secondary;
+            background-color: $color-secondary-dark;
         }
     }
 
     height: 100%;
+
+    &:hover {
+        box-shadow: 0 0 0.5em 0.5em rgba($color-object-light, 0.8);
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
 }

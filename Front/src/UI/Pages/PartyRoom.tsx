@@ -8,7 +8,9 @@ import { useGlobalStorage } from "../../services/storageService"
 import CharacterMiniature from "../Components/Common/CharacterMiniature"
 import UserInventoryObjects from "../Components/UserInventoryObjects"
 import './PartyRoom.scss'
-import ObjectDetails from "../Components/ObjectDetails"
+import { Route, Routes, useNavigate, useParams } from "react-router-dom"
+import CharacterList from "./CharacterList"
+import ObjectDetailPage from "./ObjectDetailPage"
 
 export default () => {
     const [storage] = useGlobalStorage();
@@ -16,7 +18,7 @@ export default () => {
     const currentGameEngine = getCurrentGameEngine();
     const currentGameConfgi = getCurrentGameConfig();
     const currenRoom = useCurrentRoom();
-    const [currentObjectIdDisplayed, setCurrentObjectIdDisplayed] = useState<string | null>(null);
+    const navigate = useNavigate()
 
     useEvent(AvailableEvents.endQrScan, (objectId: string) => {
         console.log("endQrScan", objectId)
@@ -24,14 +26,17 @@ export default () => {
     })
 
     useEvent(AvailableEvents.displayObject, (objectId: string | null) => {
-        console.log("displayObject", objectId)
-        setCurrentObjectIdDisplayed(objectId)
+        if (objectId != null) {
+            navigate("object/" + objectId)
+        } else {
+            navigate(".")
+        }
     })
 
     return <>
         <div className="head panel">
             <div className="character">
-                <CharacterMiniature charId="1" />
+                <CharacterMiniature charId="1" onClick={() => navigate('characters')} />
             </div>
             <button className="qr-scan object" onClick={x => sendEvent(AvailableEvents.beginQrScan)}>
                 🔎
@@ -39,11 +44,17 @@ export default () => {
             <div className="head-actions">
                 <button className="secondary">📜 Scenario</button>
                 <button className="secondary">📩 Party events</button>
+                <Routes>
+                    <Route path="/:path/*" element={<button className="secondary" onClick={()=>navigate('.')}>💼 Inventory </button>} />
+                </Routes>
             </div>
         </div>
-        <div className="party-active-content">
-            {!currentObjectIdDisplayed && <UserInventoryObjects onObjectClick={i => sendEvent(AvailableEvents.displayObject, i.id)} />}
-            {currentObjectIdDisplayed && <ObjectDetails objectId={currentObjectIdDisplayed} />}
-        </div>
+
+        <Routes>
+            <Route path="/*" element={<UserInventoryObjects onObjectClick={i => sendEvent(AvailableEvents.displayObject, i.id)} />} />
+            <Route path="/object/:objectId" element={<ObjectDetailPage />} />
+            <Route path="/characters" element={<CharacterList />} />
+            <Route path="/characters/:characterId" element={<CharacterList />} />
+        </Routes>
     </>
 }

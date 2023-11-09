@@ -38,7 +38,9 @@ export default () => {
     try {
         return (
             <>
-                <div className="qrreader-wrapper">
+                <div className="qrreader-wrapper" onClick={x => {
+                    setOpen(false)
+                }}>
                     <div className="qrreader-body">
                         <img src={magnifyingGlass} alt="" />
                         <div className="qrreader-camera">
@@ -55,9 +57,6 @@ export default () => {
                             />
                         </div>
                     </div>
-                    <button className="qrreader-close" onClick={x => {
-                        setOpen(false)
-                    }}>Close</button>
                 </div>
             </>
         )

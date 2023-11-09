@@ -1,11 +1,11 @@
 import { getCurrentGameConfig } from '../../../services/gameService';
 import './Miniatures.scss';
-import whoman from '../../../images/whoman.jpg';
-import who_man from '../../../images/who_man.jpg';
+import whoman from '../../../images/whoman.png';
+import who_man from '../../../images/who_man.png';
 import { useEffect, useState } from 'react';
 import { useGlobalStorage } from '../../../services/storageService';
 
-export default ({ charId, isUser }: { charId: string, isUser?: boolean }) => {
+export default ({ charId, isUser, onClick }: { charId: string, isUser?: boolean, onClick?: () => void }) => {
     const gameConfig = getCurrentGameConfig();
     const character = gameConfig.TROMBINOSCOPE[charId];
     const [storage] = useGlobalStorage();
@@ -22,7 +22,7 @@ export default ({ charId, isUser }: { charId: string, isUser?: boolean }) => {
         }
     }, [])
 
-    return <div className='miniature-wrapper character-wrapper'>
+    return <div className='miniature-wrapper character-wrapper' onClick={onClick}>
         <div className='img-wrapper'>
             <img src={url} />
             <div className="shadow"></div>
