@@ -10,6 +10,7 @@ import PopUps from './UI/Components/PopUps';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TestPage } from './UI/Pages/TestPage';
 import GameModeObjectsPrinting from './UI/Pages/GameModeObjectsPrinting';
+import QrCodeReader from './UI/Components/QrCodeReader';
 
 
 const root = ReactDOM.createRoot(
@@ -30,6 +31,7 @@ root.render(
             <App />
             <MySnackbar />
             <PopUps />
+            <QrCodeReader />
           </div>}>
         </Route>
       </Routes>

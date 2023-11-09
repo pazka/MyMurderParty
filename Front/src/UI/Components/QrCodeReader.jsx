@@ -6,29 +6,39 @@ import { enqueueSnackbar } from "notistack";
 import currentConfig from "../../services/config";
 
 import './QrCode.scss';
+import { sendEvent, useEvent } from "../../services/eventsService";
+import { AvailableEvents } from "../../services/eventsService/allAvailableEvents";
 
-export default ({ onTextRead, onClose }) => {
+export default () => {
     const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+
+    useEvent(AvailableEvents.beginQrScan, x => {
+        setLoading(true)
+        setOpen(true)
+    })
 
     const handleError = (err) => {
         enqueueSnackbar(err, { variant: "error" });
     }
 
     const handleScan = (data) => {
-        if(!data)
-            return ;
+        if (!data)
+            return;
 
         setLoading(false);
-        onTextRead && onTextRead(data)
+        setOpen(false);
     }
+
+    if (!open)
+        return null
 
     try {
         return (
             <>
                 <div className="qrreader-wrapper">
                     <button className="qrreader-close" onClick={x => {
-                        console.log("putain");
-                        onClose && onClose()
+                        setOpen(false)
                     }}>X</button>
                     {loading && <div>Loading...</div>}
                     <div className="qrreader-body">

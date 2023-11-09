@@ -52,6 +52,7 @@ interface Trombinoscope {
 interface Character {
     id: string;
     name: string;
+    imageUrl?: string;
     type: string;
     scenario: {
         public: string,
@@ -63,6 +64,7 @@ interface InventoryItem {
     id: string;
     name: string;
     description: string;
+    imageUrl?: string;
     canBeTaken: boolean;
     canBeUsed: boolean;
     isDeleted?: boolean;

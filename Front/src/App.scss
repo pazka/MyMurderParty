@@ -26,6 +26,13 @@
     }
 }
 
+.smallText{
+    max-width: 10em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .object-combine-panel {}
 
 .object-list {

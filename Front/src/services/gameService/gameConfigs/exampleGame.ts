@@ -7,6 +7,7 @@ export const TROMBINOSCOPE: Trombinoscope = {
     "SCIENTIST_ASSISTANT": {
         "id": "SCIENTIST_ASSISTANT",
         "name": "Assitant.e du scientifique",
+        imageUrl: "https://sharing.hosh.it/images/map1.jpg",
         "scenario": {
             public: "Vous êtes l'assistant.e du scientifique. Vous avez des compétence en science et en informatique.",
             private: "Vous chercher le secret du scientifique."
@@ -16,6 +17,7 @@ export const TROMBINOSCOPE: Trombinoscope = {
     "SCIENTIST_SECRETARY": {
         "id": "SCIENTIST_SECRETARY",
         "name": "Secrétaire du scientifique",
+        imageUrl: "https://sharing.hosh.it/images/map1.jpg",
         "scenario": {
             public: "Vous êtes la secrétaire du scientifique. Vous le connaisiez mieux que personne.",
         },
@@ -33,9 +35,10 @@ export const FULL_INVENTORY: Inventory = {
         id: "Silver Key",
         name: "Silver Key",
         description: "It can open stuff.",
+        imageUrl: "https://sharing.hosh.it/images/lap2.jpg",
         canBeTaken: true,
         canBeUsed: true,
-        toPrintIrl:true,
+        toPrintIrl: true,
         variations: {
             "SILVER_KEY.ASSITANT": {
                 description: "It's bad and can only open one object"
@@ -67,10 +70,11 @@ export const FULL_INVENTORY: Inventory = {
     "Gold Key": {
         id: "Gold Key",
         name: "Gold Key",
+        imageUrl: "https://sharing.hosh.it/images/lap2.jpg",
         description: "It can open stuff.",
         canBeTaken: true,
         canBeUsed: true,
-        toPrintIrl:true,
+        toPrintIrl: true,
         variations: {
             "GOLDKEY_KEY.ASSITANT": {
                 description: "It's very good and can only probably open anything"
@@ -93,9 +97,10 @@ export const FULL_INVENTORY: Inventory = {
         description: "ok",
         id: "Chest",
         name: "Chest",
+        imageUrl: "https://sharing.hosh.it/images/lap5.jpg",
         canBeTaken: false,
         canBeUsed: true,
-        toPrintIrl:true,
+        toPrintIrl: true,
         variations: {},
         lookActions: [],
         useActions: [{
@@ -112,6 +117,7 @@ export const FULL_INVENTORY: Inventory = {
     },
     "ChestOpen": {
         description: "This chest has been opened, it's empty.",
+        imageUrl: "https://sharing.hosh.it/images/lap4.jpg",
         id: "ChestOpen",
         name: "Opened Chest",
         canBeTaken: false,
@@ -123,13 +129,14 @@ export const FULL_INVENTORY: Inventory = {
     },
     "Door": {
         description: "This door is locked",
+        imageUrl: "https://sharing.hosh.it/images/lap5.jpg",
         id: "Door",
         name: "Door",
         canBeTaken: false,
         canBeUsed: true,
         variations: {},
         lookActions: [],
-        toPrintIrl:true,
+        toPrintIrl: true,
         useActions: [{
             conditions: {
                 needsOneOfCharacterId: [],
@@ -145,6 +152,7 @@ export const FULL_INVENTORY: Inventory = {
         description: "This door is unlocked",
         id: "DoorOpen",
         name: "Opened Door",
+        imageUrl: "https://sharing.hosh.it/images/lap4.jpg",
         canBeTaken: false,
         canBeUsed: true,
         variations: {},
@@ -193,22 +201,24 @@ export const FULL_INVENTORY: Inventory = {
     },
     "Drawer": {
         description: "ok",
+        imageUrl: "https://sharing.hosh.it/images/lap3.jpg",
         id: "Drawer",
         name: "Drawer",
         canBeTaken: false,
         canBeUsed: true,
-        toPrintIrl:true,
+        toPrintIrl: true,
         variations: {},
         lookActions: [],
         useActions: [],
     },
     "ExampleItem": {
         description: "ok",
+        imageUrl: "https://sharing.hosh.it/images/lap2.jpg",
         id: "ExampleItem",
         name: "Example",
         canBeTaken: false,
         canBeUsed: true,
-        toPrintIrl:true,
+        toPrintIrl: true,
         variations: {},
         lookActions: [],
         useActions: [],

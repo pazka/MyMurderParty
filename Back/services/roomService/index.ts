@@ -129,8 +129,18 @@ export const userChoosesACharacter = async (userId: string, roomId: string, char
         throw new Error("Character is already taken");
     }
 
-    room.characters[characterId] = user;
-    room.roomHistory.push(`${user.name} chose a character`);
+    if(!room.characters[characterId]){
+        //remove the current character from the user
+        const currentCharacterId = Object.entries(room.characters).find(([charId, user]) => user.id === userId)?.[0];
+        if(currentCharacterId){
+            delete room.characters[currentCharacterId];
+        }
+        room.roomHistory.push(`${user.name} left a character`);
+    }else{
+        room.characters[characterId] = user;
+        room.roomHistory.push(`${user.name} chose a character`);
+    }
+
     RoomCRUD.update(room);
 }
 

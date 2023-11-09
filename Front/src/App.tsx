@@ -45,7 +45,7 @@ function App() {
       <Route path="/new-user" element={<NewUser />} />
       <Route path="/choose-party" element={<ChooseRoom />} />
       <Route path="/new-party" element={<NewRoom />} />
-      <Route path="/party" element={<PartyRoom />} />
+      <Route path="/party/:roomId" element={<PartyRoom />} />
     </Routes>
   </>
 }

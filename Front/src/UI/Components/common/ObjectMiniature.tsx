@@ -1,5 +1,6 @@
 import { getCurrentGameEngine } from "../../../services/gameService"
-import { getItemWithPossibleVariation } from "../../../services/inventoryService";
+import { getFullyProcessedItem, getItemWithPossibleVariation } from "../../../services/inventoryService";
+import './Miniatures.scss';
 
 export default ({
     objectId,
@@ -8,13 +9,11 @@ export default ({
     objectId: string,
     onClick: (item: InventoryItem) => void
 }) => {
-    const currentGameEngine = getCurrentGameEngine();
-    const item = currentGameEngine.getObjectForCharacter(objectId,true);
+    const item = getFullyProcessedItem(objectId,true);
     if (!item) return null;
 
-    const variatedItem = getItemWithPossibleVariation(item);
-
-    return <div>
-        {variatedItem?.name}
+    return <div onClick={() => onClick(item)} >
+        {item?.name}
+        <img width={50} src={item.imageUrl} />
     </div>
 }

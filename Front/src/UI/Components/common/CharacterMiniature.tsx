@@ -1,5 +1,30 @@
-export default ({charId}:{charId:string}) => {
-    return <div>
-        character miniature
+import { getCurrentGameConfig } from '../../../services/gameService';
+import './Miniatures.scss';
+import whoman from '../../../images/whoman.jpg';
+import who_man from '../../../images/who_man.jpg';
+import { useEffect, useState } from 'react';
+import { useGlobalStorage } from '../../../services/storageService';
+
+export default ({ charId,isUser }: { charId: string,isUser? :boolean }) => {
+    const gameConfig = getCurrentGameConfig();
+    const character = gameConfig.TROMBINOSCOPE[charId];
+    const [storage] = useGlobalStorage();
+    const currentUser = storage.currentUser;
+    const usedCharacters = storage.currentRoom?.characters ?? {};
+
+    const [url, setUrl] = useState<string|undefined>(character?.imageUrl);
+    const [name, setName] = useState<string|undefined>(character?.name);
+
+    useEffect(() => {
+        if (!character) {
+            setUrl(Math.random() > 0.5 ? whoman : who_man);
+            setName('No Character selected')
+        }
+    }, [])
+
+    return <div className='miniature-wrapper'>
+        <img width={100} src={url} />
+        {usedCharacters[charId] && <span>{usedCharacters[charId].name}</span> }
+        <span>{name}</span>
     </div>
 }

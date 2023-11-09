@@ -10,13 +10,11 @@ import ObjectCombinator from "./ObjectCombinator"
 
 
 export default () => {
-    const [isQrOpen, setIsQrOpen] = useState(false)
     const currentGameEngine = useGameEngine()
 
-    const handleObjectScanned = (objectId: string) => {
-        setIsQrOpen(false)
+    useEvent(AvailableEvents.endQrScan, (objectId: string) => {
         sendEvent(AvailableEvents.displayObject, objectId)
-    }
+    })
 
     useEvent(AvailableEvents.endOfGame, (endOfGameResults: EndOfGameResult[]) => {
         currentGameEngine.executeEndOfGame(endOfGameResults)
@@ -25,12 +23,6 @@ export default () => {
     return (
         <div>
             <h1>Game Page</h1>
-
-            <button onClick={x => setIsQrOpen(true)}>Identify Objet</button>
-            {isQrOpen && <QrCodeReader onTextRead={handleObjectScanned} onClose={() => {
-                setIsQrOpen(false)
-            }} />}
-            <hr />
             <GenericObjectDisplay />
             <ObjectCombinator />
 
