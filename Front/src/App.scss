@@ -55,17 +55,24 @@
     overflow: auto;
 
     transition: all 0.2s ease-in-out;
+    background-image: url('/images/drawer.jpg');
+    border-radius: 1em;
+    box-shadow: inset 0px 0px 0px 1px rgba($color-background-dark, 0.2), inset 0px 0px 1px 2px rgba($color-background-dark, 0.2), inset 0px -5px 50px -15px rgba($color-background-dark, 0.4), 0px 0px 4px rgba(0, 0, 0, 0.2), 0px 1px 2px rgba(0, 0, 0, 0.5), inset 0px 0px 1em 1em rgba($color-background-dark, 0.7), ;
+    border: solid 0.1em $color-background-dark;
 
-    & > * {
+    $shadow-amount: 0.3;
+    &>* {
         padding: 0.25em;
         cursor: pointer;
         transition: all 0.2s ease-in-out;
-        flex-grow: 0.2;
+        width: 20%;
+        background: linear-gradient(to right, rgba(0, 0, 0, $shadow-amount) 0%, rgba($color-background-dark, $shadow-amount+0.3) 40%, rgba($color-background-dark, $shadow-amount+0.3) 60%, rgba(0, 0, 0, $shadow-amount) 100%);
+        box-shadow: 0px 0px 0.4em 0.2em rgba($color-background-dark, $shadow-amount);
     }
 
     .object-item:hover {
         padding: 0.25em;
         transition: all 0.2s ease-in-out;
-        box-shadow: 0px 0px 0px 1px rgba($color-object, 0.25) inset, 0px 0px 1px 2px rgba(255, 255, 255, 0.25) inset, 0px -5px 50px -15px rgba($color-object, 1) inset, 0px 0px 4px rgba(0, 0, 0, 0.2), 0px 1px 2px rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 0px 0px 1px rgba($color-object, 0.25) inset, 0px 0px 1px 2px rgba($color-object-light, 0.25) inset, 0px -5px 50px -15px rgba($color-object, 1) inset, 0px 0px 4px rgba(0, 0, 0, 0.2), 0px 1px 2px rgba(0, 0, 0, 0.5);
     }
 }

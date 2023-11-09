@@ -34,7 +34,8 @@
     }
 
     .character{
-        height: 8em;
+        height: 100%;
+        max-height: 15vmax;
     }
 }
 
@@ -42,4 +43,6 @@
     flex: 1 0 auto;
     margin: 0 0.5em;
     overflow: auto;
+    height: 100%;
+    padding-top: 0.5em;
 }

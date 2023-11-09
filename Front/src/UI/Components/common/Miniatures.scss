@@ -58,10 +58,13 @@ $span-inset: 2em;
     $span-inset: 1em;
 
     span {
+        display: flex;
         font-weight: bolder;
         padding-top: $span-inset;
-        width: 100%;
+        overflow: hidden;
+        max-width: 100%;
         height: 50%;
+        text-wrap: none;
         text-overflow: ellipsis;
         white-space: nowrap;
         padding: 0 0.2em;

@@ -3,6 +3,7 @@ import { AvailableEvents } from "../../services/eventsService/allAvailableEvents
 import { getCurrentGameConfig, getCurrentGameEngine, useGameEngine } from "../../services/gameService";
 import { getItemWithPossibleVariation, removeItemFromInventory, useInventory } from "../../services/inventoryService";
 import ObjectMiniature from "./Common/ObjectMiniature";
+import config from '../../services/config'
 
 export default ({ onObjectClick }: { onObjectClick: (object:InventoryItem)=>void }) => {
     const inventory = useInventory();
