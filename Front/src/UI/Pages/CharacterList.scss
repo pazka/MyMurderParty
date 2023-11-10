@@ -1,0 +1,59 @@
+@import '../../colors';
+
+.character-list-wrapper {
+    height: 100%;
+    width: 100%;
+    padding-top: 0.5em;
+    margin-top: 0.5em;
+    overflow: auto;
+    display: flex;
+
+}
+
+.frame {
+    margin-bottom: 1em;
+    padding-bottom: 0.5em;
+    height: fit-content;
+    border: solid 2em $color-object;
+    border-image: url("../../images/frame.png") 25% round;
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+
+}
+
+.frame>* {
+    width: 50%;
+    margin-bottom: 1em;
+}
+
+.character-page {
+    .character-head {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+
+        &>* {
+            flex: 1 1 auto;
+            max-width: 35%;
+        }
+    }
+
+    .char-img-wrapper {
+        flex: 1 0 auto;
+        max-width: 50%;
+    }
+
+    img {
+        border: solid 2em $color-object;
+        border-image: url("../../images/frame.png") 25% round;
+
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}

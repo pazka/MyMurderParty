@@ -68,7 +68,7 @@ export const userJoinRoom = async (roomId: string, password: string, userId: str
     const room = RoomCRUD.read(roomId);
     const user = UserCRUD.read(userId);
 
-    if(!room || !user){
+    if (!room || !user) {
         throw new Error("User or room does not exist");
     }
 
@@ -97,8 +97,8 @@ export const userLeaveRoom = async (roomId: string, userId: string): Promise<voi
     const room = RoomCRUD.read(roomId);
     const user = UserCRUD.read(userId);
 
-    if(!room || !user){
-        return ;
+    if (!room || !user) {
+        return;
     }
 
     if (!room.users[userId]) {
@@ -113,33 +113,28 @@ export const userLeaveRoom = async (roomId: string, userId: string): Promise<voi
 
 export const userChoosesACharacter = async (userId: string, roomId: string, characterId: string): Promise<void> => {
     const room = RoomCRUD.read(roomId);
-    const user = UserCRUD.read(userId);
+    const currentUser = UserCRUD.read(userId);
 
-    if(!room || !user){
-        return ;
+    if (!room || !currentUser) {
+        return;
     }
 
     //check if user has another character in the party
-    const possibleTakenCharId = Object.entries(room.characters).find(([charId, user]) => user.id === userId)?.[0];
-    if (possibleTakenCharId) {
-        delete room.characters[possibleTakenCharId];
+    const takenByUserCharId = Object.entries(room.characters).find(([charId, user]) => user.id === userId)?.[0];
+    if (takenByUserCharId && takenByUserCharId == characterId) return;
+    if (takenByUserCharId && takenByUserCharId != characterId) {
+        //remove the current character from the user
+        delete room.characters[takenByUserCharId];
+        room.roomHistory.push(`${currentUser.name} left a character`);
     }
 
     if (room.characters[characterId]) {
         throw new Error("Character is already taken");
+        return
     }
 
-    if(!room.characters[characterId]){
-        //remove the current character from the user
-        const currentCharacterId = Object.entries(room.characters).find(([charId, user]) => user.id === userId)?.[0];
-        if(currentCharacterId){
-            delete room.characters[currentCharacterId];
-        }
-        room.roomHistory.push(`${user.name} left a character`);
-    }else{
-        room.characters[characterId] = user;
-        room.roomHistory.push(`${user.name} chose a character`);
-    }
+    room.characters[characterId] = currentUser;
+    room.roomHistory.push(`${currentUser.name} chose a character`);
 
     RoomCRUD.update(room);
 }
@@ -147,8 +142,8 @@ export const userChoosesACharacter = async (userId: string, roomId: string, char
 export const updateRoomObjects = async (userId: string, roomId: string, objects: any[]): Promise<void> => {
     const room = RoomCRUD.read(roomId);
 
-    if(!room){
-        return ;
+    if (!room) {
+        return;
     }
 
     room.objects = objects;

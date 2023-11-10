@@ -16,22 +16,6 @@ function App() {
   const navigate = useNavigate()
   const [storage] = useGlobalStorage()
 
-  useEffect(() => {
-
-    if (!storage.currentUser) {
-      navigate('/new-user')
-    }
-
-    if (storage.currentUser && !storage.currentRoom) {
-      navigate('/choose-party')
-    }
-
-    if (storage.currentRoom) {
-      navigate('/party/' + storage.currentRoom.id)
-    }
-  },[storage.currentUser, storage.currentRoom])
-
-
   return <>
     <Routes>
       <Route path="/*" element={<HomeHeader />} />

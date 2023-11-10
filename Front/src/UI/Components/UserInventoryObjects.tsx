@@ -12,7 +12,7 @@ export default ({ onObjectClick }: { onObjectClick: (object:InventoryItem)=>void
 
     return (
         <div className="section object-list">
-                {allItems.map((inventoryItem,i) => (
+                {inventory.map((inventoryItem,i) => (
                     <ObjectMiniature key={i} objectId={inventoryItem.id} onClick={onObjectClick}/>
                 ))}
         </div>

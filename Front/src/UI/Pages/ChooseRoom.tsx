@@ -1,7 +1,7 @@
 import './ChooseRoom.scss';
 
 import { enqueueSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { getAllGamesNames } from '../../services/gameService';
 import { getDefaultRoom } from '../../services/roomService';
@@ -9,12 +9,30 @@ import { emitDeleteRoom, emitJoinRoom, emitLeaveRoom, emitNewRoomAndJoin } from 
 import { useGlobalStorage } from '../../services/storageService';
 import Select from '../Components/Common/Select';
 import { logout } from '../../services/userService';
+import { useNavigate } from 'react-router-dom';
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
     const [newRoom, setNewRoom] = useState<Room>(getDefaultRoom())
     const [roomId, setRoomId] = useState<string>("")
+    const navigate = useNavigate()
 
+    useEffect(() => {
+
+        if (!storage.currentUser) {
+            navigate('/new-user')
+        }
+
+        if (storage.currentUser && !storage.currentRoom) {
+            navigate('/choose-party')
+        }
+
+        if (storage.currentUser && storage.currentRoom) {
+            navigate('/party/' + storage.currentRoom.id)
+        }
+
+    }, [storage.currentUser, storage.currentRoom?.id])
+    
     const handleCreateRoom = (e: any) => {
         emitNewRoomAndJoin(newRoom)
         return;
@@ -26,7 +44,6 @@ export default () => {
             console.log("invalid room id")
             return;
         }
-
 
         console.log("letsgo")
 

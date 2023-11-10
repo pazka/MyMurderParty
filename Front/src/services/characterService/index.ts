@@ -28,9 +28,8 @@ export const chooseCharacter = (characterId: string) => {
     if (!isUserInARoom()) return;
 
     let user = { ...storage.currentUser };
-    if (!user) return;
-
-    if (!getAllCharacters()[characterId]) {
+    if (!user) {
+        console.error("No user found");
         return;
     }
 
@@ -61,4 +60,15 @@ export const getCurrentCharacter = (): Character | null => {
 
     const usersWithCharacter = usersIdWithCharacterInRoom();
     return usersWithCharacter[storage.currentUser.id] ?? null;
+}
+
+export const useCurrentCharacter = (): Character | null => {
+    const [storage] = useGlobalStorage();
+    const [currentCharacter, setCurrentCharacter] = useState<Character | null>(getCurrentCharacter());
+
+    useEffect(() => {
+        setCurrentCharacter(getCurrentCharacter());
+    }, [storage.currentRoom?.characters])
+
+    return currentCharacter;
 }

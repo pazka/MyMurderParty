@@ -1,7 +1,7 @@
 import config from "../config"
 import restService from "../restService";
 import { emitLogin, emitLogout } from "../socketService/emits";
-import { getGlobalState, setGlobaState } from "../storageService"
+import { getGlobalState, resetStorage, setGlobaState } from "../storageService"
 
 export const fetchAllUsers = async () => {
     const response = await restService(config.host + "/users");
@@ -30,7 +30,6 @@ export const login = async  (user : User) => {
 }
 
 export const logout = async () => {
-    const storage = getGlobalState();
-    setGlobaState({ ...storage, currentUser: null })
+    resetStorage();
     emitLogout();
 }

@@ -1,14 +1,31 @@
 import './NewUser.scss';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useGlobalStorage } from '../../services/storageService';
 import { login, logout } from '../../services/userService';
 import { useStateWithDep } from '../../services/utils';
+import { useNavigate } from 'react-router-dom';
 
 export default () => {
     const [storage, setStorage] = useGlobalStorage()
     const [currentUser, setUser] = useStateWithDep<User | null>(storage.currentUser)
+    const navigate = useNavigate()
+    useEffect(() => {
+
+        if (!storage.currentUser) {
+            navigate('/new-user')
+        }
+
+        if (storage.currentUser && !storage.currentRoom) {
+            navigate('/choose-party')
+        }
+
+        if (storage.currentUser && storage.currentRoom) {
+            navigate('/party/' + storage.currentRoom.id)
+        }
+
+    }, [storage.currentUser, storage.currentRoom?.id])
 
     const handleLogin = (e: any) => {
         e.preventDefault()

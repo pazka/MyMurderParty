@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { sendEvent, useEvent } from "../../services/eventsService"
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
 import { getCurrentGameConfig, getCurrentGameEngine } from "../../services/gameService"
@@ -11,14 +11,24 @@ import './PartyRoom.scss'
 import { Route, Routes, useNavigate, useParams } from "react-router-dom"
 import CharacterList from "./CharacterList"
 import ObjectDetailPage from "./ObjectDetailPage"
+import CharacterPage from "./CharacterPage"
+import { getCurrentCharacter, useCurrentCharacter } from "../../services/characterService"
 
 export default () => {
     const [storage] = useGlobalStorage();
     const inventory = useInventory();
     const currentGameEngine = getCurrentGameEngine();
-    const currentGameConfgi = getCurrentGameConfig();
+    const currentGameConfig = getCurrentGameConfig();
     const currenRoom = useCurrentRoom();
+    const usedCharacter = useCurrentCharacter()
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if(!storage.currentRoom){
+            navigate('/')
+        }
+    }, [storage.currentRoom?.id])
+
 
     useEvent(AvailableEvents.endQrScan, (objectId: string) => {
         console.log("endQrScan", objectId)
@@ -36,7 +46,7 @@ export default () => {
     return <>
         <div className="head panel">
             <div className="character">
-                <CharacterMiniature charId="1" onClick={() => navigate('characters')} />
+                <CharacterMiniature charId={usedCharacter?.id ?? ""} onClick={() => navigate('characters')} />
             </div>
             <button className="qr-scan object" onClick={x => sendEvent(AvailableEvents.beginQrScan)}>
                 🔎
@@ -54,7 +64,7 @@ export default () => {
             <Route path="/*" element={<UserInventoryObjects onObjectClick={i => sendEvent(AvailableEvents.displayObject, i.id)} />} />
             <Route path="/object/:objectId" element={<ObjectDetailPage />} />
             <Route path="/characters" element={<CharacterList />} />
-            <Route path="/characters/:characterId" element={<CharacterList />} />
+            <Route path="/characters/:characterId" element={<CharacterPage />} />
         </Routes>
     </>
 }
