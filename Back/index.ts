@@ -72,6 +72,11 @@ app.get('/rooms', (req: Request, res: Response) => {
   })
 });
 
+app.all('*', (req, res) => {
+  //redirect all no found to '/'
+  res.redirect('/');
+})
+
 //Socket.io
 io.on('connection', (userSocket: Socket) => {
   userEvents(userSocket, io)

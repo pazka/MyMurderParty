@@ -13,14 +13,14 @@ export default () => {
 
     return <>
         <div className="log-display">
-            <div className="logs">
-                {storage.currentRoom?.roomHistory.map((log, i) => <p key={i}>{log}</p>)}
-            </div>
             <div className="actions panel section">
                 <form onSubmit={e => e.preventDefault()}>
-                    <input placeholder="Communicate..." type="text" value={message} onChange={e => setMessages(e.target.value)} />
+                    <textarea placeholder="Communicate..."  value={message} onChange={e => setMessages(e.target.value)} />
                     <button type="submit" onClick={handleSend}>Send</button>
                 </form>
+            </div>
+            <div className="logs">
+                {storage.currentRoom?.roomHistory.map((log, i) => <p key={i}>{log}</p>)}
             </div>
         </div>
 

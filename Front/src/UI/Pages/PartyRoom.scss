@@ -52,30 +52,46 @@
 }
 
 .log-display{
+    padding : 0.5em;
     height: 100%;
     width: 100%;
+    overflow: auto;
 
     display: flex;
     flex-direction: column;
 
 
     .logs{
-        height: 60%;
+        border-radius: 0.5em;
+        background-image: url(../../images/canvas.jpg);
+        height: 100%;
         width: 100%;
         display: flex;
         flex-direction: column-reverse;
         flex-wrap: nowrap;
         overflow: auto;
+        color : black;
+    }
+
+    .actions{
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        form{
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+        }
+        
     }
 }
 
-.actions{
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    
+.scenarios{
+    height: 100%;
+    overflow: auto;
+    padding:0.5em;
+    font-size: 0.7em;
 }
 
 .scenario{
-    font-size: 0.7em;
 }

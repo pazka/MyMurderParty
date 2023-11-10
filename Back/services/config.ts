@@ -2,7 +2,7 @@ const config = {
     "DEV": {
         target : "localhost",
         cors: {
-            origins: ["http://localhost:3000"],
+            origin: "http://localhost:3000",
             methods: ["GET", "POST"],
             credentials: true,
         },
