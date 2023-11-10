@@ -36,7 +36,7 @@ export default () => {
     const objectToDisplay = currentGameEngine.getObjectForCharacter(objectId,true)
     
     if (!objectToDisplay) {
-        return <p>Nothing To display</p>
+        return <p>Rien à afficher</p>
     }
 
     return <div className="object-combine-panel">
@@ -54,6 +54,6 @@ export default () => {
                 currentGameEngine.useObjects([objectToDisplay, inventoryItemToCombine])
             }}>{inventoryItem.name}</button>
         })}
-        <button onClick={handleClosePanel}>Close</button>
+        <button onClick={handleClosePanel}>Fermer</button>
     </div>
 }

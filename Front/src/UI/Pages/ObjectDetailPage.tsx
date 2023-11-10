@@ -33,7 +33,7 @@ export default () => {
     }, [objectId])
 
     if (!item) {
-        return <p>No item to display, it has already been taken by someone else</p>
+        return <p>Rien à afficher, l'object a été pris par quelqu'un d'autre</p>
     }
 
     //for the message if there is any
@@ -51,24 +51,24 @@ export default () => {
             {item.canBeTaken && <button className={"object"} onClick={() => {
                 sendEvent(AvailableEvents.displayObject, null)
                 currentGameEngine.takesAnObject(item.id)
-            }}>Take Object</button>}
+            }}>Prendre</button>}
 
             {item.canBeShared && !item.isOpenForTaking && <button className={"object"} onClick={() => {
                 currentGameEngine.shareAnObject(item.id)
-            }}>Share the Object</button>}
+            }}>Partager</button>}
 
             {item.canBeShared && item.isOpenForTaking && <button className={"object-dark"} onClick={() => {
                 currentGameEngine.stopSharingAnObject(item.id)
-            }}>Keep the Object</button>}
+            }}>Garder</button>}
 
             {currentGameEngine.isObjectUsableAlone(item.id) && <button className={"object"} onClick={() => {
                 sendEvent(AvailableEvents.displayObject, null)
                 currentGameEngine.useObjects([item])
-            }}>Use the Object</button>}
+            }}>Activer</button>}
 
-            {currentGameEngine.isObjectUsableWithAnotherObject(item.id) && <button className={"object"} onClick={() => {
+            {currentGameEngine.isObjectUsableWithAnotherObject(item.id) && <button className={"object secondary"} onClick={() => {
                 navigate('./combine')
-            }}>Use with something else</button>}
+            }}>Utiliser sur un autre object</button>}
 
             <button onClick={x => sendEvent(AvailableEvents.displayObject, null)}>Close</button>
         </div>

@@ -26,7 +26,7 @@ export default () => {
         navigate('../scenario')
     }
 
-    if (!character) return (<div>This is nobody <button onClick={handleChoose}>Choose to be nobody</button></div>)
+    if (!character) return (<div>Anonyme <button onClick={handleChoose}>Choisir l'anonymat</button></div>)
 
     return <div className="">
         <div className="character-page">
@@ -35,7 +35,7 @@ export default () => {
                     <img className="" src={character.imageUrl} />
                 </div>
                 <h3>{character.name}</h3>
-                {usedCharacters[characterId ?? ""] && <h4>Incaranted by {usedCharacters[characterId ?? ""].name}</h4>}
+                {usedCharacters[characterId ?? ""] && <h4>Incarné.e par {usedCharacters[characterId ?? ""].name}</h4>}
             </div>
             <div>
                 <h3>Scenario</h3>
@@ -45,7 +45,7 @@ export default () => {
             </div>
 
             {!usedCharacters[characterId ?? ""] && <div className="actions">
-                <button onClick={handleChoose}>Incarnate</button>
+                <button onClick={handleChoose}>Incarner</button>
             </div>}
         </div>
     </div>

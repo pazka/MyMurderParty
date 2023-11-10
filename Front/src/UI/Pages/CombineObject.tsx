@@ -28,7 +28,7 @@ export default () => {
     }, [objectId])
 
     if (!itemToCombine) {
-        return <p>No item to display, it has already been taken by someone else</p>
+        return <p>Rien à afficher, l'objet a été pris par quelqu'un</p>
     }
 
     const handleCombine = (otherObject : InventoryItem) => {
@@ -37,7 +37,7 @@ export default () => {
     }
 
     return <div className='combine-wrapper section panel'>
-        <h2>Combine {itemToCombine.name} with what ?</h2>
+        <h2>Utiliser {itemToCombine.name} avec quoi ?</h2>
         <div className="all-objects">
             <UserInventoryObjects onObjectClick={otherObject => handleCombine(otherObject)} />
         </div>

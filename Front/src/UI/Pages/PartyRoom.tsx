@@ -62,9 +62,9 @@ export default () => {
             </button>
             <div className="head-actions">
                 <button className="secondary" onClick={()=>navigate('./scenario')}>📜 Scenario</button>
-                <button className="secondary" onClick={()=>navigate('./events')}>📩 Party events</button>
+                <button className="secondary" onClick={()=>navigate('./events')}>📩 Messagerie</button>
                 <Routes>
-                    <Route path="/:path/*" element={<button className="secondary" onClick={()=>navigate('.')}>💼 Inventory </button>} />
+                    <Route path="/:path/*" element={<button className="secondary" onClick={()=>navigate('.')}>💼 Inventaire </button>} />
                 </Routes>
             </div>
         </div>
