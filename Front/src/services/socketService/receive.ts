@@ -52,7 +52,7 @@ export default (socket: Socket) => {
 
     socket.on("broadcast-from-room", ({ sender, data }: { sender: User, data: any }) => {
         if (data.message) {
-            enqueueSnackbar(data.message, { variant: data.variant ?? "info" });
+            enqueueSnackbar(sender.name + " : " + data.message, { variant: data.variant ?? "info" });
         }
 
         if(data.endOfGameResults){

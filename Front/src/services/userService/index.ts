@@ -30,6 +30,7 @@ export const login = async  (user : User) => {
 }
 
 export const logout = async () => {
-    resetStorage();
     emitLogout();
+    resetStorage();
+    window.location.reload();
 }

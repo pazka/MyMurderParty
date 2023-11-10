@@ -27,10 +27,10 @@ export default ({ charId, isUser, onClick }: { charId: string, isUser?: boolean,
 
     return <div className={`miniature-wrapper character-wrapper ${(usedCharacters[charId] && !isUser) ? 'used' : ''}`} onClick={onClick}>
         <div className='img-wrapper'>
-            {(usedCharacters[charId] && !isUser) && <div className="username"></div>}
             <img src={url} />
         </div>
-        {usedCharacters[charId] && <span>{usedCharacters[charId].name}</span>}
+        {(usedCharacters[charId] && !isUser) && <span>{usedCharacters[charId].name}</span>}
+        {(isUser) && <span>{currentUser?.name}</span>}
         <span>{name}</span>
     </div>
 }

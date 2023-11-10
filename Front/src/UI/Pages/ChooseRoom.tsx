@@ -18,7 +18,6 @@ export default () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-
         if (!storage.currentUser) {
             navigate('/new-user')
         }

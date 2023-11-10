@@ -21,9 +21,9 @@ export default async (userSocket: Socket, io: Server) => {
         pingUser(currentUser.id);
     }else{
         console.log("user does NOT exist to us, we setup it's socket connection but not login and room events")
+        userSocket.emit('you-are', null);
     }
 
-    userSocket.emit('you-are', null);
     broadcastAllClients();
     broadcastAllRooms();
     getRoomsOfUser(currentUser?.id ?? "").then((rooms) => {

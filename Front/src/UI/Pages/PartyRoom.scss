@@ -50,3 +50,28 @@
     height: 100%;
     padding-top: 0.5em;
 }
+
+.log-display{
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+
+    .logs{
+        height: 60%;
+        width: 100%;
+        display: flex;
+        flex-direction: column-reverse;
+        flex-wrap: nowrap;
+        overflow: auto;
+    }
+}
+
+.actions{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    
+}

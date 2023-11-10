@@ -4,12 +4,12 @@ let subscriptions: { [subscriptionkey: string]: Function } = {};
 
 export const getDefaultStorage = (): AppStorage => {
     return {
+        currentUser: null,
+        currentRoom: null,
         inventory: [],
         allRooms: [],
-        currentRoom: null,
         allUsers: [],
         usersInRoom: [],
-        currentUser: null,
         roomHistory: [],
     };
 };

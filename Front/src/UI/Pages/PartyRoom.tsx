@@ -1,18 +1,21 @@
-import { useEffect, useState } from "react"
-import { sendEvent, useEvent } from "../../services/eventsService"
-import { AvailableEvents } from "../../services/eventsService/allAvailableEvents"
-import { getCurrentGameConfig, getCurrentGameEngine } from "../../services/gameService"
-import { useInventory } from "../../services/inventoryService"
-import { useCurrentRoom } from "../../services/roomService"
-import { useGlobalStorage } from "../../services/storageService"
-import CharacterMiniature from "../Components/Common/CharacterMiniature"
-import UserInventoryObjects from "../Components/UserInventoryObjects"
-import './PartyRoom.scss'
-import { Route, Routes, useNavigate, useParams } from "react-router-dom"
-import CharacterList from "./CharacterList"
-import ObjectDetailPage from "./ObjectDetailPage"
-import CharacterPage from "./CharacterPage"
-import { getCurrentCharacter, useCurrentCharacter } from "../../services/characterService"
+import './PartyRoom.scss';
+
+import { useEffect, useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+
+import { useCurrentCharacter } from '../../services/characterService';
+import { sendEvent, useEvent } from '../../services/eventsService';
+import { AvailableEvents } from '../../services/eventsService/allAvailableEvents';
+import { getCurrentGameConfig, getCurrentGameEngine } from '../../services/gameService';
+import { useInventory } from '../../services/inventoryService';
+import { useCurrentRoom } from '../../services/roomService';
+import { useGlobalStorage } from '../../services/storageService';
+import CharacterMiniature from '../Components/Common/CharacterMiniature';
+import UserInventoryObjects from '../Components/UserInventoryObjects';
+import CharacterList from './CharacterList';
+import CharacterPage from './CharacterPage';
+import ObjectDetailPage from './ObjectDetailPage';
+import PartyEvents from './PartyEvents';
 
 export default () => {
     const [storage] = useGlobalStorage();
@@ -27,7 +30,7 @@ export default () => {
         if(!storage.currentRoom){
             navigate('/')
         }
-    }, [storage.currentRoom?.id])
+    }, [storage.currentRoom])
 
 
     useEvent(AvailableEvents.endQrScan, (objectId: string) => {
@@ -53,7 +56,7 @@ export default () => {
             </button>
             <div className="head-actions">
                 <button className="secondary">📜 Scenario</button>
-                <button className="secondary">📩 Party events</button>
+                <button className="secondary" onClick={()=>navigate('./events')}>📩 Party events</button>
                 <Routes>
                     <Route path="/:path/*" element={<button className="secondary" onClick={()=>navigate('.')}>💼 Inventory </button>} />
                 </Routes>
@@ -65,6 +68,7 @@ export default () => {
             <Route path="/object/:objectId" element={<ObjectDetailPage />} />
             <Route path="/characters" element={<CharacterList />} />
             <Route path="/characters/:characterId" element={<CharacterPage />} />
+            <Route path="/events" element={<PartyEvents />} />
         </Routes>
     </>
 }
