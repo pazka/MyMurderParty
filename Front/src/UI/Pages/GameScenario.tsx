@@ -11,18 +11,17 @@ export default () => {
     const renderCharacterScenario = () => {
         if (!currentCharacter) {
             return <>
-
-                <h2>Your public scenario</h2>
-                <p>You don't have a character</p>
+                <h2>Votre scenario officiel</h2>
+                <p>Vous n'avez pas de scenario</p>
             </>
         }
         return <>
-            <h2>Your public scenario</h2>
+            <h2>Votre scenario officiel</h2>
             <div className="section panel">
                 <Markdown>{currentCharacter?.scenario.public}</Markdown>
             </div>
             <hr />
-            <h2>Your private scenario</h2>
+            <h2>Votre scenario caché</h2>
             {hasPrivateScenario && <>
                 <button onClick={() => setDisplayPrivateScenario(!displayPrivateScenario)}>{displayPrivateScenario ? 'Hide' : 'Show'}</button>
                 {
@@ -33,7 +32,7 @@ export default () => {
             </>
             }{
                 !hasPrivateScenario && <div className=" section  panel secondary">
-                    <p>You character doesn't have a private scenario</p>
+                    <p>Votre personnage n'a pas de scenario privé</p>
                 </div>
             }
         </>
@@ -41,7 +40,7 @@ export default () => {
 
     return <>
         <div className="scenarios">
-            <h2>Main scenario</h2>
+            <h2>Scenario du jeu</h2>
             <div className="scenario section panel ">
                 <Markdown>{currentGameConfig?.GAME_DESCRIPTION}</Markdown>
             </div>
