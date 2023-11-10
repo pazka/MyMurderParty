@@ -1,0 +1,41 @@
+name: Deploy on #DEPLOY
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+      - uses: actions/checkout@v4
+
+      - name: Check for #DEPLOY in commit message
+        run: |
+          if [[ $(git log -1 --pretty=%B | grep -c '#DEPLOY') -eq 0 ]]; then
+            echo "No #DEPLOY found in the commit message. Skipping deployment."
+            exit 0
+          fi
+
+      - name: Build Docker image
+        run: docker build . -t ghcr.io/pazka/my-murder-party:latest
+
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Publish Docker image
+        run: docker push ghcr.io/pazka/my-murder-party:latest
+
+      - name: SSH into server and run deployment script
+        uses: appleboy/ssh-action@master
+        with:
+          host: hosh.it
+          port: 22
+          username: ${{ vars.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /home
+            ./deploy_app.sh murder

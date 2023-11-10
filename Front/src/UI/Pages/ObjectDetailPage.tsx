@@ -18,8 +18,8 @@ export default () => {
     if (!objectId) {
         return <p>Object Id not found</p>
     }
+    
     const item = getFullyProcessedItem(objectId ?? "", true);
-
 
     useEffect(() => {
 

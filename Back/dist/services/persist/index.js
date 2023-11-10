@@ -9,12 +9,15 @@ let data = {
 class BaseEntityORM {
     constructor(entityData) {
         this.create = (obj) => {
-            const createdObj = Object.assign(Object.assign({}, obj), { id: "id-" + (0, userService_1.generateId)() });
+            const createdObj = Object.assign(Object.assign({}, obj), { id: (0, userService_1.generateId)() });
             this.entityData[createdObj.id] = createdObj;
             return Object.assign({}, createdObj);
         };
         this.read = (id) => {
-            return Object.assign({}, this.entityData[id]);
+            const obj = this.entityData[id];
+            if (!obj)
+                return null;
+            return Object.assign({}, obj);
         };
         this.readAll = () => {
             return [...Object.values(this.entityData)];

@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -25,25 +34,24 @@ const getVersion = () => {
     const versionArray = version.split('.');
     return versionArray.map((v) => parseInt(v));
 };
-const port = process.env.PORT || 8000;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)(config_1.default.cors));
 app.use(express_1.default.static('public'));
-app.get('/session', (req, res) => {
+app.get('/session', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    console.log("Session Request : existant : " + req.headers.cookie);
     const cookies = cookie_1.default.parse((_a = req.headers.cookie) !== null && _a !== void 0 ? _a : '');
     if (cookies.sessionId) {
+        console.log("user declare to be with this session : " + cookies.sessionId);
         return res.send(cookies.sessionId);
     }
-    //setcookie if not found
-    const sessionId = "sess_" + (0, userService_1.generateId)();
+    //setcookie if cookie not found or session of user not found
+    const sessionId = (0, userService_1.generateId)();
     res.setHeader('Set-Cookie', cookie_1.default.serialize('sessionId', sessionId, Object.assign({ path: '/', httpOnly: config_1.default.debug ? false : true, secure: config_1.default.debug ? false : true, maxAge: 60 * 60 * 24 * 7 }, (config_1.default.debug ? {} : {
         sameSite: 'strict',
         domain: config_1.default.domain
     }))));
     res.send(sessionId);
-});
+}));
 app.get('/info', (req, res) => {
     res.send(getVersion().join('.'));
 });
@@ -57,10 +65,14 @@ app.get('/rooms', (req, res) => {
         res.send(rooms);
     });
 });
+app.all('*', (req, res) => {
+    //redirect all no found to '/'
+    res.redirect('/');
+});
 //Socket.io
 io.on('connection', (userSocket) => {
     (0, userEvents_1.default)(userSocket, io);
 });
-server.listen(port, () => {
-    console.log(`Server is Fire at http://localhost:${port}`);
+server.listen(config_1.default.port, config_1.default.target, () => {
+    console.log(`Server is Fire at http://${config_1.default.target}:${config_1.default.port}`);
 });

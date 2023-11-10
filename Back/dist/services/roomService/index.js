@@ -42,6 +42,9 @@ const createNewRoom = (newRoom) => __awaiter(void 0, void 0, void 0, function* (
 exports.createNewRoom = createNewRoom;
 const getUsersInRoom = (roomId) => __awaiter(void 0, void 0, void 0, function* () {
     const room = persist_1.RoomCRUD.read(roomId);
+    if (!room) {
+        return [];
+    }
     const allUsers = persist_2.UserCRUD.readAll();
     const allUsersInRoom = allUsers.filter(u => room.users[u.id]);
     return allUsersInRoom;
@@ -62,6 +65,9 @@ exports.createNewRoomWithOneUser = createNewRoomWithOneUser;
 const userJoinRoom = (roomId, password, userId) => __awaiter(void 0, void 0, void 0, function* () {
     const room = persist_1.RoomCRUD.read(roomId);
     const user = persist_2.UserCRUD.read(userId);
+    if (!room || !user) {
+        throw new Error("User or room does not exist");
+    }
     if (room.users[userId]) {
         return room;
     }
@@ -83,6 +89,9 @@ exports.userJoinRoom = userJoinRoom;
 const userLeaveRoom = (roomId, userId) => __awaiter(void 0, void 0, void 0, function* () {
     const room = persist_1.RoomCRUD.read(roomId);
     const user = persist_2.UserCRUD.read(userId);
+    if (!room || !user) {
+        return;
+    }
     if (!room.users[userId]) {
         throw new Error("User does not exist in the party");
     }
@@ -94,23 +103,34 @@ const userLeaveRoom = (roomId, userId) => __awaiter(void 0, void 0, void 0, func
 exports.userLeaveRoom = userLeaveRoom;
 const userChoosesACharacter = (userId, roomId, characterId) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const user = persist_2.UserCRUD.read(userId);
     const room = persist_1.RoomCRUD.read(roomId);
+    const currentUser = persist_2.UserCRUD.read(userId);
+    if (!room || !currentUser) {
+        return;
+    }
     //check if user has another character in the party
-    const possibleTakenCharId = (_a = Object.entries(room.characters).find(([charId, user]) => user.id === userId)) === null || _a === void 0 ? void 0 : _a[0];
-    if (possibleTakenCharId) {
-        delete room.characters[possibleTakenCharId];
+    const takenByUserCharId = (_a = Object.entries(room.characters).find(([charId, user]) => user.id === userId)) === null || _a === void 0 ? void 0 : _a[0];
+    if (takenByUserCharId && takenByUserCharId == characterId)
+        return;
+    if (takenByUserCharId && takenByUserCharId != characterId) {
+        //remove the current character from the user
+        delete room.characters[takenByUserCharId];
+        room.roomHistory.push(`${currentUser.name} left a character`);
     }
     if (room.characters[characterId]) {
         throw new Error("Character is already taken");
+        return;
     }
-    room.characters[characterId] = user;
-    room.roomHistory.push(`${user.name} chose a character`);
+    room.characters[characterId] = currentUser;
+    room.roomHistory.push(`${currentUser.name} chose a character`);
     persist_1.RoomCRUD.update(room);
 });
 exports.userChoosesACharacter = userChoosesACharacter;
 const updateRoomObjects = (userId, roomId, objects) => __awaiter(void 0, void 0, void 0, function* () {
     const room = persist_1.RoomCRUD.read(roomId);
+    if (!room) {
+        return;
+    }
     room.objects = objects;
     persist_1.RoomCRUD.update(room);
 });

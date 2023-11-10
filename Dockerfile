@@ -32,7 +32,7 @@ RUN cp -r Back/node_modules Back/dist/node_modules
 
 # Build Front
 
-RUN cd Front && npm run build
+RUN cd Front && npm run ci
 
 # copy front dist to back/dist/public
 

@@ -26,6 +26,24 @@ const setupUserRoomEvents = (user, userSocket, io) => {
             userSocket.emit('error', err.message);
         });
     });
+    userSocket.on('new-room-and-join', (newRoom) => {
+        (0, roomService_1.createNewRoom)(newRoom).then((createdRoom) => __awaiter(void 0, void 0, void 0, function* () {
+            console.log("New room creation : ", createdRoom);
+            (0, socket_io_1.broadcastAllRooms)();
+            (0, roomService_1.userJoinRoom)(createdRoom.id, createdRoom.password, user.id).then((room) => {
+                console.log("User joined room : ", room);
+                userSocket.join(room.id);
+                io.to(room.id).emit('user-joined-room', user);
+                (0, exports.notifyRoomUpdate)(io, room.id);
+            }).catch((err) => {
+                console.log(err.message);
+                userSocket.emit('error', err.message);
+            });
+        })).catch((err) => {
+            console.log(err.message);
+            userSocket.emit('error', err.message);
+        });
+    });
     userSocket.on('join-room', (data) => __awaiter(void 0, void 0, void 0, function* () {
         (0, userService_1.pingUser)(user.id);
         if (!(yield (0, roomSocketService_1.ensureRoomExistOrError)(data.roomId, userSocket)))
@@ -80,6 +98,10 @@ const setupUserRoomEvents = (user, userSocket, io) => {
         if (!(yield (0, roomSocketService_1.ensureUserIsInARoom)(user.id, data.roomId, userSocket)))
             return;
         const room = persist_1.RoomCRUD.read(data.roomId);
+        if (!room) {
+            userSocket.emit('error', "Room does not exist");
+            return;
+        }
         room.roomHistory.push(`${user.name} : ${data.message}`);
         persist_1.RoomCRUD.update(room);
         io.to(data.roomId).emit('broadcast-from-room', { sender: user, data });
@@ -90,6 +112,10 @@ const setupUserRoomEvents = (user, userSocket, io) => {
         if (!(yield (0, roomSocketService_1.ensureRoomExistOrError)(data.roomId, userSocket)))
             return;
         const room = persist_1.RoomCRUD.read(data.roomId);
+        if (!room) {
+            userSocket.emit('error', "Room does not exist");
+            return;
+        }
         if (room.password !== data.password) {
             userSocket.emit('error', "Wrong password");
             return;
@@ -106,6 +132,9 @@ const setupUserRoomEvents = (user, userSocket, io) => {
 exports.setupUserRoomEvents = setupUserRoomEvents;
 const notifyRoomUpdate = (io, roomId) => __awaiter(void 0, void 0, void 0, function* () {
     const room = persist_1.RoomCRUD.read(roomId);
+    if (!room) {
+        return;
+    }
     const users = yield (0, roomService_1.getUsersInRoom)(roomId);
     io.to(roomId).emit('update-room', room);
     io.to(roomId).emit('update-room-users', users);

@@ -53,6 +53,8 @@ const updateUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
 exports.updateUser = updateUser;
 const pingUser = (userId, disconnected = false) => __awaiter(void 0, void 0, void 0, function* () {
     const user = persist_1.UserCRUD.read(userId);
+    if (!user)
+        return;
     user.lastActivity = Date.now();
     if (disconnected)
         user.lastActivity = -1;
@@ -64,6 +66,17 @@ const deleteUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.deleteUser = deleteUser;
 const generateId = () => {
-    return Array(4).fill(0).map(x => Math.random().toString(36).substring(2, 5)).join('-');
+    //3 CAPS letters + 1 dash + 3 numbers
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const numbers = "0123456789";
+    let id = "";
+    for (let i = 0; i < 3; i++) {
+        id += letters[Math.floor(Math.random() * letters.length)];
+    }
+    id += "-";
+    for (let i = 0; i < 3; i++) {
+        id += numbers[Math.floor(Math.random() * numbers.length)];
+    }
+    return id;
 };
 exports.generateId = generateId;

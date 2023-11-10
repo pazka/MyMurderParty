@@ -20,14 +20,19 @@ const roomService_1 = require("../roomService");
 exports.default = (userSocket, io) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const cookies = cookie_1.default.parse((_a = userSocket.handshake.headers.cookie) !== null && _a !== void 0 ? _a : "");
-    console.log('New socket connection', userSocket.id, 'from', userSocket.handshake.address, 'with', userSocket.handshake.headers['user-agent'], "sessionId?", cookies.sessionId);
+    console.log('New socket connection', userSocket.id, 'from', userSocket.handshake.address, 'with', userSocket.handshake.headers['user-agent'], "\n sessionId?", cookies.sessionId);
     (0, roomEvents_1.resetRoomForUser)(userSocket);
     let currentUser = yield (0, userService_1.getUserBySessionId)(cookies.sessionId);
     //case user already has a session but hasn't logged in yet
     if (currentUser) {
+        console.log("user exist to us, and the already set session is valid, we will set its login and sroom events");
         (0, roomEvents_1.setupUserRoomEvents)(currentUser, userSocket, io);
-        (0, userService_1.pingUser)(currentUser.id);
         userSocket.emit('you-are', currentUser);
+        (0, userService_1.pingUser)(currentUser.id);
+    }
+    else {
+        console.log("user does NOT exist to us, we setup it's socket connection but not login and room events");
+        userSocket.emit('you-are', null);
     }
     (0, socket_io_1.broadcastAllClients)();
     (0, socket_io_1.broadcastAllRooms)();
@@ -44,7 +49,7 @@ exports.default = (userSocket, io) => __awaiter(void 0, void 0, void 0, function
     userSocket.on('login', (data) => {
         var _a, _b;
         if (currentUser) {
-            userSocket.emit('error', "You are already logged in");
+            userSocket.emit('you-are', currentUser);
             return;
         }
         if (((_b = (_a = data === null || data === void 0 ? void 0 : data.name) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0) < 3) {
@@ -57,6 +62,7 @@ exports.default = (userSocket, io) => __awaiter(void 0, void 0, void 0, function
             currentUser = user;
             (0, roomEvents_1.setupUserRoomEvents)(currentUser, userSocket, io);
             io.emit('new-user', currentUser);
+            userSocket.emit('you-are', currentUser);
             (0, socket_io_1.broadcastAllClients)();
         });
     });
