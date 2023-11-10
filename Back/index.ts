@@ -28,8 +28,6 @@ const getVersion = () => {
   return versionArray.map((v) => parseInt(v));
 }
 
-const port = process.env.PORT || 8000;
-
 app.use(express.json());
 app.use(cors(config.cors))
 app.use(express.static('public'))
@@ -79,6 +77,6 @@ io.on('connection', (userSocket: Socket) => {
   userEvents(userSocket, io)
 });
 
-server.listen(port, () => {
-  console.log(`Server is Fire at http://localhost:${port}`);
+server.listen(config.port,config.target, () => {
+  console.log(`Server is Fire at http://${config.target}:${config.port}`);
 });

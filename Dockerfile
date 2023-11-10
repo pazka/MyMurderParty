@@ -22,11 +22,13 @@ RUN cd Front && npm install --legacy-peer-deps
 
 # Bundle app source
 
-COPY . .
+COPY Front ./Front
+COPY Back ./Back
 
 # Build Back
 
 RUN cd Back && npm run build
+RUN cp -r Back/node_modules Back/dist/node_modules
 
 # Build Front
 
@@ -40,13 +42,11 @@ WORKDIR /app
 
 # copy tmp back dist to app
 
-RUN cp -r /app_tmp/Back/dist /app
-
-ENV PORT=80
-ENV ENV=PROD
+RUN cp -r /app_tmp/Back/dist/* /app
 
 # run server
-
+#interactive for debbuging 
+#CMD ["tail", "-f", "/dev/null"]
 CMD ["node", "index.js"]
 
 
