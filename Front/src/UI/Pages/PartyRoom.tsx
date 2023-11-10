@@ -48,8 +48,8 @@ export default () => {
         }
     })
 
-    useEvent(AvailableEvents.endOfGame, (endOfGameResults : EndOfGameResult[]) => {
-        
+    useEvent(AvailableEvents.endOfGame, (endOfGameResults: EndOfGameResult[]) => {
+        currentGameEngine.executeEndOfGame(endOfGameResults)
     })
 
     return <>
