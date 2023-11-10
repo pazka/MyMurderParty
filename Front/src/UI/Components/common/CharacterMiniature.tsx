@@ -19,15 +19,15 @@ export default ({ charId, isUser, onClick }: { charId: string, isUser?: boolean,
         if (!character) {
             setUrl(Math.random() > 0.5 ? whoman : who_man);
             setName('No Character selected')
-        }else{
+        } else {
             setUrl(character.imageUrl);
             setName(character.name)
         }
     }, [charId])
 
-    return <div className={`miniature-wrapper character-wrapper ${usedCharacters[charId] ? 'used' : ''}`} onClick={onClick}>
+    return <div className={`miniature-wrapper character-wrapper ${(usedCharacters[charId] && !isUser) ? 'used' : ''}`} onClick={onClick}>
         <div className='img-wrapper'>
-            {usedCharacters[charId] && <div className="username"></div>}
+            {(usedCharacters[charId] && !isUser) && <div className="username"></div>}
             <img src={url} />
         </div>
         {usedCharacters[charId] && <span>{usedCharacters[charId].name}</span>}

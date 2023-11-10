@@ -16,6 +16,7 @@
     height: fit-content;
     border: solid 2em $color-object;
     border-image: url("../../images/frame.png") 25% round;
+    background-image: url("../../images/canvas.jpg");
 
     display: flex;
     flex-wrap: wrap;

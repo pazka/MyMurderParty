@@ -23,7 +23,7 @@ $color-secondary-light: toRgb(lighten($color-secondary, 20%));
 
 $color-background: #054d69;
 $color-background-dark: toRgb(darken($color-primary, 20%));
-$color-background-light: toRgb(lighten($color-primary, 10%));
+$color-background-light: toRgb(lighten($color-primary, 20%));
 
 $color-object: #ffcc00;
 $color-object-dark: toRgb(darken($color-object, 30%));

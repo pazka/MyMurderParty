@@ -46,7 +46,7 @@ export default () => {
     return <>
         <div className="head panel">
             <div className="character">
-                <CharacterMiniature charId={usedCharacter?.id ?? ""} onClick={() => navigate('characters')} />
+                <CharacterMiniature isUser charId={usedCharacter?.id ?? ""} onClick={() => navigate('characters')} />
             </div>
             <button className="qr-scan object" onClick={x => sendEvent(AvailableEvents.beginQrScan)}>
                 🔎
