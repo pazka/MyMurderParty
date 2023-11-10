@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  app:
+    image: 'pazka/my-murder-party:latest'
+    restart: always
+    ports:
+      - '9674:80'
+    environment:
+      - ENV=PROD
