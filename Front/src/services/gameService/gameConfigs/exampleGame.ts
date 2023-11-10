@@ -10,7 +10,7 @@ export const TROMBINOSCOPE: Trombinoscope = {
         imageUrl: "https://sharing.hosh.it/images/map1.jpg",
         "scenario": {
             public: "Vous êtes l'assistant.e du scientifique. Vous avez des compétence en science et en informatique.",
-            private: "Vous chercher le secret du scientifique."
+            private: "Vous cherchez le secret du scientifique."
         },
         "type": CharactersTypes.SCIENTIST
     },

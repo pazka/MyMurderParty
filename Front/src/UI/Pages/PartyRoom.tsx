@@ -16,6 +16,7 @@ import CharacterList from './CharacterList';
 import CharacterPage from './CharacterPage';
 import ObjectDetailPage from './ObjectDetailPage';
 import PartyEvents from './PartyEvents';
+import GameScenario from './GameScenario';
 
 export default () => {
     const [storage] = useGlobalStorage();
@@ -55,7 +56,7 @@ export default () => {
                 🔎
             </button>
             <div className="head-actions">
-                <button className="secondary">📜 Scenario</button>
+                <button className="secondary" onClick={()=>navigate('./scenario')}>📜 Scenario</button>
                 <button className="secondary" onClick={()=>navigate('./events')}>📩 Party events</button>
                 <Routes>
                     <Route path="/:path/*" element={<button className="secondary" onClick={()=>navigate('.')}>💼 Inventory </button>} />
@@ -69,6 +70,7 @@ export default () => {
             <Route path="/characters" element={<CharacterList />} />
             <Route path="/characters/:characterId" element={<CharacterPage />} />
             <Route path="/events" element={<PartyEvents />} />
+            <Route path="/scenario" element={<GameScenario />} />
         </Routes>
     </>
 }

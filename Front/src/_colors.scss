@@ -7,7 +7,7 @@
     @return rgb($red, $green, $blue);
 }
 
-$color-text-light: rgb(46, 46, 46);
+$color-text-light: rgb(26, 25, 25);
 $color-text-dark: rgb(247, 243, 252);
 
 $color-disabled: #676170;
@@ -38,7 +38,7 @@ $color-error: #FF0054;
 $color-error-dark: toRgb(darken($color-error, 20%));
 $color-error-light: toRgb(lighten($color-error, 20%));
 
-$color-warning: #93e1d8;
+$color-warning: #a3e071;
 $color-warning-dark: toRgb(darken($color-warning, 20%));
 $color-warning-light: toRgb(lighten($color-warning, 20%));
 

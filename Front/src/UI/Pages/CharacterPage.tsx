@@ -23,7 +23,7 @@ export default () => {
 
     const handleChoose = () => {
         chooseCharacter(character?.id )
-        navigate('..')
+        navigate('../scenario')
     }
 
     if (!character) return (<div>This is nobody <button onClick={handleChoose}>Choose to be nobody</button></div>)
