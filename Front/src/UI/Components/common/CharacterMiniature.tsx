@@ -18,7 +18,7 @@ export default ({ charId, isUser, onClick }: { charId: string, isUser?: boolean,
     useEffect(() => {
         if (!character) {
             setUrl(Math.random() > 0.5 ? whoman : who_man);
-            setName('No Character selected')
+            setName('Anonyme')
         } else {
             setUrl(character.imageUrl);
             setName(character.name)
