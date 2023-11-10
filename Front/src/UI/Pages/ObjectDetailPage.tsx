@@ -1,13 +1,15 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { sendEvent } from "../../services/eventsService";
-import { AvailableEvents } from "../../services/eventsService/allAvailableEvents";
-import { getCurrentGameEngine } from "../../services/gameService";
-import { getFullyProcessedItem } from "../../services/inventoryService";
-import { useGlobalStorage } from "../../services/storageService";
-import Markdown from "react-markdown";
-import ObjectQrCode from "../Components/Common/ObjectQrCode";
-import './ObjectDetailPage.scss'
-import { useEffect, useState } from "react";
+import './ObjectDetailPage.scss';
+
+import { useEffect, useState } from 'react';
+import Markdown from 'react-markdown';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { sendEvent } from '../../services/eventsService';
+import { AvailableEvents } from '../../services/eventsService/allAvailableEvents';
+import { getCurrentGameEngine } from '../../services/gameService';
+import { getFullyProcessedItem } from '../../services/inventoryService';
+import { useGlobalStorage } from '../../services/storageService';
+import ObjectQrCode from '../Components/Common/ObjectQrCode';
 
 export default () => {
     const { objectId } = useParams();

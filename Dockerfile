@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:20
 
 # Create app directory
 
@@ -31,7 +31,7 @@ RUN cd Back && npm run build
 RUN cp -r Back/node_modules Back/dist/node_modules
 
 # Build Front
-
+# removing the github ci
 RUN cd Front && npm run ci
 
 # copy front dist to back/dist/public

@@ -1,10 +1,9 @@
-import { get } from "http";
-import { useRef, useState } from "react";
-import allConfigs from "../../services/gameService/gameConfigs";
-import ObjectQrCode from "../Components/Common/ObjectQrCode";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useReactToPrint } from "react-to-print";
-import ts from "typescript";
+import { useRef, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useReactToPrint } from 'react-to-print';
+
+import allConfigs from '../../services/gameService/gameConfigs';
+import ObjectQrCode from '../Components/Common/ObjectQrCode';
 
 export default () => {
     let params = useParams();

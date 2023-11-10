@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4c28aabd.css",
+    "main.js": "/static/js/main.1993818c.js",
+    "static/media/Piazzolla-VariableFont_opsz,wght.ttf": "/static/media/Piazzolla-VariableFont_opsz,wght.2e8ca0fe73d9d23e723e.ttf",
+    "static/media/Caveat-VariableFont_wght.ttf": "/static/media/Caveat-VariableFont_wght.31f0a02d84d42627c894.ttf",
+    "static/media/frame.png": "/static/media/frame.e56ae9d8aebdf28d50a1.png",
+    "static/media/canvas.jpg": "/static/media/canvas.53a07dd2840356985704.jpg",
+    "static/media/TiltWarp-Regular-VariableFont_XROT,YROT.ttf": "/static/media/TiltWarp-Regular-VariableFont_XROT,YROT.0edec777f126e41f718d.ttf",
+    "static/media/magnifying-glass.png": "/static/media/magnifying-glass.2419e31fddb64fc0de4b.png",
+    "static/media/drawer.jpg": "/static/media/drawer.e1a0e24dfd8f0a505a33.jpg",
+    "static/media/who_man.png": "/static/media/who_man.6d2ae1baf291489690d9.png",
+    "index.html": "/index.html",
+    "main.4c28aabd.css.map": "/static/css/main.4c28aabd.css.map",
+    "main.1993818c.js.map": "/static/js/main.1993818c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4c28aabd.css",
+    "static/js/main.1993818c.js"
+  ]
+}
