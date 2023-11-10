@@ -130,7 +130,7 @@ const getObjectForCharacter = (objectId: string, noMessage: boolean = false): In
 
     if (currentObject.ownerId && currentObject.ownerId !== currentUser?.id && !currentObject.isOpenForTaking) {
         if (!noMessage) {
-            enqueueSnackbar("You shouldn't be able to look at this object. It has already been taken and is not shared by someone, please throw away the paper tag from the party", { variant: "error" })
+          //  enqueueSnackbar("You shouldn't be able to look at this object. It has already been taken and is not shared by someone, please throw away the paper tag from the party", { variant: "error" })
         }
         return null;
     }

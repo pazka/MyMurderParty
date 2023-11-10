@@ -17,6 +17,7 @@ import CharacterPage from './CharacterPage';
 import ObjectDetailPage from './ObjectDetailPage';
 import PartyEvents from './PartyEvents';
 import GameScenario from './GameScenario';
+import CombineObject from './CombineObject';
 
 export default () => {
     const [storage] = useGlobalStorage();
@@ -47,6 +48,10 @@ export default () => {
         }
     })
 
+    useEvent(AvailableEvents.endOfGame, (endOfGameResults : EndOfGameResult[]) => {
+        
+    })
+
     return <>
         <div className="head panel">
             <div className="character">
@@ -67,6 +72,7 @@ export default () => {
         <Routes>
             <Route path="/*" element={<UserInventoryObjects onObjectClick={i => sendEvent(AvailableEvents.displayObject, i.id)} />} />
             <Route path="/object/:objectId" element={<ObjectDetailPage />} />
+            <Route path="/object/:objectId/combine" element={<CombineObject />} />
             <Route path="/characters" element={<CharacterList />} />
             <Route path="/characters/:characterId" element={<CharacterPage />} />
             <Route path="/events" element={<PartyEvents />} />

@@ -1,10 +1,10 @@
 import {QRCodeSVG}  from 'qrcode.react';
 
-export default ({ objectId,name }: { objectId: string,name:string }) => {
-    return <div style={{ background: 'white', padding: '16px' }}>
+export default ({ objectId,name }: { objectId: string,name?:string }) => {
+    return <div className='qr-code'>
         <QRCodeSVG 
             value={objectId}
         />
-        <p>{name}</p>
+        {name && <p>{name}</p>}
     </div>
 }

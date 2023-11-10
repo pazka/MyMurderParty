@@ -5,16 +5,16 @@ import { getItemWithPossibleVariation, removeItemFromInventory, useInventory } f
 import ObjectMiniature from "./Common/ObjectMiniature";
 import config from '../../services/config'
 
-export default ({ onObjectClick }: { onObjectClick: (object:InventoryItem)=>void }) => {
+export default ({ onObjectClick }: { onObjectClick: (object: InventoryItem) => void }) => {
     const inventory = useInventory();
     const allItems = Object.values(getCurrentGameConfig().FULL_INVENTORY);
     const currentGameEngine = useGameEngine();
 
     return (
         <div className="section object-list">
-                {inventory.map((inventoryItem,i) => (
-                    <ObjectMiniature key={i} objectId={inventoryItem.id} onClick={onObjectClick}/>
-                ))}
+            {inventory.map((inventoryItem, i) => (
+                <ObjectMiniature key={i} objectId={inventoryItem.id} onClick={onObjectClick} />
+            ))}
         </div>
     )
 }
