@@ -56,7 +56,10 @@ VOus voulez trouver ce qui s'est passé et protéger ses travaux.`
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         "scenario": {
             public: `Vraisemblablement la seule personne autorisée à entrer dans le laboratoire du scientifique. Vous êtes un détective privé de renomée mondiale.
-`,
+
+Votre oeil afuté et votre esprit de déduction vous permettent de voir des choses que personne ne voit.            
+
+Vous portez une arme (demander au MJ)`,
             private: `Vous avez été contacté par le scientifique avant sa mort pour enquêter sur des menaces qui pesaient sur lui. 
             
 Arrivé trop tard, vous êtes déterminé à trouver le coupable.`
@@ -68,7 +71,11 @@ Arrivé trop tard, vous êtes déterminé à trouver le coupable.`
         "name": "Remi·e Chevalier",
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         "scenario": {
-            public: `Vous êtes l'assistant.e du Détective Richard Money. Vous avez des compétences en investigation. Vous voyez des choses que personnes ne voit.`,
+            public: `Vous êtes l'assistant.e du Détective Richard Money. Vous avez des compétences en investigation. 
+
+Votre oeil afuté et votre esprit de déduction vous permettent de voir des choses que personne ne voit. 
+
+Vous portez une arme (demander au MJ)`,
             private: `Vous êtes un·e Illuminati. Le grand conseil vous avait dit que les travaux du scientifique doievnt à tout finir entre les main de clan. 
 
 Vous savez que le conseil a envoyé d'autres agents dans la pièce mais ne savez pas qui.
