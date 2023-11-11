@@ -8,7 +8,6 @@ import HomeHeader from './UI/Components/Headers/HomeHeader';
 import RoomHeader from './UI/Components/Headers/RoomHeader';
 import ChooseRoom from './UI/Pages/ChooseRoom';
 import HomePage from './UI/Pages/HomePage';
-import { NewRoom } from './UI/Pages/NewRoom';
 import NewUser from './UI/Pages/NewUser';
 import PartyRoom from './UI/Pages/PartyRoom';
 
@@ -26,7 +25,6 @@ function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/new-user" element={<NewUser />} />
       <Route path="/choose-party" element={<ChooseRoom />} />
-      <Route path="/new-party" element={<NewRoom />} />
       <Route path="/party/:roomId/*" element={<PartyRoom />} />
     </Routes>
   </>
