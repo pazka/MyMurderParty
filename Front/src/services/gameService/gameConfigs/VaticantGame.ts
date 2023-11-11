@@ -1,7 +1,6 @@
 export const CHAR_TYPES = {
     "LAWFUL": "LAWFUL",
     "BAD": "BAD",
-    "NORMAL": "NORMAL",
     "TECH": "TECH",
     "INVESTIGATOR": "INVESTIGATOR",
     "SCIENTIFIC": "SCIENTIFIC",
@@ -20,7 +19,7 @@ Avec une accuité auditive hors du commun, vous avez développé une **technique
 Vous étiez un bon ami du scientifique`,
             private: "Vous recherchez la vérité sur les travaux du scientifique et chercher du sens à vos super sens"
         },
-        "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.LAWFUL]
+        "types": [CHAR_TYPES.LAWFUL]
     },
     "2_CRYPTO": {
         "id": "2_CRYPTO",
@@ -32,7 +31,7 @@ Vous étiez un bon ami du scientifique`,
 Collègue distant du scientifique, vous avez toujours été en compétition avec lui, mais sa mort vous creuse un vide.`,
             private: "Vous chercher à comprendre la mort du scientifique qui vous peine et peut-être reprendre ses travaux"
         },
-        "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.LAWFUL, CHAR_TYPES.TECH]
+        "types": [CHAR_TYPES.LAWFUL, CHAR_TYPES.TECH]
     },
     "3_PHYS": {
         "id": "3_PHYS",
@@ -48,7 +47,7 @@ Vous avez une connaissance approfondie des travaux du scientifique et de ses rec
 
 VOus voulez trouver ce qui s'est passé et protéger ses travaux.`
         },
-        "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.LAWFUL, CHAR_TYPES.SCIENTIFIC]
+        "types": [CHAR_TYPES.LAWFUL, CHAR_TYPES.SCIENTIFIC]
     },
     "4_DETECTIVE": {
         "id": "4_DETECTIVE",
@@ -64,7 +63,7 @@ Vous portez une arme (demander au MJ)`,
             
 Arrivé trop tard, vous êtes déterminé à trouver le coupable.`
         },
-        "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.LAWFUL, CHAR_TYPES.INVESTIGATOR]
+        "types": [CHAR_TYPES.LAWFUL, CHAR_TYPES.INVESTIGATOR]
     },
     "5_DET_ASSISTANT": {
         "id": "5_DET_ASSISTANT",
@@ -85,7 +84,7 @@ Vous suivez le détective pour vous **rapprocher le plus possible des travaux du
 
 Vous couchez avec \`Sophie Latech\`, la femme de Mr Bitanmin Sponsor du scientifique, Vous vous dites tout ensemble et **vous vous aidez mutuellement**.`
         },
-        "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.BAD, CHAR_TYPES.INVESTIGATOR],
+        "types": [CHAR_TYPES.BAD, CHAR_TYPES.INVESTIGATOR],
     },
     "6_SPONSOR": {
         "id": "6_SPONSOR",
@@ -98,7 +97,7 @@ Vous couchez avec \`Sophie Latech\`, la femme de Mr Bitanmin Sponsor du scientif
 Vous savez que le conseil a envoyé d'autres agents dans la pièce mais ne savez pas qui.
 Vous êtes marié à \`Sophie Latech\` mais le mariage bat de l'aile. Elle a préféré garder son nom pour des raisons compréhensibles.`
         },
-        "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.BAD],
+        "types": [CHAR_TYPES.BAD],
     },
     "7_TECHGIRL": {
         "id": "7_TECHGIRL",
@@ -114,7 +113,7 @@ Vous êtes marié à \`Mr Bitanmin\` mais le mariage bat de l'aile. Vous détest
 
 C'est pour ça que vous le trompez avec \`Remi Chevalier\` l'assistant du détective. Vous vous dites tout ensemble et **vous vous aidez mutuellement**.`
         },
-        "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.BAD, CHAR_TYPES.TECH],
+        "types": [CHAR_TYPES.BAD, CHAR_TYPES.TECH],
     },
     "8_PNJ_1": {
         "id": "8_PNJ_1",
@@ -129,7 +128,7 @@ Vous savez que le conseil a envoyé d'autres agents dans la pièce, mais ne pouv
 
 Vous avez été banni du clan pour avoir révélé des secrets. Vous êtes déterminé à vous venger en les empechant de parvenir à leurs fins et en aidant les gentils`
         },
-        "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.LAWFUL],
+        "types": [CHAR_TYPES.LAWFUL],
     },
     "9_PNJ_2": {
         "id": "8_PNJ_2",
@@ -143,7 +142,7 @@ Vous savez que le conseil a envoyé d'autres agents dans la pièce, mais ne pouv
 
 Vous avez été banni du clan pour avoir révélé des secrets. Vous êtes déterminé à vous venger en les empechant de parvenir à leurs fins et en aidant les gentils`,
         },
-        "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.LAWFUL],
+        "types": [CHAR_TYPES.LAWFUL],
     },
     "10_PNJ_BIO": {
         "id": "10_PNJ_BIO",
@@ -157,7 +156,7 @@ Vous savez que le conseil a envoyé d'autres agents dans la pièce mais ne savez
 
 Mais vous ne pouvez pas le révéler de peur de vous faire descendre.`,
         },
-        "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.BAD],
+        "types": [CHAR_TYPES.BAD],
     },
     "11_PNJ_4": {
         "id": "11_PNJ_4",
@@ -177,7 +176,7 @@ Vous connaissez tout les membres du clan :
 - \`Victor Marceau\` traitre au clan
 `,
         },
-        "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.BAD],
+        "types": [CHAR_TYPES.BAD],
     },
     "12_PNJ_5": {
         "id": "12_PNJ_5",
@@ -191,7 +190,7 @@ Vous savez que le conseil a envoyé d'autres agents dans la pièce mais ne savez
 
 Vous êtes là pour faire mine de faire avancer l'enquête mais tentez juste d'empecher votre mari et les non-illuminati de découvrir la vérité sur le travaux du scientifique.
 `},
-        types: [CHAR_TYPES.NORMAL, CHAR_TYPES.BAD],
+        types: [CHAR_TYPES.BAD],
     },
 }
 
@@ -279,7 +278,6 @@ export const FULL_INVENTORY: Inventory = {
         description: "L'ordinateur du professeur est bloqué avec un mot de passe ",
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         canBeTaken: true,
-
         toPrintIrl: true,
         variations: {
             "ORDI_HACKABLE": {
@@ -287,9 +285,18 @@ export const FULL_INVENTORY: Inventory = {
                 description: "L'ordinateur du professuer est facilement hackable pour vos compétence",
                 imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
                 canBeTaken: true,
-
                 variations: {},
                 lookActions: [],
+                useActions: [{
+                    conditions: {
+                        needsOneOfCharacterType: [CHAR_TYPES.TECH],
+                    },
+                    results: [
+                        {
+                            replaceByItemId: "ORDI_UNLOCKED",
+                        }
+                    ]
+                }]
             }
         },
         lookActions: [{
@@ -302,17 +309,8 @@ export const FULL_INVENTORY: Inventory = {
                 }
             ]
         }],
-        useActions: [{
-            conditions: {
-                needsOneOfCharacterType: [CHAR_TYPES.TECH],
-            },
-            results: [
-                {
-                    replaceByItemId: "ORDI_UNLOCKED",
-                }
-            ]
-        }],
-    }, 
+        useActions: [],
+    },
     "ORDI_UNLOCKED": {
         id: "ORDI_UNLOCKED",
         name: "Ordinateur du professeur débloqué",
@@ -329,7 +327,7 @@ export const FULL_INVENTORY: Inventory = {
             },
             results: [
                 {
-                    giveItemIds: ["FINANCE_BOOK", "RESEARCH_PAPER_1", "RESEARCH_PAPER_2"]
+                    giveItemIds: ["FINANCE_BOOK", "RESEARCH_PAPER_1"]
                 }
             ]
         }],
@@ -358,10 +356,7 @@ Les nom de comptes correspondent à des codes que vous avez dàja vu sur des aff
                 displayVariationId: "FINANCE_BOOK_INVESTIGATOR",
             }]
         }],
-        useActions: [{
-            conditions: {},
-            results: []
-        }],
+        useActions: [],
     },
     "RESEARCH_PAPER_1": {
         id: "RESEARCH_PAPER_1",
@@ -480,7 +475,7 @@ Le dinosaure se dirige vers la salle du coffre fort et y entre.
         lookActions: [],
         useActions: []
     },
-    "HIGH_SECURITY_CAMERA" : {
+    "HIGH_SECURITY_CAMERA": {
         id: "HIGH_SECURITY_CAMERA",
         name: "Caméra de sécurité",
         description: `Caméra de sécurité placée en hauteur.
@@ -526,9 +521,7 @@ Le dinosaure se dirige vers la salle du coffre fort et y entre.
         variations: {},
         lookActions: [],
         useActions: [{
-            conditions: {
-                needsOneOfObjectsId: ["ORDI_UNLOCKED"],
-            },
+            conditions: {},
             results: [
                 {
                     giveItemIds: ["CAMERA_RECORDING"],
@@ -536,6 +529,193 @@ Le dinosaure se dirige vers la salle du coffre fort et y entre.
             ]
         }]
     },
+    "FINAL_MACHINE": {
+        id: "FINAL_MACHINE",
+        name: "Machine complète",
+        description: `Elle vibre et fait du bruit, elle est allumée et affiche un message \`En attente d'une cible ADN\``,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: false,
+        variations: {},
+        lookActions: [],
+        useActions: [{
+            conditions: {
+                needsOneOfObjectsId: ["AMBER", "EGG"],
+            },
+            results: [
+                {
+                    triggerEndOfGame: [{
+                        "caractersTypeId": [CHAR_TYPES.LAWFUL],
+                        "hasWon": true,
+                        "popUpMessage": {
+                            variant: "success",
+                            message: "Vous avez fini les travaux du scientique et avec ouvert un portail vers les ressources infinies de la préhistoire !"
+                        }
+                    }, {
+                        "caractersTypeId": [CHAR_TYPES.BAD],
+                        "hasWon": false,
+                        "popUpMessage": {
+                            variant: "error",
+                            message: "Vous n'avez pas réussi à diriger les travaux du scientifique vers la fin du monde, vous avez perdu !"
+                        }
+                    }]
+                }
+            ]
+        }, {
+            conditions: {
+                needsOneOfObjectsId: ["METEORITE"],
+            },
+            results: [
+                {
+                    triggerEndOfGame: [{
+                        "caractersTypeId": [CHAR_TYPES.BAD],
+                        "hasWon": true,
+                        "popUpMessage": {
+                            variant: "magic",
+                            message: "Vous sentez un trou noir se former, signifiant la fin du monde. Vous avez accompli l'objectif des Illuminati."
+                        }
+                    }, {
+                        "caractersTypeId": [CHAR_TYPES.LAWFUL],
+                        "hasWon": false,
+                        "popUpMessage": {
+                            variant: "error",
+                            message: "Vous sentez un trou noir se former, signifiant la fin du monde, vous avez perdu !"
+                        }
+                    }]
+                }
+            ]
+        }]
+    },
+    "INCOMPLETE_MACHINE_2": {
+        id: "INCOMPLETE_MACHINE_2",
+        name: "Machine incomplète mais allumée",
+        description: `Elle vibre et est allumée mais affiche un message en rouge \`En attente du module ADN\``,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: false,
+        variations: {},
+        lookActions: [],
+        useActions: [
+            {
+                conditions: {
+                    needsOneOfObjectsId: ["ADN_MODULE"],
+                },
+                results: [
+                    {
+                        replaceByItemId: "FINAL_MACHINE",
+                    }
+                ]
+            }
+        ]
+    },
+    "INCOMPLETE_MACHINE_1": {
+        id: "INCOMPLETE_MACHINE_1",
+        name: "Machine incomplète et éteinte",
+        description: `Cette machine est bizarre et ressemble à un portail.
+        
+Elle est éteinte et semble manquer un élément pour fonctionner.`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: false,
+        toPrintIrl: true,
+        variations: {},
+        lookActions: [],
+        useActions: [
+            {
+                conditions: {
+                    needsOneOfObjectsId: ["POWER_BANK"],
+                },
+                results: [
+                    {
+                        replaceByItemId: "INCOMPLETE_MACHINE_2",
+                    }
+                ]
+            }]
+    },
+    "ADN_MODULE": {
+        id: "ADN_MODULE",
+        name: "Module ADN",
+        description: `Un gros morceau de fer et d'eléctronique marquée \`Module ADN\``,
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "POWER_BANK": {
+        id: "POWER_BANK",
+        name: "Batterie nucléaire",
+        description: `Une grosse batterie Duracell marquée \`Batterie Nucléaire\``,
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "LOCKER_CODE_3_HIGH": {
+        id: "LOCKER_CODE_3_HIGH",
+        name: "Code de casier N°3",
+        description: `Ces codes sont accrochés au plafond et inaccesibles sans escalade.`,
+        canBeTaken: false,
+        variations: {
+            "LOCKER_CODE_3_VIEW": {
+                name: "Code de casier N°3",
+                description: `Vous pouvez aisément récupérer ce code grace a votre scalade`,
+                useActions: [{
+                    conditions: {},
+                    results: [
+                        {
+                            giveItemIds: ["LOCKER_CODE_3"],
+                        }
+                    ]
+                }]
+            }
+        },
+        lookActions: [{
+            conditions: {
+                needsOneOfCharacterId: ["1_ESCALADE"],
+            },
+            results: [
+                {
+                    displayVariationId: "LOCKER_CODE_3_VIEW",
+                }
+            ]
+        }],
+        useActions: []
+    },
+    "LOCKER_CODE_3": {
+        id: "LOCKER_CODE_3",
+        name: "Code de casier N°3",
+        description: `Code de casier N°3`,
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "CRYPTED_COMPUTER": {
+        id: "CRYPTED_COMPUTER",
+        name: "Un Ordinateur avec un contenu crypté affiché à l'écran. Qui peut les décrypter ?",
+        description: `Code de casier N°3`,
+        canBeTaken: false,
+        toPrintIrl: true,
+        variations: {
+            "CRYPTED_COMPUTER_CRYPTO": {
+                name: "Ordinateur décrypté",
+                description: `Ordinateur décrypté. Vous y lisez le contenu d'un rapport sur les expériences du scientifique : 
+                
+        - test 1 : AND spatial : Quazi-echec. J'ai du tout couper avant une catastrophe
+        - test 2 : ADN préhistorique d'ambre : Bingo ! J'ai accès à des ressources infinies !`,
+            }
+        },
+        lookActions: [
+            {
+                conditions: {
+                    needsOneOfCharacterId: ["2_CRYPTO"],
+                },
+                results: [
+                    {
+                        displayVariationId: "CRYPTED_COMPUTER_CRYPTO",
+                    }
+                ]
+            }
+        ],
+        useActions: []
+    }
 }
 
 
