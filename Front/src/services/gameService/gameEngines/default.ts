@@ -13,12 +13,12 @@ import { openPopUp } from "../../utils"
 const validateALookAction = (action: LookAction): boolean => {
     const currentCharacter = getCurrentCharacter()
 
-    if (action.conditions.needsOneOfCharacterId.length > 0 && !action.conditions.needsOneOfCharacterId.includes(currentCharacter?.id ?? "")) {
+    if (action.conditions.needsOneOfCharacterId && action.conditions.needsOneOfCharacterId.length > 0 && !action.conditions.needsOneOfCharacterId.includes(currentCharacter?.id ?? "")) {
         return false
     }
 
     const currentTypes = currentCharacter?.types ?? [getCurrentGameConfig().CHAR_TYPES.NORMAL]
-    if (action.conditions.needsOneOfCharacterType.length > 0 && !action.conditions.needsOneOfCharacterType.some(type => currentTypes.includes(type))) {
+    if (action.conditions.needsOneOfCharacterType && action.conditions.needsOneOfCharacterType.length > 0 && !action.conditions.needsOneOfCharacterType.some(type => currentTypes.includes(type))) {
         return false
     }
 
@@ -28,23 +28,23 @@ const validateALookAction = (action: LookAction): boolean => {
 const validateAnUseAction = (action: UseAction, objectIds: string[]): boolean => {
     const currentCharacter = getCurrentCharacter()
 
-    if (action.conditions.needsOneOfCharacterId.length > 0 && !action.conditions.needsOneOfCharacterId.includes(currentCharacter?.id ?? "")) {
+    if (action.conditions.needsOneOfCharacterId && action.conditions.needsOneOfCharacterId.length > 0 && !action.conditions.needsOneOfCharacterId.includes(currentCharacter?.id ?? "")) {
         return false
     }
 
     const currentTypes = currentCharacter?.types ?? [getCurrentGameConfig().CHAR_TYPES.NORMAL]
-    if (action.conditions.needsOneOfCharacterType.length > 0 && !action.conditions.needsOneOfCharacterType.some(type => currentTypes.includes(type))) {
+    if (action.conditions.needsOneOfCharacterType && action.conditions.needsOneOfCharacterType.length > 0 && !action.conditions.needsOneOfCharacterType.some(type => currentTypes.includes(type))) {
         return false
     }
 
-    if (action.conditions.needsOneOfObjectsId.length > 0 && !action.conditions.needsOneOfObjectsId.some(id => objectIds.includes(id))) {
+    if (action.conditions.needsOneOfObjectsId && action.conditions.needsOneOfObjectsId.length > 0 && !action.conditions.needsOneOfObjectsId.some(id => objectIds.includes(id))) {
         return false
     }
 
     return true
 }
 
-const executeAnAction = (action: ActionResult, currentObject: InventoryItem, noMessage: boolean): InventoryItem => {
+const executeAnAction = (action: ActionResult, currentObject: InventoryItem, noMessage: boolean,lookOnly:boolean): InventoryItem => {
     if (!currentObject) {
         enqueueSnackbar("Can't execute an object action on no object, this is a bug 😖", { variant: "error" })
         return currentObject;
@@ -52,6 +52,9 @@ const executeAnAction = (action: ActionResult, currentObject: InventoryItem, noM
 
     if (action.displayVariationId) {
         currentObject.currentVariationKey = action.displayVariationId
+        if(!lookOnly){
+            updateOneObjectInRoom(currentObject)
+        }
     }
 
     if (action.displayItemId) {
@@ -97,7 +100,7 @@ const executeAnAction = (action: ActionResult, currentObject: InventoryItem, noM
     }
 
     if (action.broadcastMessage) {
-        emitBroadcastTextToRoom(action.broadcastMessage.message)
+        emitBroadcastTextToRoom(action.broadcastMessage)
     }
 
     if (action.triggerEndOfGame) {
@@ -107,7 +110,7 @@ const executeAnAction = (action: ActionResult, currentObject: InventoryItem, noM
     return currentObject
 }
 
-const getObjectForCharacter = (objectId: string, noMessage: boolean = false): InventoryItem | null => {
+const getObjectForCharacter = (objectId: string, noMessage: boolean = false,lookOnly :boolean = false): InventoryItem | null => {
     const currentRoom = getCurrentRoom()
     const currentUser = getCurrentUser()
     const currentCharacter = getCurrentCharacter()
@@ -131,7 +134,7 @@ const getObjectForCharacter = (objectId: string, noMessage: boolean = false): In
 
     if (currentObject.ownerId && currentObject.ownerId !== currentUser?.id && !currentObject.isOpenForTaking) {
         if (!noMessage) {
-          //  enqueueSnackbar("You shouldn't be able to look at this object. It has already been taken and is not shared by someone, please throw away the paper tag from the party", { variant: "error" })
+            //  enqueueSnackbar("You shouldn't be able to look at this object. It has already been taken and is not shared by someone, please throw away the paper tag from the party", { variant: "error" })
         }
         return null;
     }
@@ -148,7 +151,7 @@ const getObjectForCharacter = (objectId: string, noMessage: boolean = false): In
     delete currentObject.currentVariationKey
 
     for (const lookActionResult of appliableLookActionResults) {
-        currentObject = executeAnAction(lookActionResult, currentObject, noMessage)
+        currentObject = executeAnAction(lookActionResult, currentObject, noMessage,lookOnly)
     }
 
     return currentObject;
@@ -254,7 +257,7 @@ export const isObjectUsableAlone = (objectId: string): boolean => {
     if (useActions.length === 0) return false;
 
     const useActionWithNoObjectNeeded = useActions.find((useAction) => {
-        return useAction.conditions.needsOneOfObjectsId.length === 0
+        return !useAction.conditions.needsOneOfObjectsId || useAction.conditions.needsOneOfObjectsId.length === 0
     })
 
     return useActionWithNoObjectNeeded ? true : false;
@@ -268,7 +271,7 @@ export const isObjectUsableWithAnotherObject = (objectId: string): boolean => {
     //check if an action is possible with another object and if the current caracter can do it
     if (!object.useActions) return false;
 
-    const useActionsWithObjects = object.useActions.filter((useAction) => useAction.conditions.needsOneOfObjectsId.length > 0)
+    const useActionsWithObjects = object.useActions.filter((useAction) => useAction.conditions.needsOneOfObjectsId && useAction.conditions.needsOneOfObjectsId.length > 0)
     if (useActionsWithObjects.length === 0) return false;
 
     return true;
@@ -315,7 +318,7 @@ const useObjects = (objects: InventoryItem[]): void => {
 
     for (const objectWithResults of objectsWithResults) {
         for (const useActionResult of objectWithResults.results) {
-            executeAnAction(useActionResult, objectWithResults.object, false)
+            executeAnAction(useActionResult, objectWithResults.object, false,false)
         }
     }
 

@@ -98,7 +98,7 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
         });
     });
 
-    userSocket.on('broadcast-to-room', async (data: { message: string, roomId: string } | any) => {
+    userSocket.on('broadcast-to-room', async (data: { data: PopUpMessage, roomId: string } | any) => {
         pingUser(user.id);
         if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) return;
 
@@ -109,8 +109,10 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
             return;
         }
 
-        room.roomHistory.push(`${user.name} : ${data.message}`);
-        RoomCRUD.update(room);
+        if (data.popUpMessage) {
+            room.roomHistory.push(`${data.popUpMessage.message}`);
+            RoomCRUD.update(room);
+        }
 
         io.to(data.roomId).emit('broadcast-from-room', { sender: user, data });
         notifyRoomUpdate(io, data.roomId);

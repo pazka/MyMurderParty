@@ -94,9 +94,9 @@ interface LookAction {
 
 interface UseAction {
     conditions: {
-        needsOneOfCharacterId: string[],
-        needsOneOfCharacterType: string[],
-        needsOneOfObjectsId: string[]
+        needsOneOfCharacterId?: string[],
+        needsOneOfCharacterType?: string[],
+        needsOneOfObjectsId?: string[]
     },
     results: ActionResult[]
 }

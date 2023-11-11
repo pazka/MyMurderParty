@@ -42,10 +42,10 @@ export const emitUpdateObjects = async (objects: ObjectsInRoom) => {
     (await getSocket()).emit("update-room-objects", { objects, roomId });
 }
 
-export const emitBroadcastTextToRoom = async (text: string) => {
+export const emitBroadcastTextToRoom = async (popUpMessage: PopUpMessage) => {
     if (!isUserInARoom()) return;
     const roomId = getCurrentRoom()?.id;
-    (await getSocket()).emit("broadcast-to-room", { message: text, roomId });
+    (await getSocket()).emit("broadcast-to-room", { popUpMessage: popUpMessage, roomId });
 }
 
 export const emitBroadcastEndOfGameToRoom = async (endOfGameResults: EndOfGameResult[]) => {

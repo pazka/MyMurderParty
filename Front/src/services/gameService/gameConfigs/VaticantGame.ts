@@ -207,6 +207,29 @@ PS : Des armes sont présentes dans le jeu et peuvent être utilisées pour asso
 
 
 export const FULL_INVENTORY: Inventory = {
+    "ARME_1_6": {
+        id: "ARME_1_6",
+        name: "Revolver(6)",
+        description: "Un revolver avec 6 balles",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+        canBeUsed: true,
+        toPrintIrl : true,
+        variations: {
+        },
+        lookActions: [],
+        useActions: [{
+            conditions: {}, 
+            results: [
+                {
+                    broadcastMessage: {
+                        variant: "warning",
+                        message: "Vous entendez une forte détonation de révolver",
+                    },
+                }
+            ]
+        }],
+    },
 }
 
 

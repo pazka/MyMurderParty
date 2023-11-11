@@ -6,7 +6,7 @@ export default ()=>{
     const [text, setText] = useState("")
 
     const handleBroadaCast = ()=>{
-        emitBroadcastTextToRoom(text)
+        emitBroadcastTextToRoom({message : text})
     }
     
     return <div>
