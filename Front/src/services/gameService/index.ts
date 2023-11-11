@@ -4,7 +4,7 @@ import allGameConfigs from './gameConfigs/';
 import allEngines from './gameEngines';
 import { useEffect, useState } from 'react';
 
-let _currentGameConfig: GameConfig = allGameConfigs['Tutorial Game'];
+let _currentGameConfig: GameConfig = allGameConfigs['La mort du mysterieux Dr Vaticant'];
 const _currentGameEngine: GameEngine = allEngines['default'];
 
 export const updateCurrentGameConfigFromRoom = (room: Room | null): void => {

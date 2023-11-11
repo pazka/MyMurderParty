@@ -131,7 +131,7 @@ Vous avez été banni du clan pour avoir révélé des secrets. Vous êtes déte
         "types": [CHAR_TYPES.LAWFUL],
     },
     "9_PNJ_2": {
-        "id": "8_PNJ_2",
+        "id": "9_PNJ_2",
         "name": "Victor Marceau",
         imageUrl: "https://sharing.hosh.it/images/murd_vat/9_PNJ_2.png",
         "scenario": {
