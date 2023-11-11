@@ -10,7 +10,7 @@ export const TROMBINOSCOPE: Trombinoscope = {
     "1_ESCALADE": {
         "id": "1_ESCALADE",
         "name": "Marc Lavoie",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/1_ESCALADE.png",
         "scenario": {
             public: `Vous êtes un grimpeur aveugle à la suite d'une expérience raté avec le scientifique.
 
@@ -24,7 +24,7 @@ Vous étiez un bon ami du scientifique`,
     "2_CRYPTO": {
         "id": "2_CRYPTO",
         "name": "Alex Myster",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/2_CRYPTO.png",
         "scenario": {
             public: `Célèbre Expert en cryptographie et compréhension de donnée numérique.
             
@@ -36,7 +36,7 @@ Collègue distant du scientifique, vous avez toujours été en compétition avec
     "3_PHYS": {
         "id": "3_PHYS",
         "name": "Mme Pigius Glouton",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/3_PHYS.png",
         "scenario": {
             public: `Vous êtes une physicienne de renomée mondiale, mais plus pour votre passion dévorante pour les pigeon que vos travaux. 
             
@@ -52,7 +52,7 @@ VOus voulez trouver ce qui s'est passé et protéger ses travaux.`
     "4_DETECTIVE": {
         "id": "4_DETECTIVE",
         "name": "Richard Money",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/4_DETECTIVE.png",
         "scenario": {
             public: `Vraisemblablement la seule personne autorisée à entrer dans le laboratoire du scientifique. Vous êtes un détective privé de renomée mondiale.
 
@@ -68,7 +68,7 @@ Arrivé trop tard, vous êtes déterminé à trouver le coupable.`
     "5_DET_ASSISTANT": {
         "id": "5_DET_ASSISTANT",
         "name": "Remi·e Chevalier",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/5_DET_ASSISTANT.png",
         "scenario": {
             public: `Vous êtes l'assistant.e du Détective Richard Money. Vous avez des compétences en investigation. 
 
@@ -89,7 +89,7 @@ Vous couchez avec \`Sophie Latech\`, la femme de Mr Bitanmin Sponsor du scientif
     "6_SPONSOR": {
         "id": "6_SPONSOR",
         "name": "Henry Bitanmin",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/6_SPONSOR.png",
         "scenario": {
             public: `Vous êtes le sponsor du scientifique. Vous avez investi des millions dans ses recherches et vous êtes le seul à avoir accès à certain de ses travaux sans les comprendre.`,
             private: `Vous êtes un Illuminati. Le grand conseil vous avait dit que **les travaux du scientifique doivent à tout prix finir entre les mains du clan**, c'est pour ça qu'il vous finance vous-même. 
@@ -102,7 +102,7 @@ Vous êtes marié à \`Sophie Latech\` mais le mariage bat de l'aile. Elle a pr�
     "7_TECHGIRL": {
         "id": "7_TECHGIRL",
         "name": "Sophie Latech",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/7_TECHGIRL.png",
         "scenario": {
             public: `Vous êtes la femme de \`Mr Bitanmin\`, le sponsor du scientifique. Vous êtes une experte en informatique et en technologie.`,
             private: `Vous êtes une Illuminati. Le grand conseil vous avait dit que **les travaux du scientifique doivent à tout prix finir entre les mains du clan**, c'est pour ça qu'il vous finance vous-même.
@@ -118,7 +118,7 @@ C'est pour ça que vous le trompez avec \`Remi Chevalier\` l'assistant du détec
     "8_PNJ_1": {
         "id": "8_PNJ_1",
         "name": "Jean Valmont",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/8_PNJ_1.png",
         "scenario": {
             public: `Vous êtes un passant déterminé qui a réussi à rentrer dans ce labo pendant la confusion. Le truc bizarre c'est que vous êtes déguisé en Radar (???)
 Vous êtes un peu perdu mais vous avez l'air de savoir ce que vous faites.`,
@@ -133,7 +133,7 @@ Vous avez été banni du clan pour avoir révélé des secrets. Vous êtes déte
     "9_PNJ_2": {
         "id": "8_PNJ_2",
         "name": "Victor Marceau",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/9_PNJ_2.png",
         "scenario": {
             public: `Vous êtes un passant déterminé qui a réussi à rentrer dans ce labo pendant la confusion. Vous êtes un peu perdu mais vous avez l'air de savoir ce que vous faites.`,
             private: `Vous êtes un ancien Illuminati. Le clan voulait que le scientifique finisse ses travaux.
@@ -147,7 +147,7 @@ Vous avez été banni du clan pour avoir révélé des secrets. Vous êtes déte
     "10_PNJ_BIO": {
         "id": "10_PNJ_BIO",
         "name": "Dr Elisa Corbin",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/10_PNJ_BIO.png",
         "scenario": {
             public: `Vous êtes une scientifique experte en biologie. Vous êtes là parce que vous aimez le drama, qu'est-ce que vous foutez là ?`,
             private: `Vous êtes une Illuminati. Le grand conseil vous avait dit que **les travaux du scientifique doivent à tout prix finir entre les mains du clan**.
@@ -161,7 +161,7 @@ Mais vous ne pouvez pas le révéler de peur de vous faire descendre.`,
     "11_PNJ_4": {
         "id": "11_PNJ_4",
         "name": "Mme Clara Morille",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/11_PNJ_4.png",
         "scenario": {
             public: `Vous êtes la secrétaire du scientifique. Vous êtes là pour faire le ménage et ranger les affaires du scientifique. Vous savez tout de lui.`,
             private: `Vous êtes une Illuminati. Le grand conseil vous avait dit que **les travaux du scientifique doivent à tout prix finir entre les mains du clan**.
@@ -181,7 +181,7 @@ Vous connaissez tout les membres du clan :
     "12_PNJ_5": {
         "id": "12_PNJ_5",
         "name": "Anne Leroy",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/12_PNJ_5.png",
         "scenario": {
             public: `Vous êtes la femme du Détective \`Richard Money\`, vous êtes là car vous vouliez voir à quoi ressemblait son travail.`,
             private: `Vous êtes une Illuminati. Le grand conseil vous avait dit que **les travaux du scientifique doivent à tout prix finir entre les mains du clan**
@@ -210,7 +210,7 @@ export const FULL_INVENTORY: Inventory = {
         id: "ARME_1",
         name: "matraque du détective",
         description: `Une matraque avec le nom \`Richard Money\` gravé dessus`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/ARME_1.png",
         canBeTaken: true,
 
         toPrintIrl: true,
@@ -232,7 +232,7 @@ export const FULL_INVENTORY: Inventory = {
         id: "ARME_2",
         name: "matraque de l'assitant détective",
         description: `Une matraque avec le nom \`Remi Chevalier\` gravé dessus`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/ARME_2.png",
         canBeTaken: true,
 
         toPrintIrl: true,
@@ -254,7 +254,7 @@ export const FULL_INVENTORY: Inventory = {
         id: "ARME_3",
         name: "matraque",
         description: "Une matraque sans marquage particulier",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/ARME_3.png",
         canBeTaken: true,
 
         toPrintIrl: true,
@@ -276,14 +276,13 @@ export const FULL_INVENTORY: Inventory = {
         id: "ORDNI_LOCK",
         name: "Ordinateur du professeur bloqué",
         description: "L'ordinateur du professeur est bloqué avec un mot de passe ",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/COMPUTER.png",
         canBeTaken: true,
         toPrintIrl: true,
         variations: {
             "ORDI_HACKABLE": {
                 name: "Ordinateur facilement hackable",
                 description: "L'ordinateur du professuer est facilement hackable pour vos compétence",
-                imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
                 canBeTaken: true,
                 variations: {},
                 lookActions: [],
@@ -315,7 +314,7 @@ export const FULL_INVENTORY: Inventory = {
         id: "ORDI_UNLOCKED",
         name: "Ordinateur du professeur débloqué",
         description: "L'ordinateur du professeur est débloqué",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/COMPUTER.png",
         canBeTaken: true,
 
         variations: {
@@ -336,7 +335,7 @@ export const FULL_INVENTORY: Inventory = {
         id: "FINANCE_BOOK",
         name: "Fichier des comptes du professeur",
         description: "Fichier des comptes du professeur, vous ne comprenez pas grand chose mais vous voyez que le professeur a reçu des fonds de \`Henry Bitanmin\`, quelquechose d'autre s'y cache peut etre..",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/FINANCE_BOOK.png",
         canBeTaken: true,
 
         variations: {
@@ -362,7 +361,7 @@ Les nom de comptes correspondent à des codes que vous avez dàja vu sur des aff
         id: "RESEARCH_PAPER_1",
         name: "Recherche du professeur Opportunité",
         description: "Recherche du professeur sur les opportunités, vous ne comprenez pas grand chose, c'est très scientifique.",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/RESEARCH_PAPER_1.png",
         canBeTaken: true,
         variations: {
             "RESEARCH_PAPER_1_SCIENTIST": {
@@ -386,7 +385,7 @@ En fonction de la cible de la machine, on peut accéder à des opportunités dif
         id: "CLEF_CARREE",
         name: "Clé carrée",
         description: "Une clé carrée",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/CLEF_CARREE.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -396,7 +395,7 @@ En fonction de la cible de la machine, on peut accéder à des opportunités dif
         id: "MAINTENACE_TOOL",
         name: "Outil de maintenance",
         description: "Outil de maintenance pour débrouillage",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/MAINTENACE_TOOL.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -406,7 +405,7 @@ En fonction de la cible de la machine, on peut accéder à des opportunités dif
         id: "AMBER",
         name: "Ambre Préhistorique",
         description: `Ambre préhistorique avec une étiquette marquée: \`Cible ADN Pr Mach. Temp.\``,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/AMBER.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -417,7 +416,7 @@ En fonction de la cible de la machine, on peut accéder à des opportunités dif
         name: "Object étrange",
         description: `On dirait une pierre mais mou, il semble n'avoir aucun poids
 Il y a une étiquette marquée : \`Cible ADN Pr Mach. Temp.\``,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/METEORITE.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -427,7 +426,7 @@ Il y a une étiquette marquée : \`Cible ADN Pr Mach. Temp.\``,
         id: "EGG",
         name: "Gros Oeuf",
         description: `C'est un gros oeuf non identifié, il y a des trace de sang dessus. Qu'est-ce que ça peut bien être ?`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/EGG.png",
         canBeTaken: true,
         variations: {
             "DINO_EGG": {
@@ -469,7 +468,7 @@ Le dinosaure se dirige vers le professeur et le dévore. Il ne reste qu'un doigt
 Le dinosaure se dirige vers la salle du coffre fort et y entre.
 
 - Fin de l'enregistrement -`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/CAMERA_RECORDING.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -481,7 +480,7 @@ Le dinosaure se dirige vers la salle du coffre fort et y entre.
         description: `Caméra de sécurité placée en hauteur.
 
         Personne de normal ne peut l'atteindre.`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/HIGH_SECURITY_CAMERA.png",
         canBeTaken: false,
         toPrintIrl: true,
         variations: {
@@ -516,7 +515,7 @@ Le dinosaure se dirige vers la salle du coffre fort et y entre.
         id: "SD_CARD",
         name: "Carte SD",
         description: `Carte SD de la caméra de sécurité, vous avez besoin d'un pc pour la visioner`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/SD_CARD.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -533,7 +532,7 @@ Le dinosaure se dirige vers la salle du coffre fort et y entre.
         id: "FINAL_MACHINE",
         name: "Machine complète",
         description: `Elle vibre et fait du bruit, elle est allumée et affiche un message \`En attente d'une cible ADN\``,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/MACHINE.png",
         canBeTaken: false,
         variations: {},
         lookActions: [],
@@ -589,7 +588,7 @@ Le dinosaure se dirige vers la salle du coffre fort et y entre.
         id: "INCOMPLETE_MACHINE_2",
         name: "Machine incomplète mais allumée",
         description: `Elle vibre et est allumée mais affiche un message en rouge \`En attente du module ADN\``,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/MACHINE.png",
         canBeTaken: false,
         variations: {},
         lookActions: [],
@@ -612,7 +611,7 @@ Le dinosaure se dirige vers la salle du coffre fort et y entre.
         description: `Cette machine est bizarre et ressemble à un portail.
         
 Elle est éteinte et semble manquer un élément pour fonctionner.`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/MACHINE.png",
         canBeTaken: false,
         toPrintIrl: true,
         variations: {},
@@ -633,6 +632,7 @@ Elle est éteinte et semble manquer un élément pour fonctionner.`,
         id: "ADN_MODULE",
         name: "Module ADN",
         description: `Un gros morceau de fer et d'eléctronique marquée \`Module ADN\``,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/ADN_MODULE.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -642,6 +642,7 @@ Elle est éteinte et semble manquer un élément pour fonctionner.`,
         id: "POWER_BANK",
         name: "Batterie nucléaire",
         description: `Une grosse batterie Duracell marquée \`Batterie Nucléaire\``,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/POWER_BANK.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -651,6 +652,7 @@ Elle est éteinte et semble manquer un élément pour fonctionner.`,
         id: "LOCKER_CODE_3_HIGH",
         name: "Code de casier N°3",
         description: `Ces codes sont accrochés au plafond et inaccesibles sans escalade.`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_CODE_3.png",
         canBeTaken: false,
         variations: {
             "LOCKER_CODE_3_VIEW": {
@@ -682,6 +684,7 @@ Elle est éteinte et semble manquer un élément pour fonctionner.`,
         id: "LOCKER_CODE_3",
         name: "Code de casier N°3",
         description: `Code de casier N°3`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_CODE_3.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -689,8 +692,9 @@ Elle est éteinte et semble manquer un élément pour fonctionner.`,
     },
     "CRYPTED_COMPUTER": {
         id: "CRYPTED_COMPUTER",
-        name: "Un Ordinateur avec un contenu crypté affiché à l'écran. Qui peut les décrypter ?",
-        description: `Code de casier N°3`,
+        name: "Un Ordinateur crypté",
+        description: `Ordinateur fixe avec un contenu crypté affiché à l'écran. Qui peut les décrypter ?`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/COMPUTER.png",
         canBeTaken: false,
         toPrintIrl: true,
         variations: {
@@ -698,8 +702,12 @@ Elle est éteinte et semble manquer un élément pour fonctionner.`,
                 name: "Ordinateur décrypté",
                 description: `Ordinateur décrypté. Vous y lisez le contenu d'un rapport sur les expériences du scientifique : 
                 
-        - test 1 : AND spatial : Quazi-echec. J'ai du tout couper avant une catastrophe
-        - test 2 : ADN préhistorique d'ambre : Bingo ! J'ai accès à des ressources infinies !`,
+## test 1 
+ADN spatial : Quazi-echec. J'ai du tout couper avant une catastrophe
+
+## test 2 
+
+ADN préhistorique d'ambre : Bingo ! J'ai accès à des ressources infinies !`,
             }
         },
         lookActions: [
@@ -712,6 +720,259 @@ Elle est éteinte et semble manquer un élément pour fonctionner.`,
                         displayVariationId: "CRYPTED_COMPUTER_CRYPTO",
                     }
                 ]
+            }
+        ],
+        useActions: []
+    },
+    "LOCKER_CODE_2_CRYPTED": {
+        id: "LOCKER_CODE_2_CRYPTED",
+        name: "Code de casier N°2 crypté",
+        description: `Des codes marqués 'casier N°2' mais le code semble anormal, comme codé avec une clef de cryptage...`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_CODE_2.png",
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: [{
+            conditions: {
+                needsOneOfCharacterId: ["2_CRYPTO"],
+            },
+            results: [
+                {
+                    replaceByItemId: "LOCKER_CODE_2",
+                }
+            ]
+        }]
+    },
+    "LOCKER_CODE_2": {
+        id: "LOCKER_CODE_2",
+        name: "Code de casier N°2",
+        description: `Le code du casier N°2 en clair !`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_CODE_2.png",
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "DOIGT": {
+        id: "DOIGT",
+        name: "Un doigt humain",
+        description: "Un doigt ensanglanté, arraché par la force ! A qui appartien-t-il ?",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/DOIGT.png",
+        canBeTaken: true,
+        toPrintIrl: true,
+        variations: {
+            DOIGT_INVESTIGATOR: {
+                description: "Un doigt ensanglanté, vous identifiez qu'il appartient au scientifique !",
+            }
+        },
+        lookActions: [{
+            conditions: {
+                needsOneOfCharacterType: [CHAR_TYPES.INVESTIGATOR],
+            },
+            results: [{
+                displayVariationId: "DOIGT_INVESTIGATOR",
+            }]
+        }],
+        useActions: []
+    },
+    "DIGITAL_BOOK_LOCKED": {
+        id: "DIGITAL_BOOK_LOCKED",
+        name: "Journal numérique du professeur",
+        description: "Journal du professeur, cellé par empreinte digitale, seul son doigt pourra l'ouvrir",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/DIGITAL_BOOK.png",
+        canBeTaken: true,
+        toPrintIrl: true,
+        variations: {},
+        lookActions: [],
+        useActions: [{
+            conditions: {
+                needsOneOfObjectsId: ["DOIGT"],
+            },
+            results: [{
+                giveItemIds: ["DIGITAL_BOOK"],
+            }]
+        }]
+    },
+    "DIGITAL_BOOK": {
+        id: "DIGITAL_BOOK",
+        name: "Journal numérique du professeur",
+        description: `
+## dernière entrée du journal : 
+
+Ces satané Illuminati continue de me harceler pour obtenir mes recherches.. 
+Je sais qu'ils rodent partout mais je ne me laisserais pas faire !
+
+Jamais il n'obtiendront mes travaux !`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/DIGITAL_BOOK.png",
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "COURSE_LISTE": {
+        id: "COURSE_LISTE",
+        name: "liste de course",
+        description: `Une liste de course étrange : 
+- 1 oeuf de dinosaure 
+- 1 ambre préhistorique 
+- 1 météorite
+
+Un griboulli en bas semble avoir un sens mais vous ne savez pas quoi, il vous manque peut-être un sens de l'investigation...`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/COURSE_LISTE.png",
+        canBeTaken: true,
+        variations: {
+            COURSE_LISTE_INVESTIGATOR: {
+                description: `Une liste de course étrange, mais vous vous attardez surtout sur le gribouilli, quil vous parait naturel de déchifrer`,
+                useActions: [{
+                    conditions: {
+                        needsOneOfCharacterType: [CHAR_TYPES.INVESTIGATOR],
+                    },
+                    results: [{
+                        giveItemIds: ["CODE_LOCKER_1"],
+                    }]
+                }]
+            }
+        },
+        lookActions: [
+            {
+                conditions: {
+                    needsOneOfCharacterType: [CHAR_TYPES.INVESTIGATOR],
+                },
+                results: [{
+                    displayVariationId: "COURSE_LISTE_INVESTIGATOR",
+                }]
+            }
+        ],
+        useActions: []
+    },
+    "CODE_LOCKER_1": {
+        id: "CODE_LOCKER_1",
+        name: "Code de casier N°1",
+        description: `Le code du casier N°1 !`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_CODE_1.png",
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "LOCKER_1_LOCKED": {
+        id: "LOCKER_1_LOCKED",
+        name: "Casier N°1",
+        description: `Un casier fermé par un code. 
+        
+Le casier a reçu d'important dégats comme si on avait essayé sauvageent de l'ouvrir`,
+        canBeTaken: false,
+        toPrintIrl: true,
+        variations: {},
+        lookActions: [],
+        useActions: [{
+            conditions: {
+                needsOneOfObjectsId: ["CODE_LOCKER_1"],
+            },
+            results: [{
+                replaceByItemId: "LOCKER_1_OPEN",
+                giveItemIds: ["EGG"],
+            }]
+        }]
+    }, "LOCKER_1_OPEN": {
+        id: "LOCKER_1_OPEN",
+        name: "Casier N°1",
+        description: `Un casier ouvert, il ne contient plus rien`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_1.png",
+        canBeTaken: false,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "LOCKER_2_LOCKED": {
+        id: "LOCKER_2",
+        name: "Casier N°1",
+        description: `Un casier fermé par un code. 
+        
+Quelque chose semble briller à l'intérieur`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_2.png",
+        canBeTaken: false,
+        toPrintIrl: true,
+        variations: {},
+        lookActions: [],
+        useActions: [{
+            conditions: {
+                needsOneOfObjectsId: ["LOCKER_CODE_2"],
+            },
+            results: [{
+                replaceByItemId: "LOCKER_2_OPEN",
+                giveItemIds: ["EGG"],
+            }]
+        }]
+    }, "LOCKER_2_OPEN": {
+        id: "LOCKER_2_OPEN",
+        name: "Casier N°2",
+        description: `Un casier ouvert, il ne contient plus rien`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_2.png",
+        canBeTaken: false,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "LOCKER_3_LOCKED": {
+        id: "LOCKER_3_LOCKED",
+        name: "Casier N°3",
+        description: `Un casier fermé par un code.`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_3.png",
+        canBeTaken: false,
+        variations: {},
+        lookActions: [],
+        useActions: [{
+            conditions: {
+                needsOneOfObjectsId: ["LOCKER_CODE_3"],
+            },
+            results: [{
+                replaceByItemId: "LOCKER_3",
+                giveItemIds: ["ADN_MODULE"],
+            }]
+        }]
+    },
+    "LOCKER_3": {
+        id: "LOCKER_3",
+        name: "Casier N°3",
+        description: `Un casier ouvvet, vide`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_3.png",
+        canBeTaken: false,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "LAB_NOTE": {
+        id: "LAB_NOTE",
+        name: "Note de laboratoire",
+        description: `Note de laboratoire du professeur, vous n'y comprenez rien mais un scientifique pourrait peut-être vous aider`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LAB_NOTE.png",
+        canBeTaken: true,
+        variations: {
+            "LAB_NOTE_SCIENTIFIC": {
+                description: `
+## Jour 57 
+
+J'ai trouvé que ma machien peut autant provoquer la fin du monde que nous octroyer des ressources infinies.
+
+Je dois faire attention à qui j'en parle, je ne sais pas qui est Illuminati et qui ne l'est pas.
+
+## Jour 58
+
+Il me suffit de désactiver la machine parès chaque utilisation pour que personne ne puisse l'utiliser à mauvais escient.
+Je vais tenter une avancé préhistorique très bientot.
+
+J'ai hate ! 
+`}
+        },
+        lookActions: [
+            {
+                conditions: {
+                    needsOneOfCharacterType: [CHAR_TYPES.SCIENTIFIC],
+                },
+                results: [{
+                    displayVariationId: "LAB_NOTE_SCIENTIFIC",
+                }]
             }
         ],
         useActions: []
