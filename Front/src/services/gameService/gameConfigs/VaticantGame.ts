@@ -121,7 +121,8 @@ C'est pour ça que vous le trompez avec \`Remi Chevalier\` l'assistant du détec
         "name": "Jean Valmont",
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         "scenario": {
-            public: `Vous êtes un passant déterminé qui a réussi à rentrer dans ce labo pendant la confusion. Vous êtes un peu perdu mais vous avez l'air de savoir ce que vous faites.`,
+            public: `Vous êtes un passant déterminé qui a réussi à rentrer dans ce labo pendant la confusion. Le truc bizarre c'est que vous êtes déguisé en Radar (???)
+Vous êtes un peu perdu mais vous avez l'air de savoir ce que vous faites.`,
             private: `Vous êtes un ancien Illuminati. Le clan voulait que le scientifique finisse ses travaux.
             
 Vous savez que le conseil a envoyé d'autres agents dans la pièce, mais ne pouvez pas le révéler de peur de vous faire descendre. Vous savez que \`Remi Chevalier\` et \`Henry Bitanmin\` sont des agents du clan, mais qui d'autre ...
