@@ -35,7 +35,7 @@ export default () => {
         <button onClick={handlePrint}>PRINT THE QR CODES</button>
         <button onClick={x=> navigate('/')} >Return to the game</button>
         <h2>Mandatory to print items</h2>
-        <div style={{ display: "flex", flexWrap: "wrap", flexDirection : "row",color : "black",width: "100vw"  }}>
+        <div style={{ display: "flex", flexWrap: "wrap", flexDirection : "row",color : "black",width: "100%"  }}>
             {
                 Object.values(gameconfig.FULL_INVENTORY).filter(o => o.toPrintIrl).map((item: InventoryItem, i: number) => (
                     <ObjectQrCode key={i} objectId={item.id} name={item.name} />
@@ -45,7 +45,7 @@ export default () => {
         <hr />
         <h2>Not-mandatory to print items</h2>
         {
-            cheatMode && <div style={{ display: "flex", flexDirection : "row",color : "black",width: "100vw" }}>
+            cheatMode && <div style={{ display: "flex", flexWrap: "wrap", flexDirection : "row",color : "black",width: "100%" }}>
                 {Object.values(gameconfig.FULL_INVENTORY).filter(o => !o.toPrintIrl).map((item: InventoryItem, i: number) => (
                     <ObjectQrCode key={i} objectId={item.id} name={item.name} />
                 ))}

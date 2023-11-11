@@ -67,7 +67,6 @@ interface InventoryItem {
     description: string;
     imageUrl?: string;
     canBeTaken: boolean;
-    canBeUsed: boolean;
     isDeleted?: boolean;
     canBeShared?: boolean;
     isOpenForTaking?: boolean;
@@ -75,7 +74,7 @@ interface InventoryItem {
     ownerId?: string;
     currentVariationKey?: string;
     variations: {
-        [variation: string]: InventoryItem & any
+        [variation: string]: InventoryItem | any
     }
     replacedById?: string;
     lookActions: LookAction[];
@@ -85,9 +84,9 @@ interface InventoryItem {
 
 interface LookAction {
     conditions: {
-        needsOneOfCharacterId: string[],
-        needsOneOfCharacterType: string[],
-        needsOneOfObjectsId: string[]
+        needsOneOfCharacterId?: string[],
+        needsOneOfCharacterType?: string[],
+        needsOneOfObjectsId?: string[]
     },
     results: ActionResult[]
 }

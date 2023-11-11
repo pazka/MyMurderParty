@@ -145,8 +145,8 @@ Vous avez été banni du clan pour avoir révélé des secrets. Vous êtes déte
         },
         "types": [CHAR_TYPES.NORMAL, CHAR_TYPES.LAWFUL],
     },
-    "10_PNJ_3": {
-        "id": "10_PNJ_3",
+    "10_PNJ_BIO": {
+        "id": "10_PNJ_BIO",
         "name": "Dr Elisa Corbin",
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         "scenario": {
@@ -213,13 +213,13 @@ export const FULL_INVENTORY: Inventory = {
         description: `Une matraque avec le nom \`Richard Money\` gravé dessus`,
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         canBeTaken: true,
-        canBeUsed: true,
-        toPrintIrl : true,
+
+        toPrintIrl: true,
         variations: {
         },
         lookActions: [],
         useActions: [{
-            conditions: {}, 
+            conditions: {},
             results: [
                 {
                     broadcastMessage: {
@@ -229,19 +229,19 @@ export const FULL_INVENTORY: Inventory = {
                 }
             ]
         }],
-    },"ARME_2": {
+    }, "ARME_2": {
         id: "ARME_2",
         name: "matraque de l'assitant détective",
         description: `Une matraque avec le nom \`Remi Chevalier\` gravé dessus`,
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         canBeTaken: true,
-        canBeUsed: true,
-        toPrintIrl : true,
+
+        toPrintIrl: true,
         variations: {
         },
         lookActions: [],
         useActions: [{
-            conditions: {}, 
+            conditions: {},
             results: [
                 {
                     broadcastMessage: {
@@ -251,19 +251,19 @@ export const FULL_INVENTORY: Inventory = {
                 }
             ]
         }],
-    },"ARME_3": {
+    }, "ARME_3": {
         id: "ARME_3",
         name: "matraque",
         description: "Une matraque sans marquage particulier",
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         canBeTaken: true,
-        canBeUsed: true,
-        toPrintIrl : true,
+
+        toPrintIrl: true,
         variations: {
         },
         lookActions: [],
         useActions: [{
-            conditions: {}, 
+            conditions: {},
             results: [
                 {
                     broadcastMessage: {
@@ -273,6 +273,268 @@ export const FULL_INVENTORY: Inventory = {
                 }
             ]
         }],
+    }, "ORDNI_LOCK": {
+        id: "ORDNI_LOCK",
+        name: "Ordinateur du professeur bloqué",
+        description: "L'ordinateur du professeur est bloqué avec un mot de passe ",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+
+        toPrintIrl: true,
+        variations: {
+            "ORDI_HACKABLE": {
+                name: "Ordinateur facilement hackable",
+                description: "L'ordinateur du professuer est facilement hackable pour vos compétence",
+                imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+                canBeTaken: true,
+
+                variations: {},
+                lookActions: [],
+            }
+        },
+        lookActions: [{
+            conditions: {
+                needsOneOfCharacterType: [CHAR_TYPES.TECH],
+            },
+            results: [
+                {
+                    displayVariationId: "ORDI_HACKABLE",
+                }
+            ]
+        }],
+        useActions: [{
+            conditions: {
+                needsOneOfCharacterType: [CHAR_TYPES.TECH],
+            },
+            results: [
+                {
+                    replaceByItemId: "ORDI_UNLOCKED",
+                }
+            ]
+        }],
+    }, 
+    "ORDI_UNLOCKED": {
+        id: "ORDI_UNLOCKED",
+        name: "Ordinateur du professeur débloqué",
+        description: "L'ordinateur du professeur est débloqué",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+
+        variations: {
+        },
+        lookActions: [],
+        useActions: [{
+            conditions: {
+
+            },
+            results: [
+                {
+                    giveItemIds: ["FINANCE_BOOK", "RESEARCH_PAPER_1", "RESEARCH_PAPER_2"]
+                }
+            ]
+        }],
+    },
+    "FINANCE_BOOK": {
+        id: "FINANCE_BOOK",
+        name: "Fichier des comptes du professeur",
+        description: "Fichier des comptes du professeur, vous ne comprenez pas grand chose mais vous voyez que le professeur a reçu des fonds de \`Henry Bitanmin\`, quelquechose d'autre s'y cache peut etre..",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+
+        variations: {
+            "FINANCE_BOOK_INVESTIGATOR": {
+                name: "Fichier des comptes du professeur",
+                description: `Fichier des comptes du professeur.
+                
+Vous voyez que le professeur a reçu des fonds de \`Henry Bitanmin\`.
+Les nom de comptes correspondent à des codes que vous avez dàja vu sur des affaires lié au Illuminati, Mr Bitanmin en est donc un !`,
+            }
+        },
+        lookActions: [{
+            conditions: {
+                needsOneOfCharacterType: [CHAR_TYPES.INVESTIGATOR],
+            },
+            results: [{
+                displayVariationId: "FINANCE_BOOK_INVESTIGATOR",
+            }]
+        }],
+        useActions: [{
+            conditions: {},
+            results: []
+        }],
+    },
+    "RESEARCH_PAPER_1": {
+        id: "RESEARCH_PAPER_1",
+        name: "Recherche du professeur Opportunité",
+        description: "Recherche du professeur sur les opportunités, vous ne comprenez pas grand chose, c'est très scientifique.",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+        variations: {
+            "RESEARCH_PAPER_1_SCIENTIST": {
+                name: "Recherche du professeur",
+                description: `Recherche du professeur, c'est très scientifique.
+
+Vous comprenez que le professur a construit une machine à remonter le temps !!
+En fonction de la cible de la machine, on peut accéder à des opportunités différentes. ou peut-être que c'est l'inverse ?`}
+        },
+        lookActions: [{
+            conditions: {
+                needsOneOfCharacterType: [CHAR_TYPES.SCIENTIFIC],
+            },
+            results: [{
+                displayVariationId: "RESEARCH_PAPER_1_SCIENTIST",
+            }]
+        }],
+        useActions: []
+    },
+    "CLEF_CARREE": {
+        id: "CLEF_CARREE",
+        name: "Clé carrée",
+        description: "Une clé carrée",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "MAINTENACE_TOOL": {
+        id: "MAINTENACE_TOOL",
+        name: "Outil de maintenance",
+        description: "Outil de maintenance pour débrouillage",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "AMBER": {
+        id: "AMBER",
+        name: "Ambre Préhistorique",
+        description: `Ambre préhistorique avec une étiquette marquée: \`Cible ADN Pr Mach. Temp.\``,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "METEORITE": {
+        id: "METEORITE",
+        name: "Object étrange",
+        description: `On dirait une pierre mais mou, il semble n'avoir aucun poids
+Il y a une étiquette marquée : \`Cible ADN Pr Mach. Temp.\``,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "EGG": {
+        id: "EGG",
+        name: "Gros Oeuf",
+        description: `C'est un gros oeuf non identifié, il y a des trace de sang dessus. Qu'est-ce que ça peut bien être ?`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+        variations: {
+            "DINO_EGG": {
+                name: "Gros Oeuf de dinosaure",
+                description: `C'est un gros oeuf de dinosaure, il y a des trace de sang dessus.`,
+            }
+        },
+        lookActions: [
+            {
+                conditions: {
+                    needsOneOfCharacterId: ["10_PNJ_BIO"],
+                },
+                results: [
+                    {
+                        displayVariationId: "DINO_EGG",
+                    }
+                ]
+            }
+        ],
+        useActions: []
+    },
+    "CAMERA_RECORDING": {
+        id: "CAMERA_RECORDING",
+        name: "Enregistrement de caméra",
+        description: `Enregistrement de caméra de surveillance
+        
+On y voit la machine fonctionner et le professeur en sortir attivement avec un object dans les mains. 
+
+Il se dirige en courant vers la salle du coffre fort et y entre.
+
+30 seconde après on voit un dinosaure sortir de la machine et se cacher dans le laboratoire.
+
+Le professeur revient dans le salon, et commence à démonter la machine. 
+
+Le dinosaure sort de sa cachette et se dirige vers le professeur. Il s'effraie et tombe et se cogne la tête sur la table basse. Il meurt sur le coup.
+
+Le dinosaure se dirige vers le professeur et le dévore. Il ne reste qu'un doigt qui roule sous le canapé.
+
+Le dinosaure se dirige vers la salle du coffre fort et y entre.
+
+- Fin de l'enregistrement -`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: []
+    },
+    "HIGH_SECURITY_CAMERA" : {
+        id: "HIGH_SECURITY_CAMERA",
+        name: "Caméra de sécurité",
+        description: `Caméra de sécurité placée en hauteur.
+
+        Personne de normal ne peut l'atteindre.`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: false,
+        toPrintIrl: true,
+        variations: {
+            "HIGH_SECURITY_CAMERA_ESCALADE": {
+                name: "Caméra de sécurité",
+                description: `Caméra de sécurité placée en hauteur.
+
+                Vous pouvez l'atteindre en escaladant le mur.`,
+                useActions: [{
+                    conditions: {},
+                    results: [
+                        {
+                            giveItemIds: ["CAMERA_RECORDING"],
+                        }
+                    ]
+                }],
+            }
+        },
+        lookActions: [{
+            conditions: {
+                needsOneOfCharacterId: ["1_ESCALADE"],
+            },
+            results: [
+                {
+                    displayVariationId: "HIGH_SECURITY_CAMERA_ESCALADE",
+                }
+            ]
+        }],
+        useActions: []
+    },
+    "SD_CARD": {
+        id: "SD_CARD",
+        name: "Carte SD",
+        description: `Carte SD de la caméra de sécurité, vous avez besoin d'un pc pour la visioner`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+        variations: {},
+        lookActions: [],
+        useActions: [{
+            conditions: {
+                needsOneOfObjectsId: ["ORDI_UNLOCKED"],
+            },
+            results: [
+                {
+                    giveItemIds: ["CAMERA_RECORDING"],
+                }
+            ]
+        }]
     },
 }
 

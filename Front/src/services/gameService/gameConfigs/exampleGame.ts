@@ -37,7 +37,7 @@ export const FULL_INVENTORY: Inventory = {
         description: "It can open stuff.",
         imageUrl: "https://sharing.hosh.it/images/lap2.jpg",
         canBeTaken: true,
-        canBeUsed: true,
+        
         toPrintIrl: true,
         variations: {
             "SILVER_KEY.ASSITANT": {
@@ -73,7 +73,7 @@ export const FULL_INVENTORY: Inventory = {
         imageUrl: "https://sharing.hosh.it/images/lap2.jpg",
         description: "It can open stuff.",
         canBeTaken: true,
-        canBeUsed: true,
+        
         toPrintIrl: true,
         variations: {
             "GOLDKEY_KEY.ASSITANT": {
@@ -99,7 +99,7 @@ export const FULL_INVENTORY: Inventory = {
         name: "Chest",
         imageUrl: "https://sharing.hosh.it/images/lap5.png",
         canBeTaken: false,
-        canBeUsed: true,
+        
         toPrintIrl: true,
         variations: {},
         lookActions: [],
@@ -121,7 +121,6 @@ export const FULL_INVENTORY: Inventory = {
         id: "ChestOpen",
         name: "Opened Chest",
         canBeTaken: false,
-        canBeUsed: false,
         variations: {},
         lookActions: [],
         useActions: [],
@@ -133,7 +132,7 @@ export const FULL_INVENTORY: Inventory = {
         id: "Door",
         name: "Door",
         canBeTaken: false,
-        canBeUsed: true,
+        
         variations: {},
         lookActions: [],
         toPrintIrl: true,
@@ -154,7 +153,7 @@ export const FULL_INVENTORY: Inventory = {
         name: "Opened Door",
         imageUrl: "https://sharing.hosh.it/images/lap4.png",
         canBeTaken: false,
-        canBeUsed: true,
+        
         variations: {},
         lookActions: [],
         useActions: [{
@@ -205,7 +204,7 @@ export const FULL_INVENTORY: Inventory = {
         id: "Drawer",
         name: "Drawer",
         canBeTaken: false,
-        canBeUsed: true,
+        
         toPrintIrl: true,
         variations: {},
         lookActions: [],
@@ -217,7 +216,7 @@ export const FULL_INVENTORY: Inventory = {
         id: "ExampleItem",
         name: "Example",
         canBeTaken: false,
-        canBeUsed: true,
+        
         toPrintIrl: true,
         variations: {},
         lookActions: [],
