@@ -8,7 +8,6 @@ import { emitBroadcastEndOfGameToRoom, emitBroadcastTextToRoom, emitUpdateObject
 import { sendEvent } from "../../eventsService"
 import { AvailableEvents } from "../../eventsService/allAvailableEvents"
 import { subscribe } from "diagnostics_channel"
-import { CharactersTypes } from "../gameConfigs/exampleGame"
 import { openPopUp } from "../../utils"
 
 const validateALookAction = (action: LookAction): boolean => {
@@ -18,7 +17,8 @@ const validateALookAction = (action: LookAction): boolean => {
         return false
     }
 
-    if (action.conditions.needsOneOfCharacterType.length > 0 && !action.conditions.needsOneOfCharacterType.includes(currentCharacter?.type ?? "")) {
+    const currentTypes = currentCharacter?.types ?? [getCurrentGameConfig().CHAR_TYPES.NORMAL]
+    if (action.conditions.needsOneOfCharacterType.length > 0 && !action.conditions.needsOneOfCharacterType.some(type => currentTypes.includes(type))) {
         return false
     }
 
@@ -32,7 +32,8 @@ const validateAnUseAction = (action: UseAction, objectIds: string[]): boolean =>
         return false
     }
 
-    if (action.conditions.needsOneOfCharacterType.length > 0 && !action.conditions.needsOneOfCharacterType.includes(currentCharacter?.type ?? "")) {
+    const currentTypes = currentCharacter?.types ?? [getCurrentGameConfig().CHAR_TYPES.NORMAL]
+    if (action.conditions.needsOneOfCharacterType.length > 0 && !action.conditions.needsOneOfCharacterType.some(type => currentTypes.includes(type))) {
         return false
     }
 
@@ -328,10 +329,10 @@ const executeEndOfGame = (endOfGameResults: EndOfGameResult[]): void => {
     const currentUser = getCurrentUser()
     const currentCharacter = getCurrentCharacter()
     const currentGameConfig = getCurrentGameConfig()
-    const currentType = currentCharacter?.type ?? CharactersTypes.NORMAL
+    const currentTypes = currentCharacter?.types ?? [getCurrentGameConfig().CHAR_TYPES.NORMAL]
 
     for (const endOfGameResult of endOfGameResults) {
-        if (endOfGameResult.caractersTypeId.includes(currentType)) {
+        if (endOfGameResult.caractersTypeId.some(type => currentTypes.includes(type))) {
             openPopUp(endOfGameResult.popUpMessage)
         }
     }

@@ -1,6 +1,7 @@
-export const CHAR_TYPES = {
-    "NORMAL": "NORMAL",
-    "SCIENTIST": "SCIENTIST",
+export const CHAR_TYPES= {
+    "LAWFUL" : "LAWFUL",
+    "BAD" : "BAD",
+    "NORMAL" : "NORMAL",
 }
 
 export const TROMBINOSCOPE: Trombinoscope = {
@@ -12,22 +13,17 @@ export const TROMBINOSCOPE: Trombinoscope = {
             public: "Vous êtes l'assistant.e du scientifique. Vous avez des compétence en science et en informatique.",
             private: "Vous cherchez le secret du scientifique."
         },
-        "types": [CHAR_TYPES.SCIENTIST]
-    },
-    "SCIENTIST_SECRETARY": {
-        "id": "SCIENTIST_SECRETARY",
-        "name": "Secrétaire du scientifique",
-        imageUrl: "https://sharing.hosh.it/images/map1.jpg",
-        "scenario": {
-            public: "Vous êtes la secrétaire du scientifique. Vous le connaisiez mieux que personne.",
-        },
         "types": [CHAR_TYPES.NORMAL]
-    }
+    },
 }
 
-export const GAME_NAME = "Tutorial Game"
+export const GAME_NAME = "La mort du mysterieux Dr Vaticant"
 
-export const GAME_DESCRIPTION = "This is a tutorial game. It's purpose is to show you how to create a game."
+export const GAME_DESCRIPTION = `Vous vous retrouvez réuni.e.s dans le bureau du scientifique \`Dr Vaticant\` dont vous n'avez jamais bien compris le travail. 
+
+Sa mort a été déclarée mais aucun supect n'est encore connu. Tout le monde accours pour y voir plus clair, seules les personnes présente dans la pièce ont pu se procurer un accès.
+
+**Suivez les indices, utilisez votre esprit de déduction pour découvrir comment le scientifique est mort et peut-être enfin comprendre l'ampleur de son travail !**`
 
 
 export const FULL_INVENTORY: Inventory = {
@@ -166,7 +162,7 @@ export const FULL_INVENTORY: Inventory = {
             results: [{
                 triggerEndOfGame: [
                     {
-                        caractersTypeId: [CHAR_TYPES.SCIENTIST],
+                        caractersTypeId: [],
                         hasWon: false,
                         popUpMessage: { message: "You lost, Normal have won !", variant: "error" }
                     },
@@ -180,13 +176,13 @@ export const FULL_INVENTORY: Inventory = {
         }, {
             conditions: {
                 needsOneOfCharacterId: [],
-                needsOneOfCharacterType: [CHAR_TYPES.SCIENTIST],
+                needsOneOfCharacterType: [],
                 needsOneOfObjectsId: []
             },
             results: [{
                 triggerEndOfGame: [
                     {
-                        caractersTypeId: [CHAR_TYPES.SCIENTIST],
+                        caractersTypeId: [],
                         hasWon: true,
                         popUpMessage: { message: "Sicentist have won !", variant: "success" }
                     },

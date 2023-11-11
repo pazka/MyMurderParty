@@ -5,6 +5,7 @@ type GameConfig = {
     TROMBINOSCOPE: Trombinoscope;
     GAME_NAME: string;
     GAME_DESCRIPTION: string;
+    CHAR_TYPES: {[char_type:string] : string};
 }
 
 interface GameEngine {
@@ -52,8 +53,8 @@ interface Trombinoscope {
 interface Character {
     id: string;
     name: string;
-    imageUrl?: string;
-    type: string;
+    imageUrl: string;
+    types: string[];
     scenario: {
         public: string,
         private?: string
