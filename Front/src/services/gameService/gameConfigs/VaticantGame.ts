@@ -207,10 +207,54 @@ PS : Des armes sont présentes dans le jeu et peuvent être utilisées pour asso
 
 
 export const FULL_INVENTORY: Inventory = {
-    "ARME_1_6": {
-        id: "ARME_1_6",
-        name: "Revolver(6)",
-        description: "Un revolver avec 6 balles",
+    "ARME_1": {
+        id: "ARME_1",
+        name: "Revolver du détective",
+        description: `Un revolver avec le nom \`Richard Money\` gravé dessus`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+        canBeUsed: true,
+        toPrintIrl : true,
+        variations: {
+        },
+        lookActions: [],
+        useActions: [{
+            conditions: {}, 
+            results: [
+                {
+                    broadcastMessage: {
+                        variant: "warning",
+                        message: "Vous entendez une forte détonation de révolver",
+                    },
+                }
+            ]
+        }],
+    },"ARME_2": {
+        id: "ARME_2",
+        name: "Revolver de l'assitant détective",
+        description: `Un revolver avec le nom \`Remi Chevalier\` gravé dessus`,
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
+        canBeTaken: true,
+        canBeUsed: true,
+        toPrintIrl : true,
+        variations: {
+        },
+        lookActions: [],
+        useActions: [{
+            conditions: {}, 
+            results: [
+                {
+                    broadcastMessage: {
+                        variant: "warning",
+                        message: "Vous entendez une forte détonation de révolver",
+                    },
+                }
+            ]
+        }],
+    },"ARME_3": {
+        id: "ARME_3",
+        name: "Revolver",
+        description: "Un revolver sans marquage particulier",
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         canBeTaken: true,
         canBeUsed: true,
