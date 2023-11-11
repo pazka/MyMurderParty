@@ -199,6 +199,8 @@ export const GAME_DESCRIPTION = `Vous vous retrouvez réuni·e·s dans le labora
 
 Sa mort a été déclarée mais aucun supect n'est encore connu. Tout le monde accours pour y voir plus clair, seules les personnes présente dans la pièce ont pu se procurer un accès.
 
+Il n'y a pas de corp mais une énorme tache de sang sur le sol... Que s'est-il passé ??
+
 **Suivez les indices, utilisez votre esprit de déduction pour découvrir comment le scientifique est mort et peut-être enfin comprendre l'ampleur de son travail !**
 
 PS : Des armes sont présentes dans le jeu et peuvent être utilisées pour assomer d'autres joueur·se·s. Un·e Joueur·se assomé doit se laisser prendre ses objets et faire le mort pendant 1 minute. Iel peut ensuite se relever et continuer à jouer avec pleine connaissance de ce qui vient de se passer.
@@ -210,7 +212,7 @@ export const FULL_INVENTORY: Inventory = {
         id: "ARME_1",
         name: "matraque du détective",
         description: `Une matraque avec le nom \`Richard Money\` gravé dessus`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/ARME_1.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/ARME.png",
         canBeTaken: true,
 
         toPrintIrl: true,
@@ -232,7 +234,7 @@ export const FULL_INVENTORY: Inventory = {
         id: "ARME_2",
         name: "matraque de l'assitant détective",
         description: `Une matraque avec le nom \`Remi Chevalier\` gravé dessus`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/ARME_2.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/ARME.png",
         canBeTaken: true,
 
         toPrintIrl: true,
@@ -254,10 +256,8 @@ export const FULL_INVENTORY: Inventory = {
         id: "ARME_3",
         name: "matraque",
         description: "Une matraque sans marquage particulier",
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/ARME_3.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/ARME.png",
         canBeTaken: true,
-
-        toPrintIrl: true,
         variations: {
         },
         lookActions: [],
@@ -274,7 +274,7 @@ export const FULL_INVENTORY: Inventory = {
         }],
     }, "ORDNI_LOCK": {
         id: "ORDNI_LOCK",
-        name: "Ordinateur du professeur bloqué",
+        name: "Ordinateur du professeur",
         description: "L'ordinateur du professeur est bloqué avec un mot de passe ",
         imageUrl: "https://sharing.hosh.it/images/murd_vat/COMPUTER.png",
         canBeTaken: true,
@@ -426,7 +426,7 @@ Il y a une étiquette marquée : \`Cible ADN Pr Mach. Temp.\``,
         id: "EGG",
         name: "Gros Oeuf",
         description: `C'est un gros oeuf non identifié, il y a des trace de sang dessus. Qu'est-ce que ça peut bien être ?`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/EGG.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/EGG.webp",
         canBeTaken: true,
         variations: {
             "DINO_EGG": {
@@ -450,6 +450,7 @@ Il y a une étiquette marquée : \`Cible ADN Pr Mach. Temp.\``,
     },
     "CAMERA_RECORDING": {
         id: "CAMERA_RECORDING",
+        imageUrl : "https://sharing.hosh.it/images/murd_vat/CAMERA_RECORDING.png",
         name: "Enregistrement de caméra",
         description: `Enregistrement de caméra de surveillance
         
@@ -468,7 +469,6 @@ Le dinosaure se dirige vers le professeur et le dévore. Il ne reste qu'un doigt
 Le dinosaure se dirige vers la salle du coffre fort et y entre.
 
 - Fin de l'enregistrement -`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/CAMERA_RECORDING.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -642,7 +642,7 @@ Elle est éteinte et semble manquer un élément pour fonctionner.`,
         id: "POWER_BANK",
         name: "Batterie nucléaire",
         description: `Une grosse batterie Duracell marquée \`Batterie Nucléaire\``,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/POWER_BANK.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/POWER_BANK.webp",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -652,8 +652,9 @@ Elle est éteinte et semble manquer un élément pour fonctionner.`,
         id: "LOCKER_CODE_3_HIGH",
         name: "Code de casier N°3",
         description: `Ces codes sont accrochés au plafond et inaccesibles sans escalade.`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_CODE_3.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/PAPER.png",
         canBeTaken: false,
+        toPrintIrl: true,
         variations: {
             "LOCKER_CODE_3_VIEW": {
                 name: "Code de casier N°3",
@@ -684,7 +685,7 @@ Elle est éteinte et semble manquer un élément pour fonctionner.`,
         id: "LOCKER_CODE_3",
         name: "Code de casier N°3",
         description: `Code de casier N°3`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_CODE_3.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/PAPER.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -692,9 +693,9 @@ Elle est éteinte et semble manquer un élément pour fonctionner.`,
     },
     "CRYPTED_COMPUTER": {
         id: "CRYPTED_COMPUTER",
-        name: "Un Ordinateur crypté",
+        name: "Un Ordinateur fixe",
         description: `Ordinateur fixe avec un contenu crypté affiché à l'écran. Qui peut les décrypter ?`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/COMPUTER.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/PC.png",
         canBeTaken: false,
         toPrintIrl: true,
         variations: {
@@ -728,8 +729,9 @@ ADN préhistorique d'ambre : Bingo ! J'ai accès à des ressources infinies !`,
         id: "LOCKER_CODE_2_CRYPTED",
         name: "Code de casier N°2 crypté",
         description: `Des codes marqués 'casier N°2' mais le code semble anormal, comme codé avec une clef de cryptage...`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_CODE_2.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/PAPER.png",
         canBeTaken: true,
+        toPrintIrl: true,
         variations: {},
         lookActions: [],
         useActions: [{
@@ -747,7 +749,7 @@ ADN préhistorique d'ambre : Bingo ! J'ai accès à des ressources infinies !`,
         id: "LOCKER_CODE_2",
         name: "Code de casier N°2",
         description: `Le code du casier N°2 en clair !`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_CODE_2.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/PAPER.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -811,6 +813,8 @@ Jamais il n'obtiendront mes travaux !`,
     },
     "COURSE_LISTE": {
         id: "COURSE_LISTE",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/PAPER.png",
+        toPrintIrl: true,
         name: "liste de course",
         description: `Une liste de course étrange : 
 - 1 oeuf de dinosaure 
@@ -818,7 +822,6 @@ Jamais il n'obtiendront mes travaux !`,
 - 1 météorite
 
 Un griboulli en bas semble avoir un sens mais vous ne savez pas quoi, il vous manque peut-être un sens de l'investigation...`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/COURSE_LISTE.png",
         canBeTaken: true,
         variations: {
             COURSE_LISTE_INVESTIGATOR: {
@@ -849,7 +852,7 @@ Un griboulli en bas semble avoir un sens mais vous ne savez pas quoi, il vous ma
         id: "CODE_LOCKER_1",
         name: "Code de casier N°1",
         description: `Le code du casier N°1 !`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_CODE_1.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/PAPER.png",
         canBeTaken: true,
         variations: {},
         lookActions: [],
@@ -858,6 +861,7 @@ Un griboulli en bas semble avoir un sens mais vous ne savez pas quoi, il vous ma
     "LOCKER_1_LOCKED": {
         id: "LOCKER_1_LOCKED",
         name: "Casier N°1",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER.png",
         description: `Un casier fermé par un code. 
         
 Le casier a reçu d'important dégats comme si on avait essayé sauvageent de l'ouvrir`,
@@ -871,14 +875,15 @@ Le casier a reçu d'important dégats comme si on avait essayé sauvageent de l'
             },
             results: [{
                 replaceByItemId: "LOCKER_1_OPEN",
-                giveItemIds: ["EGG"],
+                giveItemIds: ["EGG","ARME_3"],
             }]
         }]
-    }, "LOCKER_1_OPEN": {
+    }, 
+    "LOCKER_1_OPEN": {
         id: "LOCKER_1_OPEN",
         name: "Casier N°1",
         description: `Un casier ouvert, il ne contient plus rien`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_1.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER.png",
         canBeTaken: false,
         variations: {},
         lookActions: [],
@@ -886,11 +891,11 @@ Le casier a reçu d'important dégats comme si on avait essayé sauvageent de l'
     },
     "LOCKER_2_LOCKED": {
         id: "LOCKER_2",
-        name: "Casier N°1",
+        name: "Casier N°2",
         description: `Un casier fermé par un code. 
         
 Quelque chose semble briller à l'intérieur`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_2.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER.png",
         canBeTaken: false,
         toPrintIrl: true,
         variations: {},
@@ -904,11 +909,12 @@ Quelque chose semble briller à l'intérieur`,
                 giveItemIds: ["EGG"],
             }]
         }]
-    }, "LOCKER_2_OPEN": {
+    }, 
+    "LOCKER_2_OPEN": {
         id: "LOCKER_2_OPEN",
         name: "Casier N°2",
         description: `Un casier ouvert, il ne contient plus rien`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_2.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER.png",
         canBeTaken: false,
         variations: {},
         lookActions: [],
@@ -918,7 +924,7 @@ Quelque chose semble briller à l'intérieur`,
         id: "LOCKER_3_LOCKED",
         name: "Casier N°3",
         description: `Un casier fermé par un code.`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_3.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER.png",
         canBeTaken: false,
         variations: {},
         lookActions: [],
@@ -936,8 +942,9 @@ Quelque chose semble briller à l'intérieur`,
         id: "LOCKER_3",
         name: "Casier N°3",
         description: `Un casier ouvvet, vide`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER_3.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/LOCKER.png",
         canBeTaken: false,
+        toPrintIrl: true,
         variations: {},
         lookActions: [],
         useActions: []
@@ -946,7 +953,7 @@ Quelque chose semble briller à l'intérieur`,
         id: "LAB_NOTE",
         name: "Note de laboratoire",
         description: `Note de laboratoire du professeur, vous n'y comprenez rien mais un scientifique pourrait peut-être vous aider`,
-        imageUrl: "https://sharing.hosh.it/images/murd_vat/LAB_NOTE.png",
+        imageUrl: "https://sharing.hosh.it/images/murd_vat/PAPER.png",
         canBeTaken: true,
         variations: {
             "LAB_NOTE_SCIENTIFIC": {
