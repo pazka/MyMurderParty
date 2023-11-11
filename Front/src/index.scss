@@ -54,7 +54,15 @@ div.app-root {
 
 .full-page-debug {
     background: white;
+    color : black !important;
     height: 100%;
     width: 100%;
     overflow: auto;
+    & * {
+        width:fit-content;
+        flex: 0 1 auto;
+    }
+    .qr-code{
+        width : auto
+    }
 }

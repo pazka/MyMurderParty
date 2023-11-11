@@ -209,8 +209,8 @@ PS : Des armes sont présentes dans le jeu et peuvent être utilisées pour asso
 export const FULL_INVENTORY: Inventory = {
     "ARME_1": {
         id: "ARME_1",
-        name: "Revolver du détective",
-        description: `Un revolver avec le nom \`Richard Money\` gravé dessus`,
+        name: "matraque du détective",
+        description: `Une matraque avec le nom \`Richard Money\` gravé dessus`,
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         canBeTaken: true,
         canBeUsed: true,
@@ -231,8 +231,8 @@ export const FULL_INVENTORY: Inventory = {
         }],
     },"ARME_2": {
         id: "ARME_2",
-        name: "Revolver de l'assitant détective",
-        description: `Un revolver avec le nom \`Remi Chevalier\` gravé dessus`,
+        name: "matraque de l'assitant détective",
+        description: `Une matraque avec le nom \`Remi Chevalier\` gravé dessus`,
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         canBeTaken: true,
         canBeUsed: true,
@@ -253,8 +253,8 @@ export const FULL_INVENTORY: Inventory = {
         }],
     },"ARME_3": {
         id: "ARME_3",
-        name: "Revolver",
-        description: "Un revolver sans marquage particulier",
+        name: "matraque",
+        description: "Une matraque sans marquage particulier",
         imageUrl: "https://sharing.hosh.it/images/murd_vat/unknown.png",
         canBeTaken: true,
         canBeUsed: true,
