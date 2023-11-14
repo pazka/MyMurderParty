@@ -890,7 +890,7 @@ Le casier a reçu d'important dégats comme si on avait essayé sauvageent de l'
         useActions: []
     },
     "LOCKER_2_LOCKED": {
-        id: "LOCKER_2",
+        id: "LOCKER_2_LOCKED",
         name: "Casier N°2",
         description: `Un casier fermé par un code. 
         
