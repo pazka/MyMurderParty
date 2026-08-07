@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:20-slim
 
 # Create app directory
 
@@ -6,19 +6,19 @@ WORKDIR /app_tmp
 
 # copy Back/package.json
 
-COPY Back/package.json ./Back/package.json
+COPY Back/package.json Back/package-lock.json ./Back/
 
 # Install app dependencies
 
-RUN cd Back && npm install
+RUN cd Back && npm ci
 
 # copy Front/package.json
 
-COPY Front/package.json ./Front/package.json
+COPY Front/package.json Front/package-lock.json ./Front/
 
 # Install app dependencies
 
-RUN cd Front && npm install --legacy-peer-deps
+RUN cd Front && npm ci --legacy-peer-deps
 
 # Bundle app source
 
