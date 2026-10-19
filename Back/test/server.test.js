@@ -91,6 +91,19 @@ test('/session cookie in PROD: HttpOnly, Secure, SameSite=Strict, Domain=.hosh.i
     assert.equal(cookie, `sessionId=${id}; Max-Age=604800; Domain=.hosh.it; Path=/; HttpOnly; Secure; SameSite=Strict`)
 })
 
+test('/session finds sessionId among other cookies, URL-decoded, first one wins, quotes stripped', async () => {
+    const echo = async cookie => {
+        const r = await fetch(DEV + '/session', {headers: {cookie}})
+        assert.equal(r.headers.get('set-cookie'), null)
+        return r.text()
+    }
+    assert.equal(await echo('theme=dark; sessionId=ABC-123; other=1'), 'ABC-123')
+    assert.equal(await echo('sessionId=ABC%2D124'), 'ABC-124')
+    assert.equal(await echo('sessionId=ABC-125; sessionId=ABC-999'), 'ABC-125')
+    assert.equal(await echo('sessionId="ABC-126"'), 'ABC-126')
+    assert.equal(await echo('sessionId=ABC%ZZ7'), 'ABC%ZZ7')        // bad escape: kept raw
+})
+
 test('startup log has no dotenv banner (dotenv >= 17 prints one unless quiet)', () => {
     for (const env of ['DEV', 'PROD']) {
         assert.match(logs[env], /Server is Fire at/)

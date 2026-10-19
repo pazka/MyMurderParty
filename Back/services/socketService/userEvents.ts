@@ -2,13 +2,13 @@ import { Server, Socket } from "socket.io";
 import { UserCRUD } from "../persist";
 import { createNewUser, createOrGetNewUser, deleteUser, getAllUsers, getUserBySessionId, pingUser } from "../userService";
 import { notifyRoomUpdate, resetRoomForUser, setupUserRoomEvents } from "./roomEvents";
-import cookie from 'cookie';
+import { parseCookies } from "../cookies";
 import { broadcastAllClients, broadcastAllRooms } from "../socket-io";
 import { getRoomsOfUser, userChoosesACharacter, userLeaveAllRooms, userLeaveRoom } from "../roomService";
 import { publicUser } from "../publicView";
 
 export default async (userSocket: Socket, io: Server) => {
-    const cookies = cookie.parse(userSocket.handshake.headers.cookie ?? "");
+    const cookies = parseCookies(userSocket.handshake.headers.cookie);
     console.log('New socket connection', userSocket.id, 'from', userSocket.handshake.address, 'with', userSocket.handshake.headers['user-agent'], "\n sessionId?", cookies.sessionId);
     resetRoomForUser(userSocket)
 

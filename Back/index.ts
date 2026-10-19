@@ -14,7 +14,8 @@ import { createNewRoom, getAllRooms } from './services/roomService';
 import config from './services/config';
 import { generateId, getAllUsers, getUserBySessionId } from './services/userService';
 import cors from 'cors';
-import cookie from 'cookie';
+import { stringifySetCookie } from 'cookie';
+import { parseCookies } from './services/cookies';
 import { broadcastAllClients, broadcastAllRooms, initIo } from './services/socket-io';
 import { publicRoom, publicUser } from './services/publicView';
 
@@ -34,7 +35,7 @@ app.use(cors(config.cors))
 app.use(express.static('public'))
 
 app.get('/session', async (req: Request, res: Response) => {
-  const cookies = cookie.parse(req.headers.cookie ?? '');
+  const cookies = parseCookies(req.headers.cookie);
 
   if (cookies.sessionId) {
     console.log("user declare to be with this session : " + cookies.sessionId);
@@ -44,7 +45,9 @@ app.get('/session', async (req: Request, res: Response) => {
 
   //setcookie if cookie not found or session of user not found
   const sessionId = generateId();
-  res.setHeader('Set-Cookie', cookie.serialize('sessionId', sessionId, {
+  res.setHeader('Set-Cookie', stringifySetCookie({
+    name: 'sessionId',
+    value: sessionId,
     path: '/',
     httpOnly: config.debug ? false : true,
     secure: config.debug ? false : true,
