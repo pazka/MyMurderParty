@@ -15,6 +15,6 @@ Goal: keep the base image, dependencies and Actions current **without changing b
 - Security issues listed in TESTING.md are owner decisions; don't fix them silently inside a dependency PR.
 
 ## Rules
-- Never read, print or commit `.env` files (`Back/.env` is tracked: don't open it) or secrets.
+- Never commit a `.env` file; `Back/.env.example` documents the variables (dev values only).
 - No new dependency without the owner's yes (tests use Node built-ins only).
 - Run installs and tests in containers (TESTING.md), not on the owner's machine.

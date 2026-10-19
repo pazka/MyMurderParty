@@ -41,22 +41,28 @@ conflict, shared objects, room broadcast and history, delete with password), and
 `scripts/smoke.sh`: the built image with `ENV=PROD`, hardened — front served, REST, PROD cookie flags,
 engine.io handshake, no crash in the logs.
 
-## Upgrades checked (2026-10-19)
+## Changes and upgrades (2026-10-19)
 
-- **Node 20 → 26** (Dependabot #4): back 7/7 on 26.12, image (incl. CRA front build) builds on
-  `node:26-slim`, hardened smoke OK → **go**.
+- **Node 26**: Dockerfile on `node:26-slim` (supersedes Dependabot #4); back 10/10 and hardened smoke on
+  Node 20 and 26.
+- **No session ids or room passwords leave the server.** Users sent to other people (`/users`,
+  `all-users`, `new-user`, room members and characters, event senders) are `{id, name, lastActivity}`;
+  rooms (`/rooms`, `all-rooms`, `update-room`) have no `password`. Only `you-are` (your own user) still
+  carries your `sessionId`. Code: `Back/services/publicView.ts`.
+- Rooms are built from `name`, `password`, `gameConfigName` only; `roomHistory` is initialised by the
+  server (a client could inject members/characters or omit the history before).
+- A missing join/delete password counts as `""` (rooms are created with an empty one and joined by code).
+- CORS: the config key is `origin` (was `origins`, so no allow-list applied); PROD allows
+  `https://murder.hosh.it` only.
+- Logout releases only the leaving player's character (a shadowed variable released the first character of
+  every room).
+- `Back/.env` replaced by `Back/.env.example` (dev values only; `.env` is git-ignored).
 
-## Known issues (pinned, not changed)
+Each change has a test that fails on the old code (checked: 6 failures on `main` before the fix).
 
-- **`GET /users` returns every user with their `sessionId`**: anyone can take over any player's session.
-- `GET /rooms` and the `all-rooms` broadcast include **room passwords in clear**.
-- PROD CORS uses the key `origins` (the `cors` package and Socket.IO read `origin`), so the allow-list is
-  not applied.
+## Known issues (kept)
+
 - State is in memory: a restart or redeploy ends every game.
-- `createNewRoom` trusts the client's room shape: a room created without `roomHistory` cannot be joined
-  (`reading 'push'`). The front always sends it.
-- `userLeaveAllRooms` compares `userId === userId` (shadowed variable): on logout the first character of
-  every room is released.
-- `Back/dist/` is committed but the image rebuilds it; `Back/.env` is tracked in git (not read by this
-  work; now kept out of the Docker build context).
+- `/test` (cheat page: all users, all rooms, delete) is routed in production.
+- `Back/dist/` is committed but the image rebuilds it.
 - Image runs as root by default (it works as uid 1000, see the smoke); no HEALTHCHECK.
