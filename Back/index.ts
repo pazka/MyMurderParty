@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 //For env File 
-dotenv.config();
+dotenv.config({ quiet: true }); // dotenv >= 17 logs a banner by default; keep the startup log as before
 
 import fs from 'fs';
 

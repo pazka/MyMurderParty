@@ -16,12 +16,13 @@ const DIST = path.join(__dirname, '..', 'dist')
 let DEV                               // config DEV: "localhost":8001, debug cookies (set in before())
 const PROD = 'http://127.0.0.1:80'    // config PROD: 0.0.0.0:80, hardened cookies
 const servers = []
+const logs = {}                       // env -> everything the server printed so far
 
 async function start(env, marker) {
     let log = ''
     const p = spawn(process.execPath, ['index.js'], {cwd: DIST, env: {...process.env, ENV: env}})
-    p.stdout.on('data', d => { log += d })
-    p.stderr.on('data', d => { log += d })
+    p.stdout.on('data', d => { log += d; logs[env] = log })
+    p.stderr.on('data', d => { log += d; logs[env] = log })
     servers.push(p)
     const until = Date.now() + 15000
     while (!log.includes(marker)) {
@@ -88,6 +89,13 @@ test('/session issues an id cookie (debug flags in DEV) and echoes an existing o
 test('/session cookie in PROD: HttpOnly, Secure, SameSite=Strict, Domain=.hosh.it', async () => {
     const {id, cookie} = await session(PROD)
     assert.equal(cookie, `sessionId=${id}; Max-Age=604800; Domain=.hosh.it; Path=/; HttpOnly; Secure; SameSite=Strict`)
+})
+
+test('startup log has no dotenv banner (dotenv >= 17 prints one unless quiet)', () => {
+    for (const env of ['DEV', 'PROD']) {
+        assert.match(logs[env], /Server is Fire at/)
+        assert.doesNotMatch(logs[env], /injecting env|injected env|\[dotenv@/)
+    }
 })
 
 test('unknown routes redirect to /', async () => {
