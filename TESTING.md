@@ -32,7 +32,7 @@ the real Dockerfile, front included).
 
 ## What is covered
 
-`Back/test/server.test.js` (7 tests, Node built-ins only; `test/sio-poll.js` is a tiny Socket.IO
+`Back/test/server.test.js` (12 tests, Node built-ins only; `test/sio-poll.js` is a tiny Socket.IO
 long-polling client on `fetch`): `/info`, `/session` id format and cookie flags (DEV and PROD), redirect of
 unknown routes, login rules and `you-are` / `new-user` events, reconnect with the session cookie, the full
 room flow as the front drives it (create-and-join, unique name, password, users list, character choice and
@@ -59,6 +59,19 @@ engine.io handshake, no crash in the logs.
 - `Back/.env` replaced by `Back/.env.example` (dev values only; `.env` is git-ignored).
 
 Each change has a test that fails on the old code (checked: 6 failures on `main` before the fix).
+
+## Dependency majors (2026-10-19, branch `agent/deps-majors`)
+
+- **cookie 0.5 → 2** (#11): ESM-only, `parseCookie` / `stringifySetCookie`, no default export. Parsing goes
+  through `Back/services/cookies.ts`, which keeps cookie 0.5's rules (cookie 2 no longer strips quotes);
+  `tsconfig` `module: node20` (still CommonJS output; types for the `require(esm)`), typescript `^5.9.3`.
+  cookie 2 declares Node >= 22: on Node 20 `npm ci` warns (EBADENGINE) but it runs (`require(esm)`).
+- **dotenv 16 → 18** (#12): `config({ quiet: true })`, no startup banner as before.
+- **cross-env 7 → 10** (#14, #16), npm minor/patch group (#10).
+- **TypeScript 7 not taken** (#13, #15): the `typescript` 7 package has no JS compiler API. CRA 5
+  (`react-scripts`, fork-ts-checker) fails ("Cannot find module 'typescript'"); in Back `tsc` 7 compiles the
+  same JS but `npm run dev` (nodemon → ts-node) crashes. Back stays on TS 5.9, Front on 4.9.
+- Tests: cookie parsing (other cookies, URL-decoding, first wins, quotes, bad escapes) and quiet startup log.
 
 ## Known issues (kept)
 
