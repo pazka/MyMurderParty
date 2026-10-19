@@ -16,6 +16,7 @@ import { generateId, getAllUsers, getUserBySessionId } from './services/userServ
 import cors from 'cors';
 import cookie from 'cookie';
 import { broadcastAllClients, broadcastAllRooms, initIo } from './services/socket-io';
+import { publicRoom, publicUser } from './services/publicView';
 
 const io = initIo(server, { cors: config.cors });
 
@@ -62,13 +63,13 @@ app.get('/info', (req: Request, res: Response) => {
 
 app.get('/users', (req: Request, res: Response) => {
   getAllUsers().then((users) => {
-    res.send(users);
+    res.send(users.map(publicUser));
   })
 });
 
 app.get('/rooms', (req: Request, res: Response) => {
   return getAllRooms().then((rooms) => {
-    res.send(rooms);
+    res.send(rooms.map(publicRoom));
   })
 });
 

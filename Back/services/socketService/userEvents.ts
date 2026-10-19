@@ -5,6 +5,7 @@ import { notifyRoomUpdate, resetRoomForUser, setupUserRoomEvents } from "./roomE
 import cookie from 'cookie';
 import { broadcastAllClients, broadcastAllRooms } from "../socket-io";
 import { getRoomsOfUser, userChoosesACharacter, userLeaveAllRooms, userLeaveRoom } from "../roomService";
+import { publicUser } from "../publicView";
 
 export default async (userSocket: Socket, io: Server) => {
     const cookies = cookie.parse(userSocket.handshake.headers.cookie ?? "");
@@ -55,7 +56,7 @@ export default async (userSocket: Socket, io: Server) => {
             currentUser = user;
             setupUserRoomEvents(currentUser, userSocket, io);
 
-            io.emit('new-user', currentUser);
+            io.emit('new-user', publicUser(currentUser));
             userSocket.emit('you-are', currentUser);
             broadcastAllClients()
         });

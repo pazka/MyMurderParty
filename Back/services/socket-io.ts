@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import { getAllUsers } from "./userService";
 import { getAllRooms } from "./roomService";
+import { publicRoom, publicUser } from "./publicView";
 
 let _io: Server | null = null;
 
@@ -10,11 +11,11 @@ export const initIo = (server : any,option : any) : Server => {
 }
 
 export const broadcastAllClients = () => {
-    getAllUsers().then((allUsers) => _io?.emit('all-users', allUsers));
+    getAllUsers().then((allUsers) => _io?.emit('all-users', allUsers.map(publicUser)));
 }
 
 export const broadcastAllRooms = () => {
-    getAllRooms().then((allUsers) => _io?.emit('all-rooms', allUsers));
+    getAllRooms().then((allRooms) => _io?.emit('all-rooms', allRooms.map(publicRoom)));
 }
 
 export const getIo = () : Server => {

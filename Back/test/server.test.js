@@ -95,7 +95,7 @@ test('unknown routes redirect to /', async () => {
     assert.deepEqual([r.status, r.headers.get('location')], [302, '/'])
 })
 
-test('login: name length rule, you-are, new-user broadcast; /users lists users WITH their sessionId', async () => {
+test('login: name length rule, you-are (own sessionId), new-user broadcast and /users without session ids', async () => {
     const watcher = await player()
     const c = await player()
     try {
@@ -107,11 +107,15 @@ test('login: name length rule, you-are, new-user broadcast; /users lists users W
         assert.match(me.id, ID)
         assert.deepEqual([me.name, me.sessionId], ['Alice', c.sessionId])
         assert.equal(typeof me.lastActivity, 'number')
-        assert.deepEqual((await waitUntil(watcher, 'new-user'))[0].name, 'Alice')
+        const [announced] = await waitUntil(watcher, 'new-user')
+        assert.deepEqual(announced, {id: me.id, name: 'Alice', lastActivity: me.lastActivity})
 
-        // Known issue kept as is (TESTING.md): anyone can read every session id here.
+        // A session id is a login credential: other people never receive it.
         const users = await (await fetch(DEV + '/users')).json()
-        assert.ok(users.some(u => u.id === me.id && u.sessionId === c.sessionId))
+        assert.deepEqual(users.find(u => u.id === me.id), {id: me.id, name: 'Alice', lastActivity: me.lastActivity})
+        assert.ok(users.every(u => !('sessionId' in u)))
+        const [all] = await waitUntil(watcher, 'all-users', list => list.some(u => u.id === me.id))
+        assert.ok(all.every(u => !('sessionId' in u)))
 
         // A reconnect with the same cookie is recognised.
         const back = await new PollClient(DEV, {cookie: `sessionId=${c.sessionId}`}).connect()
@@ -134,9 +138,11 @@ test('rooms: create, unique name, join with password, characters, objects, broad
         assert.deepEqual(Object.keys(room.users), [host.me.id])
         assert.deepEqual(room.roomHistory, ['Hostess joined the party'])
 
-        // Known issue kept as is: room passwords are public.
+        // Passwords and session ids stay on the server.
+        assert.ok(!('password' in room))
+        assert.ok(Object.values(room.users).every(u => !('sessionId' in u)))
         const listed = (await (await fetch(DEV + '/rooms')).json()).find(r => r.id === room.id)
-        assert.equal(listed.password, 'pw')
+        assert.deepEqual([listed.name, 'password' in listed], [name, false])
 
         await guest.emit('new-room', roomPayload(name))
         assert.deepEqual(await guest.waitFor('error'), ['Room with same name already exists'])
@@ -149,7 +155,8 @@ test('rooms: create, unique name, join with password, characters, objects, broad
         assert.deepEqual(users.map(u => u.name).sort(), ['Guesty', 'Hostess'])
 
         await host.emit('choose-character', {roomId: room.id, characterId: 'butler'})
-        await waitUntil(host, 'update-room', r => r && r.characters.butler)
+        const [withChar] = await waitUntil(host, 'update-room', r => r && r.characters.butler)
+        assert.deepEqual(withChar.characters.butler, {id: host.me.id, name: 'Hostess', lastActivity: withChar.characters.butler.lastActivity})
         await guest.emit('choose-character', {roomId: room.id, characterId: 'butler'})
         assert.deepEqual(await guest.waitFor('error'), ['Character is already taken'])
 
@@ -174,14 +181,70 @@ test('rooms: create, unique name, join with password, characters, objects, broad
     }
 })
 
-test('quirk: a room created without roomHistory cannot be joined (the server trusts the client shape)', async () => {
-    const c = await player('Quirky')
+test('room fields come from the server: history initialised, injected users/characters ignored', async () => {
+    const c = await player('Builder')
     try {
-        const {roomHistory, ...noHistory} = roomPayload('NoHistory-' + Date.now())
-        await c.emit('new-room-and-join', noHistory)
-        const [err] = await c.waitFor('error')
-        assert.match(err, /reading 'push'/)
+        const name = 'Shape-' + Date.now()
+        await c.emit('new-room-and-join', {name, password: '', gameConfigName: 'Murder',
+            users: {'XXX-000': {id: 'XXX-000', name: 'ghost'}}, characters: {butler: {id: 'XXX-000'}}})
+        const [room] = await waitUntil(c, 'update-room', r => r && r.name === name)
+        assert.deepEqual(Object.keys(room.users), [c.me.id])
+        assert.deepEqual(room.characters, {})
+        assert.deepEqual(room.roomHistory, ['Builder joined the party'])
     } finally {
         await c.close()
     }
+})
+
+test('joining by room code, as the front does: empty password, or none at all', async () => {
+    const host = await player('Opener')
+    const a = await player('Joiner')
+    const b = await player('Nopass')
+    try {
+        const name = 'Open-' + Date.now()
+        await host.emit('new-room-and-join', roomPayload(name, ''))
+        const [room] = await waitUntil(host, 'update-room', r => r && r.name === name)
+        await a.emit('join-room', {roomId: room.id, password: ''})
+        assert.equal((await waitUntil(a, 'update-room', r => r && r.id === room.id))[0].id, room.id)
+        await b.emit('join-room', {roomId: room.id})
+        const [users] = await waitUntil(host, 'update-room-users', u => u.length === 3)
+        assert.deepEqual(users.map(u => u.name).sort(), ['Joiner', 'Nopass', 'Opener'])
+    } finally {
+        await host.close()
+        await a.close()
+        await b.close()
+    }
+})
+
+test('logout releases only the leaving player\'s character', async () => {
+    const a = await player('Butler')
+    const b = await player('Maidy')
+    try {
+        const name = 'Chars-' + Date.now()
+        await a.emit('new-room-and-join', roomPayload(name, ''))
+        const [room] = await waitUntil(a, 'update-room', r => r && r.name === name)
+        await b.emit('join-room', {roomId: room.id, password: ''})
+        await waitUntil(a, 'update-room-users', u => u.length === 2)
+        // The other player picks first: the old bug released the room's FIRST character, not the leaver's.
+        await b.emit('choose-character', {roomId: room.id, characterId: 'maid'})
+        await waitUntil(b, 'update-room', r => r && r.characters.maid)
+        await a.emit('choose-character', {roomId: room.id, characterId: 'butler'})
+        await waitUntil(b, 'update-room', r => r && r.characters.butler && r.characters.maid)
+        await a.emit('logout')
+        const [after] = await waitUntil(b, 'update-room', r => r && !r.users[a.me.id])
+        assert.deepEqual(Object.keys(after.characters), ['maid'])
+        assert.equal(after.characters.maid.name, 'Maidy')
+    } finally {
+        await a.close()
+        await b.close()
+    }
+})
+
+test('CORS in PROD: murder.hosh.it is allowed, other origins are not', async () => {
+    const pre = origin => fetch(PROD + '/rooms', {method: 'OPTIONS', headers: {origin, 'access-control-request-method': 'GET'}})
+    const ok = await pre('https://murder.hosh.it')
+    assert.equal(ok.headers.get('access-control-allow-origin'), 'https://murder.hosh.it')
+    assert.equal(ok.headers.get('access-control-allow-credentials'), 'true')
+    const ko = await pre('https://evil.example')
+    assert.equal(ko.headers.get('access-control-allow-origin'), null)
 })

@@ -25,13 +25,19 @@ export const createNewRoom = async (newRoom: NewRoom): Promise<Room> => {
         throw new Error("Room with same name already exists");
     }
 
-    let createdRoom: Room = RoomCRUD.create(newRoom);
+    // Only these fields come from the client; the rest is the server's.
+    let createdRoom: Room = RoomCRUD.create({
+        name: newRoom.name,
+        password: newRoom.password ?? "",
+        gameConfigName: newRoom.gameConfigName,
+    });
 
     createdRoom = {
         ...createdRoom,
         users: {},
         objects: {},
         characters: {},
+        roomHistory: [],
     }
 
     RoomCRUD.update(createdRoom);
@@ -75,7 +81,7 @@ export const userJoinRoom = async (roomId: string, password: string, userId: str
     if (room.users[userId]) { return room; }
 
     //check password 
-    if (room.password !== password) {
+    if (room.password !== (password ?? "")) {
         throw new Error("Wrong password");
     }
 
@@ -154,7 +160,7 @@ export const userLeaveAllRooms = async (userId: string): Promise<void> => {
     const allRooms = await getAllRooms();
     allRooms.forEach(room => {
         //check if user has another character in the party
-        const characterId = Object.entries(room.characters).find(([charId, userId]) => userId === userId)?.[0];
+        const characterId = Object.entries(room.characters).find(([charId, user]) => user.id === userId)?.[0];
         if (characterId)
             delete room.characters[characterId];
 

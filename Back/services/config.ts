@@ -13,7 +13,7 @@ const config = {
     "STAGING": {
         target : "0.0.0.0",
         cors: {
-            origins: ["http://dev.localhost/","http://dev.localhost/:9874"],
+            origin: ["http://dev.localhost", "http://dev.localhost:9874"],
             methods: ["GET", "POST"],
             credentials: true,
         },
@@ -24,7 +24,7 @@ const config = {
     "PROD": {
         target : "0.0.0.0",
         cors: {
-            origins: ["https://murder.hosh.it"],
+            origin: ["https://murder.hosh.it"],
             methods: ["GET", "POST"],
             credentials: true,
         },

@@ -4,6 +4,7 @@ import { createNewRoom, getRoomsOfUser, getUsersInRoom, updateRoomObjects, userJ
 import { ensureRoomExistOrError, ensureUserIsInARoom } from "../roomService/roomSocketService";
 import { broadcastAllRooms } from "../socket-io";
 import { pingUser } from "../userService";
+import { publicRoom, publicUser } from "../publicView";
 
 export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) => {
     //check if user is in a room
@@ -28,7 +29,7 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
 
                 userSocket.join(room.id);
 
-                io.to(room.id).emit('user-joined-room', user);
+                io.to(room.id).emit('user-joined-room', publicUser(user));
                 notifyRoomUpdate(io, room.id);
             }).catch((err: Error) => {
                 console.log(err.message);
@@ -49,7 +50,7 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
 
             userSocket.join(room.id);
 
-            io.to(room.id).emit('user-joined-room', user);
+            io.to(room.id).emit('user-joined-room', publicUser(user));
             notifyRoomUpdate(io, room.id);
         }).catch((err: Error) => {
             console.log(err.message);
@@ -73,7 +74,7 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
 
             userSocket.leave(data.roomId);
             userSocket.emit('update-room', null);
-            io.to(data.roomId).emit('user-left-room', user);
+            io.to(data.roomId).emit('user-left-room', publicUser(user));
             notifyRoomUpdate(io, data.roomId ?? "");
         }).catch((err: Error) => {
             console.log(err.message);
@@ -90,7 +91,7 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
         };
 
         updateRoomObjects(user.id, data.roomId, data.objects).then(() => {
-            io.to(data.roomId).emit('room-object-update', { user, objects: data.objects });
+            io.to(data.roomId).emit('room-object-update', { user: publicUser(user), objects: data.objects });
             notifyRoomUpdate(io, data.roomId);
         }).catch((err: Error) => {
             console.log(err.message);
@@ -114,7 +115,7 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
             RoomCRUD.update(room);
         }
 
-        io.to(data.roomId).emit('broadcast-from-room', { sender: user, data });
+        io.to(data.roomId).emit('broadcast-from-room', { sender: publicUser(user), data });
         notifyRoomUpdate(io, data.roomId);
     })
 
@@ -128,12 +129,12 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
             userSocket.emit('error', "Room does not exist");
             return;
         }
-        if (room.password !== data.password) {
+        if (room.password !== (data.password ?? "")) {
             userSocket.emit('error', "Wrong password");
             return;
         }
 
-        io.to(data.roomId).emit('room-deleted', { by: user });
+        io.to(data.roomId).emit('room-deleted', { by: publicUser(user) });
 
         //make all user who joined room leave 
         Object.keys(room.users).forEach(userId => {
@@ -154,8 +155,8 @@ export const notifyRoomUpdate = async (io: Server, roomId: string) => {
 
     const users: User[] = await getUsersInRoom(roomId);
 
-    io.to(roomId).emit('update-room', room);
-    io.to(roomId).emit('update-room-users', users);
+    io.to(roomId).emit('update-room', publicRoom(room));
+    io.to(roomId).emit('update-room-users', users.map(publicUser));
     broadcastAllRooms();
 }
 
