@@ -1,5 +1,5 @@
 # ---- build stage: install deps + build Back and Front ----
-FROM node:20-slim AS build
+FROM node:26-slim AS build
 
 WORKDIR /app_tmp
 
@@ -26,7 +26,7 @@ RUN cd Front && npm run ci
 RUN cp -r Front/build Back/dist/public
 
 # ---- runtime stage: only the built app + runtime deps ----
-FROM node:20-slim
+FROM node:26-slim
 
 # patch OS packages; drop npm (unused at runtime, ships vulnerable bundled deps)
 RUN apt-get update && apt-get -y upgrade && rm -rf /var/lib/apt/lists/* \
