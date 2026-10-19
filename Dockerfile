@@ -17,7 +17,8 @@ COPY Back ./Back
 
 # Build Back
 RUN cd Back && npm run build
-RUN cp -r Back/node_modules Back/dist/node_modules
+# runtime gets production dependencies only (nodemon, cross-env, typescript stay in the build stage)
+RUN cd Back && npm prune --omit=dev && cp -r node_modules dist/node_modules
 
 # Build Front (CI=false so CRA warnings are not errors)
 RUN cd Front && npm run ci
