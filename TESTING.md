@@ -71,7 +71,23 @@ Each change has a test that fails on the old code (checked: 6 failures on `main`
 - **TypeScript 7 not taken** (#13, #15): the `typescript` 7 package has no JS compiler API. CRA 5
   (`react-scripts`, fork-ts-checker) fails ("Cannot find module 'typescript'"); in Back `tsc` 7 compiles the
   same JS but `npm run dev` (nodemon → ts-node) crashes. Back stays on TS 5.9, Front on 4.9.
+  Superseded for Back on 2026-10-26 (below).
 - Tests: cookie parsing (other cookies, URL-decoding, first wins, quotes, bad escapes) and quiet startup log.
+
+## Back on TypeScript 7 (2026-10-26, MIGRATIONS.md)
+
+- `typescript` 7.0.2 (exact pin; native `tsc`, picked from the `@typescript/typescript-<os>-<arch>`
+  optional package, a static binary: no install script, works on node:20-slim / node:26-slim). Emitted
+  JS is the same as TS 5.9's (only diff: `var _a, _b;` split into two `var` lines in
+  `services/socketService/userEvents.js`); the image's runtime files are otherwise identical.
+- `npm run dev` no longer uses ts-node (TS 7 has no JS compiler API): `tsc` once, then `Back/dev.mjs`
+  (Node built-ins only) watches the sources, reruns `tsc` on change, and `node --watch dist/index.js`
+  restarts the server. Same cwd as before (`.env`, `version.txt`, `public/`). `tsc --watch` of 7.0.2 was not
+  used: it missed edits inside containers. `nodemon`, `ts-node-dev` (and its `ts-node`) are removed;
+  `tsconfig.json` drops the `ts-node` block and excludes `dev.mjs` from the build.
+- Tested: back 12/12 on node 20 and 26 (TESTING.md command), hardened smoke OK, image file list identical to
+  the previous image, dev loop in node:20-slim and node:26-slim (edit `index.ts` → `/info` serves the
+  change after a restart; SIGTERM leaves no `tsc`/`node` behind).
 
 ## Known issues (kept)
 

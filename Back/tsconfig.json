@@ -106,7 +106,6 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "ts-node": {
-    "files": true
-  },
+  /* dev.mjs is the dev runner (npm run dev), not app code; node_modules and dist are the defaults kept */
+  "exclude": ["node_modules", "dist", "dev.mjs"]
 }

@@ -29,7 +29,7 @@ Back :
 ```sh
 cd Back
 npm i
-npm run dev
+npm run dev   # tsc once, then dev.mjs: recompiles on change into dist/, node --watch restarts the server
 ```
 
 ## How to build
