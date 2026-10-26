@@ -4,7 +4,6 @@ import { getDefaultRoom, updateCurrentRoom } from "../../services/roomService"
 import RoomBroadcast from "./RoomBroadcast"
 import currentConfig from "../../services/config"
 import { emitDeleteRoom, emitJoinRoom, emitLeaveRoom, emitNewRoom } from "../../services/socketService/emits"
-import { spawn } from "child_process"
 import { getAllGamesNames, getCurrentGameEngine, useGameEngine } from "../../services/gameService"
 import { usersIdWithCharacterInRoom } from "../../services/characterService"
 
