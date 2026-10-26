@@ -20,7 +20,7 @@ RUN cd Back && npm run build
 # runtime gets production dependencies only (cross-env, typescript stay in the build stage)
 RUN cd Back && npm prune --omit=dev && cp -r node_modules dist/node_modules
 
-# Build Front (CI=false so CRA warnings are not errors)
+# Build Front (tsc type check, then vite build into Front/build)
 RUN cd Front && npm run ci
 
 # copy front dist to back/dist/public

@@ -22,7 +22,7 @@ Front :
 cd Front
 # legacy ecause compatibility between react ts and qrcode reader/generator
 npm i --legacy-peer-deps
-npm start
+npm start   # Vite dev server on http://localhost:3000 (the Back's DEV CORS origin)
 ```
 
 Back :

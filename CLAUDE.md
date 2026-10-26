@@ -1,7 +1,7 @@
 # CLAUDE.md — pazka/MyMurderParty
 
 Murder-party game companion (https://murder.hosh.it): `Back/` Express + Socket.IO (TypeScript, in-memory
-state), `Front/` CRA 5 React app; one image built by the root `Dockerfile`. Owner: Alexandre (pazka).
+state), `Front/` React app built with Vite (TypeScript 7 type check); one image built by the root `Dockerfile`. Owner: Alexandre (pazka).
 Read **TESTING.md** first.
 
 ## Maintenance (autonomous agent)

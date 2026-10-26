@@ -7,7 +7,6 @@ import { addItemToInventory, addItemsToInventory, getFullInventory, getFullyProc
 import { emitBroadcastEndOfGameToRoom, emitBroadcastTextToRoom, emitUpdateObjects } from "../../socketService/emits"
 import { sendEvent } from "../../eventsService"
 import { AvailableEvents } from "../../eventsService/allAvailableEvents"
-import { subscribe } from "diagnostics_channel"
 import { openPopUp } from "../../utils"
 
 const validateALookAction = (action: LookAction): boolean => {

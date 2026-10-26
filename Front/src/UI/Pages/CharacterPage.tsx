@@ -5,7 +5,6 @@ import Markdown from "react-markdown";
 import { useGlobalStorage } from "../../services/storageService";
 import { sendEvent } from "../../services/eventsService";
 import { AvailableEvents } from "../../services/eventsService/allAvailableEvents";
-import { emit } from "process";
 import { emitChooseCharacter } from "../../services/socketService/emits";
 import { useCurrentRoom } from "../../services/roomService";
 import { chooseCharacter } from "../../services/characterService";

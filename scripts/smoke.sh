@@ -39,7 +39,7 @@ for _ in $(seq 1 60); do
   sleep 1
 done
 
-step "front (CRA build in public/)"
+step "front (Vite build in public/)"
 code 200 "$BASE/"
 grep -q '<div id="root">' "$TMP/body" || fail "front index not served"
 

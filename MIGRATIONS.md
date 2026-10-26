@@ -16,3 +16,19 @@ Images: `ghcr.io/pazka/my-murder-party:<git sha>` (pushed by `deploy.yml` for ev
   node:20-slim and node:26-slim. Details in TESTING.md ("Back on TypeScript 7").
 - **Rollback**: redeploy the previous image `ghcr.io/pazka/my-murder-party:90196ebdbfc3be36dc5cd20b50ab9510070041c7`
   (or `git revert` the merge commit).
+
+## 2026-10-26 — Front: Create React App → Vite 8, TypeScript 4.9.5 → 7.0.2
+
+- **Why**: Dependabot #15 (closed): `react-scripts` 5 peers TypeScript ^3||^4 and fails with TS 7
+  ("Cannot find module 'typescript'"); CRA is unmaintained.
+- **Changed**: `Front/package.json` + lockfile (`react-scripts`, `web-vitals`, `cross-env` out; `vite` 8.3.4,
+  `@vitejs/plugin-react` 6.1.2, `typescript` 7.0.2 exact), `Front/vite.config.mts` (new), `Front/index.html`
+  (from `public/`), `src/vite-env.d.ts` (was `react-app-env.d.ts`), `tsconfig.json` (ES2020, `bundler`
+  resolution), `src/App.scss` (relative image URL), three unused Node imports removed, Dockerfile/README/
+  smoke comments.
+- **Runtime behaviour**: unchanged (browser check below). Build output paths changed (`/assets/…` instead of
+  `/static/…`): the Back serves `public/` as a whole, nothing references those paths.
+- **Proof**: hardened smoke + Playwright comparison against the previous image. Details in TESTING.md
+  ("Front off Create React App").
+- **Rollback**: redeploy the previous image `ghcr.io/pazka/my-murder-party:f4e222fa885612138b9185dd19c003856eb5b1a1`
+  (or `git revert` the merge commit).
