@@ -76,7 +76,7 @@ app.get('/rooms', (req: Request, res: Response) => {
   })
 });
 
-app.all('*', (req, res) => {
+app.all('/{*splat}', (req, res) => {
   //redirect all no found to '/'
   res.redirect('/');
 })
