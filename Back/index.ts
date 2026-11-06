@@ -76,6 +76,25 @@ app.get('/rooms', (req: Request, res: Response) => {
   })
 });
 
+// Health for the box (compose healthcheck, hosh-deploy): proves the server reads its files and the in-memory
+// user/room store answers, and that Socket.IO is attached. Read-only: creates no user, room or session.
+app.get('/healthz', async (req: Request, res: Response) => {
+  res.setHeader('Cache-Control', 'no-store');
+  try {
+    const [users, rooms] = await Promise.all([getAllUsers(), getAllRooms()]);
+    res.json({
+      status: 'ok',
+      version: getVersion().join('.'),
+      users: users.length,
+      rooms: rooms.length,
+      sockets: io.engine.clientsCount,
+    });
+  } catch (e) {
+    console.error('healthz failed', e);
+    res.status(503).json({ status: 'error' });
+  }
+});
+
 app.all('*', (req, res) => {
   //redirect all no found to '/'
   res.redirect('/');

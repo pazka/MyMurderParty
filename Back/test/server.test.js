@@ -20,7 +20,9 @@ const logs = {}                       // env -> everything the server printed so
 
 async function start(env, marker) {
     let log = ''
-    const p = spawn(process.execPath, ['index.js'], {cwd: DIST, env: {...process.env, ENV: env}})
+    const e = {...process.env, ENV: env}
+    delete e.PORT                     // the config's own port (PORT is tested on its own below)
+    const p = spawn(process.execPath, ['index.js'], {cwd: DIST, env: e})
     p.stdout.on('data', d => { log += d; logs[env] = log })
     p.stderr.on('data', d => { log += d; logs[env] = log })
     servers.push(p)
@@ -268,4 +270,54 @@ test('CORS in PROD: murder.hosh.it is allowed, other origins are not', async () 
     assert.equal(ok.headers.get('access-control-allow-credentials'), 'true')
     const ko = await pre('https://evil.example')
     assert.equal(ko.headers.get('access-control-allow-origin'), null)
+})
+
+test('/healthz: 200 {status ok} with store counts, HEAD too, creates nothing (DEV and PROD)', async () => {
+    for (const base of [DEV, PROD]) {
+        const before = await (await fetch(base + '/users')).json()
+        const r = await fetch(base + '/healthz', {redirect: 'manual'})
+        assert.equal(r.status, 200)
+        assert.equal(r.headers.get('cache-control'), 'no-store')
+        assert.equal(r.headers.get('set-cookie'), null)
+        const h = await r.json()
+        assert.deepEqual(Object.keys(h).sort(), ['rooms', 'sockets', 'status', 'users', 'version'])
+        assert.equal(h.status, 'ok')
+        assert.equal(h.version, await (await fetch(base + '/info')).text())
+        assert.equal(h.users, before.length)
+        assert.equal(h.rooms, (await (await fetch(base + '/rooms')).json()).length)
+        assert.equal((await fetch(base + '/healthz', {method: 'HEAD'})).status, 200)
+        assert.deepEqual(await (await fetch(base + '/users')).json(), before)
+    }
+})
+
+test('ops/healthcheck.js: exit 0 against the running server (config ENV + PORT), 1 when nothing answers', () => {
+    const {spawnSync} = require('node:child_process')
+    const run = env => spawnSync(process.execPath, ['ops/healthcheck.js'], {cwd: DIST, env: {...process.env, ...env}, encoding: 'utf8'})
+    assert.equal(run({ENV: 'PROD', PORT: ''}).status, 0)
+    const down = run({ENV: 'PROD', PORT: '1'})
+    assert.equal(down.status, 1)
+    assert.match(down.stderr, /unhealthy/)
+})
+
+test('PORT overrides the listen port (hosh-deploy compose: ENV=PROD PORT=8000); a bad PORT stops the start', async () => {
+    let log = ''
+    const p = spawn(process.execPath, ['index.js'], {cwd: DIST, env: {...process.env, ENV: 'PROD', PORT: '18000'}})
+    p.stdout.on('data', d => { log += d })
+    p.stderr.on('data', d => { log += d })
+    try {
+        const until = Date.now() + 15000
+        while (!log.includes('Server is Fire at http://0.0.0.0:18000')) {
+            if (Date.now() > until || p.exitCode !== null) throw new Error('PORT server did not start:\n' + log)
+            await new Promise(r => setTimeout(r, 50))
+        }
+        assert.equal((await (await fetch('http://127.0.0.1:18000/healthz')).json()).status, 'ok')
+        const r = await fetch('http://127.0.0.1:18000/session')
+        assert.match(r.headers.get('set-cookie'), /Domain=\.hosh\.it.*HttpOnly.*Secure.*SameSite=Strict/)
+    } finally {
+        p.kill()
+    }
+    const {spawnSync} = require('node:child_process')
+    const bad = spawnSync(process.execPath, ['index.js'], {cwd: DIST, env: {...process.env, ENV: 'PROD', PORT: '80x'}, encoding: 'utf8', timeout: 10000})
+    assert.notEqual(bad.status, 0)
+    assert.match(bad.stderr, /PORT must be an integer/)
 })
