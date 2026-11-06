@@ -42,8 +42,12 @@ unknown routes, login rules and `you-are` / `new-user` events, reconnect with th
 room flow as the front drives it (create-and-join, unique name, password, users list, character choice and
 conflict, shared objects, room broadcast and history, delete with password), and the quirks below.
 
-`scripts/smoke.sh`: the built image with `ENV=PROD`, hardened — front served, REST, PROD cookie flags,
-engine.io handshake, no crash in the logs.
+`scripts/smoke.sh`: the built image run **exactly like the box's legacy compose** (`ENV=PROD`, uid 1000,
+read-only rootfs, tmpfs `/tmp`, cap_drop ALL, no-new-privileges, restart always, container port 80) — front
+served, REST, PROD cookie flags, engine.io handshake, a whole two-player party over Socket.IO
+(`Back/test/container-flow.js play`, run with the image's own node: session cookie, login, create-and-join,
+join by code, character, shared objects, room message, `/rooms` + `/users`, delete, logout), no crash in the
+logs, then a container restart comes back empty (`keep` → restart → `empty`: state is in memory).
 
 ## Changes and upgrades (2026-10-19)
 
