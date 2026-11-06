@@ -46,4 +46,7 @@ jobs:
         run: bash scripts/check-node-version.sh mymurderparty:smoke
       - name: guardrail rejects an unpatched Node (test of the test)
         run: '! bash scripts/check-node-version.sh node:24.21.0-alpine'
-      - run: bash scripts/smoke.sh mymurderparty:smoke
+      - name: legacy mode (the box's legacy compose, unchanged until the cutover)
+        run: bash scripts/smoke.sh mymurderparty:smoke legacy
+      - name: template mode (docker-compose.example.yml + hosh-deploy register checks + POST_DEPLOY)
+        run: bash scripts/smoke.sh mymurderparty:smoke template

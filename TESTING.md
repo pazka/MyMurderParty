@@ -6,7 +6,7 @@ what the game server does today so a Dependabot PR is judged on its CI run.
 ## What ships
 
 One image: `Back/` compiled with `tsc` into `Back/dist/` (run as `node index.js`), `Front/` (Vite + React, `tsc` type check) built
-into `dist/public/`. Production config = `ENV=PROD` (docker-compose.yml). All game state is **in memory**.
+into `dist/public/`. Production config = `ENV=PROD` (`docker-compose.legacy.yml`, `.env.example`). All game state is **in memory**.
 
 ## Run it
 
@@ -16,9 +16,9 @@ docker run --rm -v "$PWD/Back":/src:ro node:26-slim sh -c \
   'mkdir /a && cd /src && tar --exclude=./node_modules --exclude=./.env -cf - . | tar -xf - -C /a && cd /a \
    && npm ci && npm run build && node --test --test-reporter=spec test/server.test.js'
 
-# container smoke (hardened: uid 1000, read-only rootfs, cap_drop ALL) + patched-Node guardrail
+# container smoke in both box modes + patched-Node guardrail
 docker build -t mymurderparty:smoke . && bash scripts/check-node-version.sh mymurderparty:smoke \
-  && bash scripts/smoke.sh mymurderparty:smoke
+  && bash scripts/smoke.sh mymurderparty:smoke legacy && bash scripts/smoke.sh mymurderparty:smoke template
 ```
 
 (Windows Git Bash: prefix `docker run` with `MSYS_NO_PATHCONV=1`, mount `"$(cygpath -w "$PWD/Back")"`.)
@@ -27,7 +27,7 @@ docker build -t mymurderparty:smoke . && bash scripts/check-node-version.sh mymu
 
 PRs, `main`, `agent/**`: `back tests (node 26)` (npm ci, tsc build, tests) and `container smoke` (builds
 the real Dockerfile, front included; checks the image's Node with `scripts/check-node-version.sh`, and that the
-script rejects an unpatched `node:24.21.0-alpine`). `release.yml` and `deploy.yml` run the same Node check on
+script rejects an unpatched `node:24.21.0-alpine`). `release.yml` and `build-scan-push.yml` run the same Node check on
 the candidate image before anything is pushed.
 
 `scripts/check-node-version.sh IMAGE`: fails if the image's Node is EOL (not 22/24/26) or below the patched
@@ -36,18 +36,27 @@ minimum of its line (CVE-2026-111497: 22.23.4 / 24.22.1 / 26.12.1). Copied uncha
 
 ## What is covered
 
-`Back/test/server.test.js` (12 tests, Node built-ins only; `test/sio-poll.js` is a tiny Socket.IO
+`Back/test/server.test.js` (15 tests, Node built-ins only; `test/sio-poll.js` is a tiny Socket.IO
 long-polling client on `fetch`): `/info`, `/session` id format and cookie flags (DEV and PROD), redirect of
 unknown routes, login rules and `you-are` / `new-user` events, reconnect with the session cookie, the full
 room flow as the front drives it (create-and-join, unique name, password, users list, character choice and
-conflict, shared objects, room broadcast and history, delete with password), and the quirks below.
+conflict, shared objects, room broadcast and history, delete with password), `/healthz` (DEV and PROD, creates nothing), `ops/healthcheck.js`, the `PORT` override,
+and the quirks below.
 
-`scripts/smoke.sh`: the built image run **exactly like the box's legacy compose** (`ENV=PROD`, uid 1000,
+`scripts/smoke.sh IMAGE legacy`: the built image run **exactly like the box's legacy compose** (`ENV=PROD`, uid 1000,
 read-only rootfs, tmpfs `/tmp`, cap_drop ALL, no-new-privileges, restart always, container port 80) — front
 served, REST, PROD cookie flags, engine.io handshake, a whole two-player party over Socket.IO
 (`Back/test/container-flow.js play`, run with the image's own node: session cookie, login, create-and-join,
 join by code, character, shared objects, room message, `/rooms` + `/users`, delete, logout), no crash in the
-logs, then a container restart comes back empty (`keep` → restart → `empty`: state is in memory).
+logs, then a container restart comes back empty (`keep` → restart → `empty`: state is in memory). Since the
+hosh-deploy migration it also checks uid / read-only rootfs / no capabilities, `/healthz`, the read-only
+`ops/smoke.js`, and that the image HEALTHCHECK turns `healthy`.
+
+`scripts/smoke.sh IMAGE template`: the same checks on the hosh-deploy compose itself
+(`docker-compose.example.yml` + `.env.example`, image swapped, uid 10001, `PORT=8000`, published on the conf's
+`BIND` 127.0.0.1:9137), after `scripts/register-check.sh` (CI copy of what `hosh-deploy register` refuses on
+the box), plus the conf's `POST_DEPLOY` run inside the container exactly as the box runs it (argv, no shell).
+Both modes run in CI (`container smoke`) and in `release.yml` before any push.
 
 ## Changes and upgrades (2026-10-19)
 
@@ -132,4 +141,6 @@ Each change has a test that fails on the old code (checked: 6 failures on `main`
 - State is in memory: a restart or redeploy ends every game.
 - `/test` (cheat page: all users, all rooms, delete) is routed in production.
 - `Back/dist/` is committed but the image rebuilds it.
-- Image runs as root by default (it works as uid 1000, see the smoke); no HEALTHCHECK.
+- Image runs as root by default (both composes set a non-root user: legacy 1000, hosh-deploy 10001).
+- Logs are plain text (not JSON lines as the box contract asks); the app trusts no `X-Forwarded-For` (it never
+  reads the client IP).
