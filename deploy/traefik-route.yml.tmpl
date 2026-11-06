@@ -1,0 +1,22 @@
+# Rendered by hosh-deploy on the first deploy (copied at `register`) into
+# /root/hosh-deploy/edge/traefik/dynamic/my-murder-party.yml. @@TOKENS@@ are filled on the box.
+# hosh.it box standard: edge Traefik (host network, file provider) → loopback port of the container.
+# REVERT = delete this file (Traefik hot-reloads the directory).
+http:
+  routers:
+    my-murder-party:
+      rule: "Host(`@@HOST@@`)"
+      service: my-murder-party
+      entryPoints: [@@ENTRYPOINT@@]
+      middlewares: [my-murder-party-hsts]
+      tls: @@TLS@@
+  middlewares:
+    my-murder-party-hsts:
+      headers:
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+  services:
+    my-murder-party:
+      loadBalancer:
+        servers:
+          - url: "http://@@BIND@@"

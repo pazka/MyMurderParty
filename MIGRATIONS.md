@@ -1,7 +1,24 @@
 # Migrations
 
 One entry per toolchain migration: what changed, how it was proven, how to roll back.
-Images: `ghcr.io/pazka/my-murder-party:<git sha>` (pushed by `deploy.yml` for every `main` commit).
+Images: `ghcr.io/pazka/my-murder-party:<git sha>` (pushed by `build-scan-push.yml`, named
+`deploy.yml` until 2026-11-06, for every `main` commit).
+
+## 2026-11-06 — hosh-deploy template app (pazka/hosh-management#5)
+
+- **Why**: the legacy box deploy is manual (a Node security fix needed hand work on the box). Box standard
+  (hosh-migration 11-BOX-STANDARD.md, Decision #16): releases deploy themselves through `hosh-deploy`.
+- **Changed**: `PORT` env overrides the listen port (unset = 80 in PROD as before); `GET /healthz`;
+  `Back/ops/healthcheck.js` (image `HEALTHCHECK`) and `Back/ops/smoke.js` (`POST_DEPLOY`, read-only);
+  `deploy/hosh-deploy.conf`, `deploy/traefik-route.yml.tmpl`, `docker-compose.example.yml`, `.env.example`,
+  `DEPLOY.md`; `docker-compose.yml` → `docker-compose.legacy.yml` (must not exist in `/srv/my-murder-party`, or
+  `hosh-deploy register` would validate it instead of the example); workflow `deploy.yml` (build-scan-push) →
+  `build-scan-push.yml`, new `deploy.yml` (hosh-deploy), `release.yml` smoke in both modes before any push +
+  `deploy` job (stable tags only; no-op without `HOSH_DEPLOY_KEY`).
+- **Runtime behaviour**: unchanged under the legacy compose (port 80, uid 1000, ENV=PROD); `/healthz` answers
+  instead of redirecting to `/`; the container now reports a health status.
+- **Proof**: CI `container smoke` legacy + template modes; back tests 15/15.
+- **Rollback**: `git revert` the merge; on the box, the legacy compose keeps working with any image (DEPLOY.md §6).
 
 ## 2026-11-06 — Node 26.13.0 pinned by digest, Node 20 out of CI (pazka/hosh-management#5)
 

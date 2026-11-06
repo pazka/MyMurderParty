@@ -38,7 +38,11 @@ WORKDIR /app
 # copy built back (incl. runtime node_modules + front in public/) to app
 COPY --from=build /app_tmp/Back/dist/ /app/
 
-# run server
+# health: GET /healthz on the configured port (ENV + PORT; legacy compose = :80, hosh-deploy compose = :8000).
+# No curl in the image: node checks it.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 CMD ["node", "/app/ops/healthcheck.js"]
+
+# run server (listens on PORT if set, else 80 in PROD; runs as any uid: nothing is written to disk)
 #interactive for debbuging
 #CMD ["tail", "-f", "/dev/null"]
 CMD ["node", "index.js"]

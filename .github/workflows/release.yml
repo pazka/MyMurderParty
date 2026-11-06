@@ -18,7 +18,13 @@ name: release
 #   secrets.DOKPLOY_WEBHOOK  Dokploy deploy-webhook URL, POSTed after :latest is pushed.
 #                         Unset/empty = a notice is printed and the run still succeeds.
 #
-# The build-scan-push workflow (deploy.yml) is untouched: it keeps pushing :ci + :<sha> only.
+#   secrets.HOSH_DEPLOY_KEY  hosh-deploy key (box standard): after a STABLE tag vX.Y.Z is pushed, the `deploy`
+#                         job runs deploy.yml → hosh-deploy on the box (verifies, rolls back by itself).
+#                         Unset = a notice, nothing deployed (the legacy box keeps pulling tags by hand).
+#   vars.HOSH_AUTODEPLOY  'false' = no deploy after a release (Actions → deploy still works by hand).
+#
+# Before any push the candidate must pass the hardened smoke in both modes (scripts/smoke.sh legacy|template).
+# The build-scan-push workflow (build-scan-push.yml) keeps pushing :ci + :<sha> only.
 on:
   push:
     tags: ['v*']
@@ -37,6 +43,9 @@ jobs:
     # Tag pushes and manual runs always go; branch pushes only when DEPLOY_TRIGGER == 'main'.
     if: github.event_name != 'push' || github.ref_type == 'tag' || vars.DEPLOY_TRIGGER == 'main'
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.meta.outputs.primary }}
+      deploy: ${{ steps.meta.outputs.deploy }}
     steps:
       - uses: actions/checkout@v7
       - name: compute release tags
@@ -63,6 +72,12 @@ jobs:
           fi
           echo "primary=$primary" >> "$GITHUB_OUTPUT"
           echo "latest=$latest" >> "$GITHUB_OUTPUT"
+          # hosh-deploy takes stable release tags only (vX.Y.Z): no prerelease, no main-<sha>
+          if [ "$REF_TYPE" = "tag" ] && printf '%s' "$REF_NAME" | grep -Eq '^v[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,6}$'; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
           echo "release tags: :$primary :$SHA (latest=$latest)"
       - uses: docker/setup-buildx-action@v4
       - uses: docker/login-action@v4
@@ -77,6 +92,10 @@ jobs:
           tags: ghcr.io/pazka/my-murder-party:candidate
       - name: Node runtime is patched (CVE-2026-111497 guardrail, before any push)
         run: bash scripts/check-node-version.sh ghcr.io/pazka/my-murder-party:candidate
+      - name: hardened smoke, legacy compose mode (before any push)
+        run: bash scripts/smoke.sh ghcr.io/pazka/my-murder-party:candidate legacy
+      - name: hardened smoke, hosh-deploy template mode (before any push)
+        run: bash scripts/smoke.sh ghcr.io/pazka/my-murder-party:candidate template
       - name: Trivy scan (CRITICAL; blocking unless TRIVY_POLICY=warn)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
@@ -112,3 +131,13 @@ jobs:
             exit 0
           fi
           curl -fsS -X POST "$DOKPLOY_WEBHOOK"
+
+  # Box standard (Decision #16): a stable release goes live through hosh-deploy on the hosh.it box, which
+  # verifies it and rolls back by itself. No-op (notice) until the owner sets HOSH_DEPLOY_KEY at the cutover.
+  deploy:
+    needs: release
+    if: needs.release.outputs.deploy == 'true' && vars.HOSH_AUTODEPLOY != 'false'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      version: ${{ needs.release.outputs.tag }}
+    secrets: inherit

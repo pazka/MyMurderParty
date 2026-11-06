@@ -8,8 +8,8 @@ Read **TESTING.md** first.
 Goal: keep the base image, dependencies and Actions current **without changing behaviour**.
 - **Gate = `ci` green**: `back tests (node 26)` + `container smoke` (incl. the patched-Node guardrail
   `scripts/check-node-version.sh`; never weaken it).
-- **Branches**: work on `agent/<topic>`; CI runs without a PR. Never push to `main` (`deploy.yml` /
-  `release.yml` publish from it), never tag. **The owner merges.**
+- **Branches**: work on `agent/<topic>`; CI runs without a PR. Never push to `main` (`build-scan-push.yml`
+  publishes from it; a `v*` tag releases and, once `HOSH_DEPLOY_KEY` is set, deploys: DEPLOY.md), never tag. **The owner merges.**
 - **Dependabot PRs**: green → summarise risk in a PR comment. Red → reproduce per TESTING.md, smallest fix on
   an `agent/` branch. Never weaken or delete a test; the Socket.IO events the front uses are a contract.
 - When the base image major moves, move the test matrix to `[new, next]` and update TESTING.md.

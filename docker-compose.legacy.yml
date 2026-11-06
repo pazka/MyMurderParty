@@ -1,0 +1,16 @@
+# LEGACY: how the box ran this app before hosh-deploy (/root/hosh-deploy/murder/docker-compose.yml),
+# kept as the reference for scripts/smoke.sh legacy mode. Not used by hosh-deploy: the box's template
+# compose is docker-compose.example.yml (`hosh-deploy register` copies it to docker-compose.yml).
+services:
+  app:
+    image: 'ghcr.io/pazka/my-murder-party:v1.1.1'
+    user: "1000:1000"
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    restart: always
+    ports:
+      - '127.0.0.1:9674:80'
+    environment:
+      - ENV=PROD
