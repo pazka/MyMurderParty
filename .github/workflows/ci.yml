@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ['20', '26']
+        node: ['26']  # Node 20 is EOL; patched 26.x only (pazka/hosh-management#5)
     defaults:
       run:
         working-directory: Back
@@ -42,4 +42,8 @@ jobs:
           load: true
           push: false
           tags: mymurderparty:smoke
+      - name: Node runtime is patched (CVE-2026-111497 guardrail)
+        run: bash scripts/check-node-version.sh mymurderparty:smoke
+      - name: guardrail rejects an unpatched Node (test of the test)
+        run: '! bash scripts/check-node-version.sh node:24.21.0-alpine'
       - run: bash scripts/smoke.sh mymurderparty:smoke

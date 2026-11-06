@@ -12,23 +12,27 @@ into `dist/public/`. Production config = `ENV=PROD` (docker-compose.yml). All ga
 
 ```bash
 # back tests: black-box, spawn the built server twice (ENV=DEV on localhost:8001, ENV=PROD on :80)
-docker run --rm -v "$PWD/Back":/src:ro node:20-slim sh -c \
+docker run --rm -v "$PWD/Back":/src:ro node:26-slim sh -c \
   'mkdir /a && cd /src && tar --exclude=./node_modules --exclude=./.env -cf - . | tar -xf - -C /a && cd /a \
    && npm ci && npm run build && node --test --test-reporter=spec test/server.test.js'
 
-# container smoke (hardened: uid 1000, read-only rootfs, cap_drop ALL)
-docker build -t mymurderparty:smoke . && bash scripts/smoke.sh mymurderparty:smoke
-
-# next base before Dependabot's PR lands
-sed 's/node:20-slim/node:26-slim/g' Dockerfile | docker build -f - -t mymurderparty:next .
+# container smoke (hardened: uid 1000, read-only rootfs, cap_drop ALL) + patched-Node guardrail
+docker build -t mymurderparty:smoke . && bash scripts/check-node-version.sh mymurderparty:smoke \
+  && bash scripts/smoke.sh mymurderparty:smoke
 ```
 
 (Windows Git Bash: prefix `docker run` with `MSYS_NO_PATHCONV=1`, mount `"$(cygpath -w "$PWD/Back")"`.)
 
 ## CI (`.github/workflows/ci.yml`)
 
-PRs, `main`, `agent/**`: `back tests (node 20|26)` (npm ci, tsc build, tests) and `container smoke` (builds
-the real Dockerfile, front included).
+PRs, `main`, `agent/**`: `back tests (node 26)` (npm ci, tsc build, tests) and `container smoke` (builds
+the real Dockerfile, front included; checks the image's Node with `scripts/check-node-version.sh`, and that the
+script rejects an unpatched `node:24.21.0-alpine`). `release.yml` and `deploy.yml` run the same Node check on
+the candidate image before anything is pushed.
+
+`scripts/check-node-version.sh IMAGE`: fails if the image's Node is EOL (not 22/24/26) or below the patched
+minimum of its line (CVE-2026-111497: 22.23.4 / 24.22.1 / 26.12.1). Copied unchanged from the box standard
+(pazka/hosh-management#5); the minimums are bumped there when Node ships a security release.
 
 ## What is covered
 
@@ -113,6 +117,11 @@ Each change has a test that fails on the old code (checked: 6 failures on `main`
   (react-to-print) → `/test` → logout. Same page texts and URLs at every step, same Socket.IO frames (as a
   multiset, ids masked), same `/rooms`, no page errors; screenshots differ only in random ids and the fake
   camera frame. Vite dev server checked against the Back (login + create party, no errors).
+
+## Node 26.13.0 pinned, Node 20 dropped (2026-11-06, MIGRATIONS.md)
+
+- CVE-2026-111497 (Brotli RCE in `node:zlib`, exploited) is fixed in 26.12.1; Node 20 is EOL. Both stages
+  are `node:26.13.0-slim@sha256:…` (Dependabot `docker` bumps tag + digest). CI matrix is Node 26 only.
 
 ## Known issues (kept)
 

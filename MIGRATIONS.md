@@ -3,6 +3,19 @@
 One entry per toolchain migration: what changed, how it was proven, how to roll back.
 Images: `ghcr.io/pazka/my-murder-party:<git sha>` (pushed by `deploy.yml` for every `main` commit).
 
+## 2026-11-06 — Node 26.13.0 pinned by digest, Node 20 out of CI (pazka/hosh-management#5)
+
+- **Why**: CVE-2026-111497 (Brotli RCE in `node:zlib`, actively exploited) is fixed in Node 26.12.1; Node 20
+  is EOL. The floating `node:26-slim` tag gave no proof of which 26.x went into an image.
+- **Changed**: `Dockerfile` both stages `node:26.13.0-slim@sha256:5adad64f…68072` (same variant);
+  `ci.yml` matrix `['26']`; new `scripts/check-node-version.sh` (box-standard guardrail) run on the built image
+  in `ci.yml` (container smoke), `release.yml` and `deploy.yml` (before any push), plus a permanent
+  negative check that it rejects `node:24.21.0-alpine`.
+- **Runtime behaviour**: unchanged (same app code; base image patch-level only).
+- **Proof**: CI on the PR (back tests on Node 26, guardrail log `Node 26.13.0 in mymurderparty:smoke: OK`,
+  hardened smoke).
+- **Rollback**: redeploy the previous image (`git revert` the merge commit, or the previous release tag).
+
 ## 2026-10-26 — Back: TypeScript 5.9.3 → 7.0.2, dev loop without ts-node
 
 - **Why**: Dependabot #13 (closed): TS 7 compiles Back, but `npm run dev` (nodemon → ts-node) crashed

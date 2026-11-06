@@ -6,7 +6,8 @@ Read **TESTING.md** first.
 
 ## Maintenance (autonomous agent)
 Goal: keep the base image, dependencies and Actions current **without changing behaviour**.
-- **Gate = `ci` green**: `back tests (node 20|26)` + `container smoke`.
+- **Gate = `ci` green**: `back tests (node 26)` + `container smoke` (incl. the patched-Node guardrail
+  `scripts/check-node-version.sh`; never weaken it).
 - **Branches**: work on `agent/<topic>`; CI runs without a PR. Never push to `main` (`deploy.yml` /
   `release.yml` publish from it), never tag. **The owner merges.**
 - **Dependabot PRs**: green → summarise risk in a PR comment. Red → reproduce per TESTING.md, smallest fix on
