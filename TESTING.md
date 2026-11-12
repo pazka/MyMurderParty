@@ -31,7 +31,7 @@ script rejects an unpatched `node:24.21.0-alpine`). `release.yml` and `build-sca
 the candidate image before anything is pushed.
 
 `scripts/check-node-version.sh IMAGE`: fails if the image's Node is EOL (not 22/24/26) or below the patched
-minimum of its line (CVE-2026-111497: 22.23.4 / 24.22.1 / 26.12.1). Copied unchanged from the box standard
+minimum of its line (CVE-2026-111497: 22.23.5 / 24.22.3 / 26.13.1). Copied unchanged from the box standard
 (pazka/hosh-management#5); the minimums are bumped there when Node ships a security release.
 
 ## What is covered
@@ -134,7 +134,7 @@ Each change has a test that fails on the old code (checked: 6 failures on `main`
 ## Node 26.13.0 pinned, Node 20 dropped (2026-11-06, MIGRATIONS.md)
 
 - CVE-2026-111497 (Brotli RCE in `node:zlib`, exploited) is fixed in 26.12.1; Node 20 is EOL. Both stages
-  are `node:26.13.0-slim@sha256:…` (Dependabot `docker` bumps tag + digest). CI matrix is Node 26 only.
+  are `node:26.13.1-slim@sha256:…` (Dependabot `docker` bumps tag + digest). CI matrix is Node 26 only.
 
 ## Known issues (kept)
 
