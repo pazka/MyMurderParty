@@ -23,6 +23,8 @@ waits healthy, checks `/healthz` on the loopback port and through Traefik, runs 
 (`node /app/ops/smoke.js http://127.0.0.1:8000`, read-only) inside the container and **rolls back by itself**
 if any check fails (the workflow then goes red). Nothing from the repo runs on the host.
 
+- Release: push the tag `vX.Y.Z`, or Actions → **release** on `main` with `version=vX.Y.Z` (creates the
+  tag and the GitHub release on the commit it built and scanned; fails if the tag exists on another commit).
 - While `HOSH_DEPLOY_KEY` is not set (before the cutover) the `deploy` job only prints a notice: a release
   just builds, smokes (legacy + template mode), scans and pushes `:vX.Y.Z`, `:<sha>`, `:latest` as before.
 - Redeploy / roll forward / back: Actions → **deploy** → `vX.Y.Z`, `rollback` or `status`.
