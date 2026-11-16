@@ -31,7 +31,7 @@ script rejects an unpatched `node:24.21.0-alpine`). `release.yml` and `build-sca
 the candidate image before anything is pushed.
 
 `scripts/check-node-version.sh IMAGE`: fails if the image's Node is EOL (not 22/24/26) or below the patched
-minimum of its line (CVE-2026-111497: 22.23.4 / 24.22.1 / 26.12.1). Copied unchanged from the box standard
+minimum of its line (CVE-2026-111497: 22.23.5 / 24.22.3 / 26.13.1). Copied unchanged from the box standard
 (pazka/hosh-management#5); the minimums are bumped there when Node ships a security release.
 
 ## What is covered
@@ -57,6 +57,26 @@ hosh-deploy migration it also checks uid / read-only rootfs / no capabilities, `
 `BIND` 127.0.0.1:9137), after `scripts/register-check.sh` (CI copy of what `hosh-deploy register` refuses on
 the box), plus the conf's `POST_DEPLOY` run inside the container exactly as the box runs it (argv, no shell).
 Both modes run in CI (`container smoke`) and in `release.yml` before any push.
+
+`scripts/browser-smoke.sh IMAGE` (CI `container smoke`, last step): the **front's client-side navigation** in a
+real browser, so a react-router / React / Vite upgrade is judged on what players click, not only on "the
+bundle is served". The built image runs hardened (uid 10001, read-only, cap_drop ALL) with `ENV=STAGING` and the
+page is opened on `http://dev.localhost:9874/`: the front picks its server from the host name
+(`Front/src/services/config.ts`), and any other name means production. The runner's Chrome resolves every
+other host to nothing, and `scripts/browser-flow.mjs` drives it over the DevTools protocol with the image's own
+node (built-in `fetch` + `WebSocket`, no package installed). It pins, for two players in two browser contexts:
+`/` → `/new-user`; login → `/choose-party`; join button disabled until the code is `XXX-DDD`; create a party →
+`/party/<id>` with the room name and `[id]` in the header; Scenario → `/party/<id>/scenario`; the Inventaire
+button only on sub pages; Messagerie from a sub page → `/party/<id>/events` (relative to the party, not to the
+sub page); Inventaire → `/party/<id>`; the character miniature → `/party/<id>/characters`; browser back/forward
+over those entries; a reload of a deep link lands on `/party/<id>` of the same party; player 2 types the code in
+lower case without the dash, it is formatted to `XXX-DDD` and joins the same party; logout from the room header
+→ `/new-user`; no uncaught page error. Checked 2026-11-16: 29/29 on `main` (react-router 6.18) and on the
+#30 lockfile (6.30.6); changing one relative `navigate()` in `PartyRoom.tsx` fails 3 checks.
+
+To run it locally without Docker: build `Back/` and `Front/`, copy `Front/build` to `Back/dist/public`, start
+`ENV=STAGING PORT=9874 node index.js` in `Back/dist`, then `node scripts/browser-flow.mjs http://dev.localhost:9874/`
+(Node ≥ 22; it starts `google-chrome`, or `$CHROME`, itself).
 
 ## Changes and upgrades (2026-10-19)
 
@@ -134,7 +154,7 @@ Each change has a test that fails on the old code (checked: 6 failures on `main`
 ## Node 26.13.0 pinned, Node 20 dropped (2026-11-06, MIGRATIONS.md)
 
 - CVE-2026-111497 (Brotli RCE in `node:zlib`, exploited) is fixed in 26.12.1; Node 20 is EOL. Both stages
-  are `node:26.13.0-slim@sha256:…` (Dependabot `docker` bumps tag + digest). CI matrix is Node 26 only.
+  are `node:26.13.1-slim@sha256:…` (Dependabot `docker` bumps tag + digest). CI matrix is Node 26 only.
 
 ## Known issues (kept)
 

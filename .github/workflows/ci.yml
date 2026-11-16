@@ -50,3 +50,5 @@ jobs:
         run: bash scripts/smoke.sh mymurderparty:smoke legacy
       - name: template mode (docker-compose.example.yml + hosh-deploy register checks + POST_DEPLOY)
         run: bash scripts/smoke.sh mymurderparty:smoke template
+      - name: browser flow (front navigation in the runner's Chrome, ENV=STAGING, nothing leaves the runner)
+        run: bash scripts/browser-smoke.sh mymurderparty:smoke
