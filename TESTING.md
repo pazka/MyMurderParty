@@ -78,6 +78,46 @@ To run it locally without Docker: build `Back/` and `Front/`, copy `Front/build`
 `ENV=STAGING PORT=9874 node index.js` in `Back/dist`, then `node scripts/browser-flow.mjs http://dev.localhost:9874/`
 (Node ≥ 22; it starts `google-chrome`, or `$CHROME`, itself).
 
+## Visual use cases (visual regression, hosh-management AGENTS.md §3)
+
+`visual/run.sh IMAGE` (CI `container smoke`, after the browser flow): the built image runs hardened (uid 10001,
+read-only, cap_drop ALL) with `ENV=STAGING` on `http://dev.localhost:9874`, two headless Chromes of the runner
+(mouse for 1400 / 1024, touch for 390) resolve every other host to nothing, and `visual/shoot.mjs` runs with the
+image's own node (no package): every case below at **1400, 1024 and 390 px**, a new player (new browser
+context) for each shot, compared with `visual/baseline/<id>-<width>.png` (tolerance: channel 24, 0.1 % of the
+pixels). Copied from pazka/plats `visual/`. Each shot starts at `/` and is reached with the clicks listed.
+
+| id | page / state | steps |
+|---|---|---|
+| H1-new-user | logged out: `/` → `/new-user`, login form | none |
+| C1-choose-party | logged in, no party: `/choose-party` (hello, join by code with the button disabled, create a party with the game list) | login "Visual Alice" |
+| C2-choose-party-code-typed | join form filled: `abc123` typed, formatted to `ABC-123`, Join enabled | login, type the code |
+| P1-party-inventory | in a party (default game "La mort du mysterieux Dr Vaticant"): header, portrait, QR button, Scenario / Messagerie, empty inventory | login, create a party |
+| P2-party-scenario | `/party/<id>/scenario` (game text, no character yet), Inventaire button shown | + Scenario |
+| P3-party-messagerie | `/party/<id>/events`: message box, history "Visual Alice joined the party" | + Messagerie |
+| P4-party-characters | `/party/<id>/characters`: the 12 characters in the frame + "Anonyme" | + click the portrait |
+| P5-party-character-page | `/party/<id>/characters/<first>`: name, Incarner, markdown scenario | + click the first character |
+| P6-tutorial-inventory | in a party of the "Tutorial Game" (empty inventory) | login, pick Tutorial Game, create |
+| P7-tutorial-scenario | its scenario page | + Scenario |
+
+Pinned so a diff means a real change: the room header shows "Visual party" and `[ABC-123]` (party ids are drawn
+by the server, room names must be unique); a player without a character gets one of two "?" portraits at random
+(`CharacterMiniature.tsx`), the harness shows `whoman.png` for both; animations, transitions and the caret are off.
+Game pictures (characters, objects, maps) come from `https://sharing.hosh.it`, which the harness resolves to
+nothing: they are drawn as broken images, the same way on every run, so **those pictures are not covered**.
+
+Not covered, and why:
+- `/objects/<game>` (printable QR sheet) and `/test`: no link leads there and the server redirects every
+  unknown path to `/` (`Back/index.ts`), so a player cannot reach them today.
+- QR scanner pop-up (needs a camera), an object page and object combination (the starting inventory is empty;
+  objects come from scanning), a chosen character, a second player, error snackbars: not yet.
+
+New or changed baselines (a wanted visual change, said in the PR): CI prints every failing shot in the log
+(`VISUAL-PNG` lines); `node visual/from-log.mjs <job log> visual/baseline --chrome` writes them back with
+their sha256 checked. Look at every picture before committing it. Baselines are only meaningful for the
+runner's Chrome (`visual/baseline/chrome.txt`); a local run with another Chrome differs by its fonts.
+Local run: `docker build -t mymurderparty:smoke . && CHROME=/path/to/chrome bash visual/run.sh`.
+
 ## Changes and upgrades (2026-10-19)
 
 - **Node 26**: Dockerfile on `node:26-slim` (supersedes Dependabot #4); back 10/10 and hardened smoke on
