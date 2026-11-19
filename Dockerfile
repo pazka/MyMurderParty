@@ -5,11 +5,11 @@ WORKDIR /app_tmp
 
 # install Back dependencies from lockfile
 COPY Back/package.json Back/package-lock.json ./Back/
-RUN cd Back && npm ci
+RUN cd Back && npm ci --ignore-scripts
 
 # install Front dependencies from lockfile
 COPY Front/package.json Front/package-lock.json ./Front/
-RUN cd Front && npm ci --legacy-peer-deps
+RUN cd Front && npm ci --legacy-peer-deps --ignore-scripts
 
 # Bundle app source
 COPY Front ./Front
