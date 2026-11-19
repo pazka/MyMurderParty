@@ -1,42 +1,40 @@
 import { Server, Socket } from "socket.io";
 import { RoomCRUD } from "../persist";
-import { createNewRoom, getRoomsOfUser, getUsersInRoom, updateRoomObjects, userJoinRoom, userLeaveRoom } from "../roomService";
+import { createNewRoom, getAllRooms, getRoomsOfUser, getUsersInRoom, updateRoomObjects, userJoinRoom, userLeaveRoom } from "../roomService";
 import { ensureRoomExistOrError, ensureUserIsInARoom } from "../roomService/roomSocketService";
 import { broadcastAllRooms } from "../socket-io";
 import { pingUser } from "../userService";
 import { publicRoom, publicUser } from "../publicView";
+import { log } from "../log";
 
 export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) => {
     //check if user is in a room
 
     userSocket.on('new-room', (newRoom: NewRoom) => {
-        console.log("New room creation : ", newRoom);
-
         createNewRoom(newRoom).then(async (createdRoom: Room) => {
+            log.info('room_created', 'new party', { rooms: (await getAllRooms()).length });
             broadcastAllRooms();
         }).catch((err: Error) => {
-            console.log(err.message);
+            log.debug('action_refused', 'action refused', { action: 'new-room', reason: err.message });
             userSocket.emit('error', err.message);
         });
     })
 
     userSocket.on('new-room-and-join', (newRoom: NewRoom) => {
         createNewRoom(newRoom).then(async (createdRoom: Room) => {
-            console.log("New room creation : ", createdRoom);
+            log.info('room_created', 'new party', { rooms: (await getAllRooms()).length });
             broadcastAllRooms();
             userJoinRoom(createdRoom.id, createdRoom.password, user.id).then((room: Room) => {
-                console.log("User joined room : ", room);
-
                 userSocket.join(room.id);
 
                 io.to(room.id).emit('user-joined-room', publicUser(user));
                 notifyRoomUpdate(io, room.id);
             }).catch((err: Error) => {
-                console.log(err.message);
+                log.debug('action_refused', 'action refused', { action: 'new-room-and-join', reason: err.message });
                 userSocket.emit('error', err.message);
             });
         }).catch((err: Error) => {
-            console.log(err.message);
+            log.debug('action_refused', 'action refused', { action: 'new-room-and-join', reason: err.message });
             userSocket.emit('error', err.message);
         });
     })
@@ -53,7 +51,7 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
             io.to(room.id).emit('user-joined-room', publicUser(user));
             notifyRoomUpdate(io, room.id);
         }).catch((err: Error) => {
-            console.log(err.message);
+            log.debug('action_refused', 'action refused', { action: 'join-room', reason: err.message });
             userSocket.emit('error', err.message);
         });
     });
@@ -77,7 +75,7 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
             io.to(data.roomId).emit('user-left-room', publicUser(user));
             notifyRoomUpdate(io, data.roomId ?? "");
         }).catch((err: Error) => {
-            console.log(err.message);
+            log.debug('action_refused', 'action refused', { action: 'leave-room', reason: err.message });
             userSocket.emit('error', err.message);
         });
     });
@@ -86,7 +84,7 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
         pingUser(user.id);
 
         if (!await ensureUserIsInARoom(user.id, data.roomId, userSocket)) {
-            console.log("User is not in the party");
+            log.debug('action_refused', 'action refused', { action: 'update-room-objects', reason: 'not in the party' });
             return
         };
 
@@ -94,7 +92,7 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
             io.to(data.roomId).emit('room-object-update', { user: publicUser(user), objects: data.objects });
             notifyRoomUpdate(io, data.roomId);
         }).catch((err: Error) => {
-            console.log(err.message);
+            log.debug('action_refused', 'action refused', { action: 'update-room-objects', reason: err.message });
             userSocket.emit('error', err.message);
         });
     });
@@ -142,6 +140,7 @@ export const setupUserRoomEvents = (user: User, userSocket: Socket, io: Server) 
         });
 
         RoomCRUD.delete(data.roomId);
+        log.info('room_deleted', 'party deleted', { rooms: (await getAllRooms()).length });
         broadcastAllRooms();
     })
 }
