@@ -132,6 +132,8 @@ jobs:
           context: .
           load: true
           tags: ghcr.io/pazka/my-murder-party:candidate
+          # the `version` field of every log line (Dockerfile ARG VERSION)
+          build-args: VERSION=${{ steps.meta.outputs.primary }}
       - name: Node runtime is patched (CVE-2026-111497 guardrail, before any push)
         run: bash scripts/check-node-version.sh ghcr.io/pazka/my-murder-party:candidate
       - name: hardened smoke, legacy compose mode (before any push)

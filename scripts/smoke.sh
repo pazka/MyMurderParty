@@ -158,5 +158,17 @@ dk restart "$NAME" >/dev/null
 wait_up
 flow empty || fail "state survived a restart"
 
+step "logs: one JSON object per line (startup twice, shutdown on the restart's SIGTERM, the party's lines)"
+dk logs "$NAME" >"$TMP/app.log" 2>"$TMP/app.err"
+[ -s "$TMP/app.err" ] && { cat "$TMP/app.err"; fail "stderr is not empty"; }
+dk run --rm -i --entrypoint node "$IMAGE" -e '
+  const lines = require("fs").readFileSync(0, "utf8").split("\n").filter(Boolean).map(l => JSON.parse(l))
+  const n = e => lines.filter(o => o.event === e).length
+  for (const o of lines) for (const k of ["ts", "level", "service", "version", "event", "msg"]) if (!(k in o)) throw new Error("no " + k)
+  if (lines.some(o => o.service !== "my-murder-party")) throw new Error("service")
+  if (n("startup") !== 2 || n("shutdown") !== 1 || n("user_created") < 2 || n("room_created") < 1) throw new Error("events: " + lines.map(o => o.event))
+  if (lines.some(o => o.level === "error")) throw new Error("error line")
+' <"$TMP/app.log" || { cat "$TMP/app.log"; fail "container stdout is not the JSON log lines"; }
+
 SMOKE_OK=1
 echo "SMOKE OK ($MODE, $IMAGE)"

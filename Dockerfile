@@ -45,4 +45,8 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 CMD ["nod
 # run server (listens on PORT if set, else 80 in PROD; runs as any uid: nothing is written to disk)
 #interactive for debbuging
 #CMD ["tail", "-f", "/dev/null"]
+# Release tag, the `version` of every log line (release.yml passes it; any other build says "dev")
+ARG VERSION=dev
+ENV APP_VERSION=${VERSION}
+
 CMD ["node", "index.js"]
