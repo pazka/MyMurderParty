@@ -22,3 +22,6 @@ yarn-debug.log*
 yarn-error.log*
 
 .env
+
+# log.test.js scratch copies of dist/
+.test-log-*
