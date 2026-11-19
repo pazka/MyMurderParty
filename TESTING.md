@@ -14,7 +14,7 @@ into `dist/public/`. Production config = `ENV=PROD` (`docker-compose.legacy.yml`
 # back tests: black-box, spawn the built server twice (ENV=DEV on localhost:8001, ENV=PROD on :80)
 docker run --rm -v "$PWD/Back":/src:ro node:26-slim sh -c \
   'mkdir /a && cd /src && tar --exclude=./node_modules --exclude=./.env -cf - . | tar -xf - -C /a && cd /a \
-   && npm ci && npm run build && node --test --test-reporter=spec test/server.test.js'
+   && npm ci --ignore-scripts && npm run build && node --test --test-reporter=spec test/server.test.js'
 
 # container smoke in both box modes + patched-Node guardrail
 docker build -t mymurderparty:smoke . && bash scripts/check-node-version.sh mymurderparty:smoke \
