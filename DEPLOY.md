@@ -109,6 +109,8 @@ That only gives an "orphan container" warning; never run `down --remove-orphans`
 | `APP_BIND` | `127.0.0.1:9137` | box | loopback publish (must equal `BIND` in `deploy/hosh-deploy.conf`) |
 | `ENV` | `PROD` | box | config set: CORS `https://murder.hosh.it` only, session cookie `Domain=.hosh.it; HttpOnly; Secure; SameSite=Strict`, listen `0.0.0.0` |
 | `PORT` | `8000` (set in the compose, not the env file) | compose | listen port; unset = 80 (PROD), which the legacy compose relies on |
+| `LOG_LEVEL` (or `APP_LOG_LEVEL`) | `info` | box (optional) | `debug` adds one line per request, socket connect / event name and refused action |
+| `APP_VERSION` | the release tag (image `ARG VERSION`) | image | the `version` field of every log line; `dev` on non-release builds |
 
 ## 3. Capability checks (what "works" means — not just a 200)
 
@@ -137,6 +139,10 @@ That only gives an "orphan container" warning; never run `down --remove-orphans`
 
 - No volume (like blueprincedraw): state is in memory by design; a deploy or restart ends every game.
 - The image keeps working with the legacy compose (port 80 by default, any uid) until the cutover is done.
-- Logs are plain text, not JSON lines; client IPs appear only in the Socket.IO connection log line (the app
-  trusts no `X-Forwarded-For`, so behind Traefik that is the docker gateway address).
+- Logs follow the hub logging standard (hosh-management AGENTS.md §11): stdout only, one JSON object per line
+  (`ts`, `level`, `service` = `my-murder-party`, `version`, `event`, `msg`). At `info`: `startup`, `shutdown`
+  (SIGTERM: the container stops at once instead of after docker's 10 s), `user_created`, `user_deleted`,
+  `room_created`, `room_deleted` (counts only), and errors: `request_failed` (5xx, with `err`), `request_slow`
+  (> 1 s), `healthz_failed`. Never a session id, cookie, room password, player or room name, socket payload,
+  path, query string, user agent or IP. Every answer carries `X-Request-Id`.
 - `/test` (cheat page) is still routed in production (TESTING.md known issue, owner decision).

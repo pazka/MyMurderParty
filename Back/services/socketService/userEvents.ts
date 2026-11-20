@@ -6,24 +6,24 @@ import { parseCookies } from "../cookies";
 import { broadcastAllClients, broadcastAllRooms } from "../socket-io";
 import { getRoomsOfUser, userChoosesACharacter, userLeaveAllRooms, userLeaveRoom } from "../roomService";
 import { publicUser } from "../publicView";
+import { log } from "../log";
 
 export default async (userSocket: Socket, io: Server) => {
     const cookies = parseCookies(userSocket.handshake.headers.cookie);
-    console.log('New socket connection', userSocket.id, 'from', userSocket.handshake.address, 'with', userSocket.handshake.headers['user-agent'], "\n sessionId?", cookies.sessionId);
     resetRoomForUser(userSocket)
 
     let currentUser: User | undefined = await getUserBySessionId(cookies.sessionId);
 
     //case user already has a session but hasn't logged in yet
     if (currentUser) {
-        console.log("user exist to us, and the already set session is valid, we will set its login and sroom events")
         setupUserRoomEvents(currentUser, userSocket, io);
         userSocket.emit('you-are', currentUser);
         pingUser(currentUser.id);
     }else{
-        console.log("user does NOT exist to us, we setup it's socket connection but not login and room events")
         userSocket.emit('you-are', null);
     }
+
+    log.debug('socket_connect', 'client connected', { known_user: Boolean(currentUser), clients: io.engine.clientsCount });
 
     broadcastAllClients();
     broadcastAllRooms();
@@ -34,8 +34,9 @@ export default async (userSocket: Socket, io: Server) => {
         });
     });
 
-    userSocket.onAny((event, ...args) => {
-        console.log(`Received ${event} with args : `, args);
+    // the event name only: payloads hold names, room passwords and game content
+    userSocket.onAny((event) => {
+        log.debug('socket_event', 'event received', { name: String(event).slice(0, 40) });
     });
 
     //case user session is linked ot nothing
@@ -50,9 +51,8 @@ export default async (userSocket: Socket, io: Server) => {
             return;
         }
 
-        console.log("Hello ! I'm", data);
-        createNewUser(data, cookies.sessionId).then((user: User) => {
-            console.log(user);
+        createNewUser(data, cookies.sessionId).then(async (user: User) => {
+            log.info('user_created', 'new player', { users: (await getAllUsers()).length });
             currentUser = user;
             setupUserRoomEvents(currentUser, userSocket, io);
 
@@ -63,7 +63,7 @@ export default async (userSocket: Socket, io: Server) => {
     });
 
     userSocket.on('disconnect', () => {
-        console.log('Socket disconnected', userSocket.id);
+        log.debug('socket_disconnect', 'client disconnected', { clients: io.engine.clientsCount });
         if (!currentUser) return;
         pingUser(currentUser.id, true);
         broadcastAllClients()
@@ -74,7 +74,7 @@ export default async (userSocket: Socket, io: Server) => {
         deleteUser(currentUser.id);
         userLeaveAllRooms(currentUser.id);
         currentUser = undefined;
-        console.log('Socket deleted', userSocket.id);
+        log.info('user_deleted', 'player logged out', {});
         broadcastAllClients()
         broadcastAllRooms()
     });
@@ -88,7 +88,7 @@ export default async (userSocket: Socket, io: Server) => {
 
             broadcastAllClients()
         }).catch((err: Error) => {
-            console.log(err.message);
+            log.debug('action_refused', 'action refused', { action: 'choose-character', reason: err.message });
             userSocket.emit('error', err.message);
         });
 

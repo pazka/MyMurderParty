@@ -263,6 +263,27 @@ test('logout releases only the leaving player\'s character', async () => {
     }
 })
 
+test('logout deletes the player: gone from /users, the session cookie no longer resolves to them', async () => {
+    const a = await player('Leaver')
+    try {
+        assert.ok((await (await fetch(DEV + '/users')).json()).some(u => u.id === a.me.id))
+        await a.emit('logout')
+        const until = Date.now() + 5000
+        while ((await (await fetch(DEV + '/users')).json()).some(u => u.id === a.me.id)) {
+            assert.ok(Date.now() < until, 'still listed in /users after logout')
+            await new Promise(r => setTimeout(r, 50))
+        }
+        const again = await new PollClient(DEV, {cookie: `sessionId=${a.sessionId}`}).connect()
+        try {
+            assert.deepEqual(await again.waitFor('you-are'), [null])
+        } finally {
+            await again.close()
+        }
+    } finally {
+        await a.close()
+    }
+})
+
 test('CORS in PROD: murder.hosh.it is allowed, other origins are not', async () => {
     const pre = origin => fetch(PROD + '/rooms', {method: 'OPTIONS', headers: {origin, 'access-control-request-method': 'GET'}})
     const ok = await pre('https://murder.hosh.it')
