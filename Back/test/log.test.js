@@ -198,7 +198,7 @@ test('server: startup line, user_created and room_created at info, shutdown on S
         await s.ready
         const st = s.lines().find(o => o.event === 'startup')
         assert.match(st.ts, TS)
-        assert.deepEqual(Object.keys(st).slice(0, 6), KEYS)
+        assert.deepEqual(Object.keys(st), [...KEYS, 'port', 'env', 'log_level', 'config'])   // nothing else (no env values)
         assert.deepEqual([st.level, st.service, st.version, st.msg, st.port, st.env, st.log_level],
             ['info', 'my-murder-party', 'v9.8.7', 'Server is Fire at http://0.0.0.0:9871', 9871, 'STAGING', 'info'])
         assert.deepEqual(st.config, ['ENV', 'PORT', 'APP_VERSION'])
@@ -228,9 +228,48 @@ test('server: startup line, user_created and room_created at info, shutdown on S
         }
         assert.deepEqual([lines[1].users, lines[2].rooms, lines[3].rooms], [1, 1, 0])
         const down = lines[5]
+        assert.deepEqual(Object.keys(down), [...KEYS, 'signal', 'uptime_s'])
         assert.deepEqual([down.signal, typeof down.uptime_s], ['SIGTERM', 'number'])
         for (const x of [sessionId, me.id, 'Secret Player', 'Secret Room', 'secret-room-pw', 'wrong-secret-pw', 'other-secret-pw', '203.0.113',
             '127.0.0.1', 'SecretAgent', room.id]) assert.ok(!s.out.includes(x), x)
+        assert.equal(s.err, '', 'nothing on stderr')
+    } finally {
+        await s.stop()
+    }
+})
+
+// a logged-in player without a party
+async function aPlayer(base, name) {
+    const sessionId = await (await fetch(base + '/session')).text()
+    const c = await new PollClient(base, {cookie: `sessionId=${sessionId}`}).connect()
+    await c.waitFor('you-are')
+    await c.emit('login', {name})
+    const [me] = await waitUntil(c, 'you-are', u => u !== null)
+    return {c, sessionId, me}
+}
+
+test('server: new-room (create without joining) broadcasts all-rooms and logs one room_created with the count', async () => {
+    const s = startServer(9876)
+    try {
+        await s.ready
+        const {c, room} = await playAParty(s.base)
+        await sleep(200)
+        assert.deepEqual(s.lines().filter(o => o.event === 'room_created').map(o => o.rooms), [1])
+        await c.emit('new-room', {id: '', name: 'Secret Lobby Room', password: 'lobby-secret-pw', users: {}, objects: {},
+            characters: {}, roomHistory: [], gameConfigName: 'Murder'})
+        // the front's room list (UI/Cheats/AllRooms.tsx) is fed by this broadcast; nothing else triggers one here
+        const [all] = await waitUntil(c, 'all-rooms', rooms => rooms.some(r => r.name === 'Secret Lobby Room'))
+        assert.deepEqual(all.map(r => r.name).sort(), ['Secret Lobby Room', 'Secret Room Name'])
+        assert.ok(all.every(r => !('password' in r)))
+        const lobby = all.find(r => r.name === 'Secret Lobby Room')
+        assert.deepEqual(Object.keys(lobby.users), [], 'new-room does not join')
+        assert.deepEqual((await (await fetch(s.base + '/rooms')).json()).map(r => r.name).sort(), ['Secret Lobby Room', 'Secret Room Name'])
+        await sleep(200)
+        const created = s.lines().filter(o => o.event === 'room_created')
+        assert.deepEqual(created.map(o => [o.level, o.rooms]), [['info', 1], ['info', 2]])
+        assert.deepEqual(Object.keys(created[1]), [...KEYS, 'rooms'])
+        await c.close()
+        for (const x of ['Secret Lobby', 'lobby-secret-pw', 'Secret Room', 'Secret Player', lobby.id, room.id]) assert.ok(!s.out.includes(x), x)
         assert.equal(s.err, '', 'nothing on stderr')
     } finally {
         await s.stop()
@@ -249,6 +288,17 @@ test('server: LOG_LEVEL=debug adds request, healthz, socket and refused-action l
         assert.equal(bad.status, 400)                                                  // Express's own 400, as before
         await c.emit('new-room-and-join', {name: 'Secret Room Name', password: 'wrong-secret-pw', gameConfigName: 'Murder'})
         assert.deepEqual(await c.waitFor('error'), ['Room with same name already exists'])
+        // a second player: wrong room password, then the character the first player holds
+        const p2 = await aPlayer(s.base, 'Secret Second Player')
+        await p2.c.emit('join-room', {roomId: room.id, password: 'bad-guess-secret-pw'})
+        assert.deepEqual(await p2.c.waitFor('error'), ['Wrong password'])
+        await p2.c.emit('join-room', {roomId: room.id, password: 'secret-room-pw'})
+        await waitUntil(c, 'update-room-users', u => u.length === 2)
+        await c.emit('choose-character', {roomId: room.id, characterId: 'butler'})
+        await waitUntil(p2.c, 'update-room', r => r && r.characters.butler)
+        await p2.c.emit('choose-character', {roomId: room.id, characterId: 'butler'})
+        assert.deepEqual(await p2.c.waitFor('error'), ['Character is already taken'])
+        await p2.c.close()
         await c.close()
         await sleep(300)
         const lines = s.lines()
@@ -259,13 +309,19 @@ test('server: LOG_LEVEL=debug adds request, healthz, socket and refused-action l
         assert.deepEqual([rd.level, rd.method, rd.status], ['debug', 'GET', 302])
         assert.ok(lines.some(o => o.event === 'request' && o.route === '/session' && o.status === 400))
         assert.ok(lines.some(o => o.event === 'socket_connect' && o.level === 'debug' && o.known_user === false))
-        assert.deepEqual(lines.filter(o => o.event === 'socket_event').map(o => o.name), ['login', 'new-room-and-join', 'new-room-and-join'])
+        assert.deepEqual(lines.filter(o => o.event === 'socket_event').map(o => o.name), ['login', 'new-room-and-join', 'new-room-and-join',
+            'login', 'join-room', 'join-room', 'choose-character', 'choose-character'])
         const refused = lines.filter(o => o.event === 'action_refused')
-        assert.deepEqual(refused.map(o => [o.level, o.action, o.reason]),
-            [['debug', 'new-room-and-join', 'Room with same name already exists']])
+        assert.deepEqual(refused.map(o => [o.level, o.action, o.reason]), [
+            ['debug', 'new-room-and-join', 'Room with same name already exists'],
+            ['debug', 'join-room', 'Wrong password'],
+            ['debug', 'choose-character', 'Character is already taken'],
+        ])
+        for (const o of refused) assert.deepEqual(Object.keys(o), [...KEYS, 'action', 'reason'])
         assert.ok(lines.some(o => o.event === 'socket_disconnect' && o.level === 'debug' && typeof o.clients === 'number'))
         for (const x of [sessionId, 'Secret Player', 'Secret Room', 'secret-room-pw', 'wrong-secret-pw', 'SECRET-PATH',
-            'secret-query', 'secret-body', 'secret=q', '127.0.0.1', 'SecretAgent', room.id]) assert.ok(!s.out.includes(x), x)
+            'secret-query', 'secret-body', 'secret=q', '127.0.0.1', 'SecretAgent', room.id, 'Secret Second', 'bad-guess-secret-pw',
+            p2.sessionId, p2.me.id, 'butler']) assert.ok(!s.out.includes(x), x)
         assert.equal(s.err, '', 'nothing on stderr (Express env "test")')
     } finally {
         await s.stop()

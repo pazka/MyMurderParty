@@ -36,25 +36,28 @@ minimum of its line (CVE-2026-111497: 22.23.5 / 24.22.3 / 26.13.1). Copied uncha
 
 ## What is covered
 
-`Back/test/log.test.js` (9 tests, Node built-ins + the app's express): the logging standard (hosh-management
+`Back/test/log.test.js` (10 tests, Node built-ins + the app's express): the logging standard (hosh-management
 AGENTS.md §11, DEPLOY.md §5). `services/log.js` unit tests (line format, level filter, `LOG_LEVEL` /
 `APP_LOG_LEVEL`, config names, `errField`, `requestId`, route templates); the request logger on a real Express
 app with a fake clock (5xx = `request_failed` error with `err`, 1000 ms not slow / 1001 ms `request_slow` warn,
 the rest and `/healthz` at debug, `X-Request-Id` kept or generated); the built server (`dist/index.js`,
-`ENV=STAGING`, black box): `startup` (version from `APP_VERSION`, port, config names only), a whole party at
+`ENV=STAGING`, black box): `startup` (version from `APP_VERSION`, port, config names only; its full key list and
+the `shutdown` one are pinned, so no extra field slips in), a whole party at
 info gives only `user_created`, `room_created`, `room_deleted`, `user_deleted`, then `shutdown` on SIGTERM and
-exit 0; at debug, request lines by route template, socket connect / event names, `action_refused` with the
-server's own reason, Express's 400 on a bad JSON body with nothing on stderr; a copy of `dist/` with an
+exit 0; `new-room` (create without joining) broadcasts `all-rooms` and logs exactly one `room_created` with the
+room count; at debug, request lines by route template, socket connect / event names, `action_refused` with the
+server's own reason (duplicate room name, wrong `join-room` password, character already taken), Express's 400 on a bad JSON body with nothing on stderr; a copy of `dist/` with an
 unreadable `version.txt` (server run as nobody 65534 when the suite runs as root) gives `healthz_failed` (503)
 and `request_failed` (500, Express's own page) with `err`. Never a session id, player or room name, password,
 payload, path, query, user agent or IP (asserted). `scripts/smoke.sh` (both modes): container stdout is only
 JSON lines, stderr empty, 2 `startup` + 1 `shutdown` around the restart, the party's lines, no error line.
 
-`Back/test/server.test.js` (15 tests, Node built-ins only; `test/sio-poll.js` is a tiny Socket.IO
+`Back/test/server.test.js` (16 tests, Node built-ins only; `test/sio-poll.js` is a tiny Socket.IO
 long-polling client on `fetch`): `/info`, `/session` id format and cookie flags (DEV and PROD), redirect of
 unknown routes, login rules and `you-are` / `new-user` events, reconnect with the session cookie, the full
 room flow as the front drives it (create-and-join, unique name, password, users list, character choice and
-conflict, shared objects, room broadcast and history, delete with password), `/healthz` (DEV and PROD, creates nothing), `ops/healthcheck.js`, the `PORT` override,
+conflict, shared objects, room broadcast and history, delete with password), logout deletes the player (gone from
+`/users`, the cookie no longer resolves), `/healthz` (DEV and PROD, creates nothing), `ops/healthcheck.js`, the `PORT` override,
 and the quirks below.
 
 `scripts/smoke.sh IMAGE legacy`: the built image run **exactly like the box's legacy compose** (`ENV=PROD`, uid 1000,
