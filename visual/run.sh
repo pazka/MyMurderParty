@@ -21,12 +21,17 @@ PORT=9874
 CDP_DESKTOP=9341
 CDP_PHONE=9342
 P1="$(mktemp -d)"; P2="$(mktemp -d)"
+LOGS="$(mktemp -d)"
 PIDS=()
 dk() { MSYS_NO_PATHCONV=1 docker "$@"; }
 cleanup() {
   for p in "${PIDS[@]}"; do kill "$p" 2>/dev/null || true; done
+  # wait for the Chromes to exit: a profile still being written makes rm -rf fail ("Directory not empty")
+  # and, under set -e, that turned a green run red after "0 failure(s)" (fix of pazka/StoraAlex#31)
+  for p in "${PIDS[@]}"; do wait "$p" 2>/dev/null || true; done
   dk rm -f "$NAME" >/dev/null 2>&1 || true
-  rm -rf "$P1" "$P2"
+  rm -rf "$P1" "$P2" "$LOGS" 2>/dev/null || { sleep 2; rm -rf "$P1" "$P2" "$LOGS" || true; }
+  return 0
 }
 trap cleanup EXIT
 
@@ -61,5 +66,12 @@ dk run --rm --network host --user 10001:10001 --read-only --cap-drop ALL --secur
   /v/shoot.mjs "http://dev.localhost:$PORT" "$@"
 rc=$?
 set -e
-dk logs "$NAME" 2>&1 | grep -qiE 'unhandled|TypeError|ReferenceError' && { echo "VISUAL FAIL: server logged an error" >&2; rc=1; }
+# logs to a file first: under pipefail, `dk logs | grep -q` loses an early match (grep exits, dk logs gets
+# SIGPIPE, the pipeline fails) and hid the error; the same fix as pazka/StoraAlex visual/run.sh
+dk logs "$NAME" >"$LOGS/app.log" 2>&1 || true
+if grep -qiE 'unhandled|TypeError|ReferenceError' "$LOGS/app.log"; then
+  echo "VISUAL FAIL: server logged an error" >&2
+  grep -iE 'unhandled|TypeError|ReferenceError' "$LOGS/app.log" | head -20 >&2 || true
+  rc=1
+fi
 exit $rc
