@@ -19,15 +19,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ['20', '26']
+        node: ['26']  # Node 20 is EOL; patched 26.x only (pazka/hosh-management#5)
     defaults:
       run:
         working-directory: Back
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - run: npm ci --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund --ignore-scripts
       - run: npm run build
-      - run: node --test --test-reporter=spec test/server.test.js
+      - run: node --test --test-reporter=spec test/server.test.js test/log.test.js
 
   smoke:
     name: container smoke
@@ -42,4 +42,18 @@ jobs:
           load: true
           push: false
           tags: mymurderparty:smoke
-      - run: bash scripts/smoke.sh mymurderparty:smoke
+      - name: Node runtime is patched (CVE-2026-111497 guardrail)
+        run: bash scripts/check-node-version.sh mymurderparty:smoke
+      - name: guardrail rejects an unpatched Node (test of the test)
+        run: '! bash scripts/check-node-version.sh node:24.21.0-alpine'
+      - name: legacy mode (the box's legacy compose, unchanged until the cutover)
+        run: bash scripts/smoke.sh mymurderparty:smoke legacy
+      - name: template mode (docker-compose.example.yml + hosh-deploy register checks + POST_DEPLOY)
+        run: bash scripts/smoke.sh mymurderparty:smoke template
+      - name: browser flow (front navigation in the runner's Chrome, ENV=STAGING, nothing leaves the runner)
+        run: bash scripts/browser-smoke.sh mymurderparty:smoke
+      # Visual regression (hosh-management AGENTS.md §3, use cases in TESTING.md): the runner's Chrome over the
+      # DevTools protocol, the image's own node, no package; every case at 1400 / 1024 / 390 vs visual/baseline/.
+      # A failing shot is printed in this log (VISUAL-PNG lines): visual/from-log.mjs writes it back as a file.
+      - name: visual regression (screenshots vs baselines, ENV=STAGING, nothing leaves the runner)
+        run: VISUAL_PRINT_NEW=1 bash visual/run.sh mymurderparty:smoke

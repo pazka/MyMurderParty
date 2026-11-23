@@ -6,40 +6,134 @@ what the game server does today so a Dependabot PR is judged on its CI run.
 ## What ships
 
 One image: `Back/` compiled with `tsc` into `Back/dist/` (run as `node index.js`), `Front/` (Vite + React, `tsc` type check) built
-into `dist/public/`. Production config = `ENV=PROD` (docker-compose.yml). All game state is **in memory**.
+into `dist/public/`. Production config = `ENV=PROD` (`docker-compose.legacy.yml`, `.env.example`). All game state is **in memory**.
 
 ## Run it
 
 ```bash
 # back tests: black-box, spawn the built server twice (ENV=DEV on localhost:8001, ENV=PROD on :80)
-docker run --rm -v "$PWD/Back":/src:ro node:20-slim sh -c \
+docker run --rm -v "$PWD/Back":/src:ro node:26-slim sh -c \
   'mkdir /a && cd /src && tar --exclude=./node_modules --exclude=./.env -cf - . | tar -xf - -C /a && cd /a \
-   && npm ci && npm run build && node --test --test-reporter=spec test/server.test.js'
+   && npm ci --ignore-scripts && npm run build && node --test --test-reporter=spec test/server.test.js test/log.test.js'
 
-# container smoke (hardened: uid 1000, read-only rootfs, cap_drop ALL)
-docker build -t mymurderparty:smoke . && bash scripts/smoke.sh mymurderparty:smoke
-
-# next base before Dependabot's PR lands
-sed 's/node:20-slim/node:26-slim/g' Dockerfile | docker build -f - -t mymurderparty:next .
+# container smoke in both box modes + patched-Node guardrail
+docker build -t mymurderparty:smoke . && bash scripts/check-node-version.sh mymurderparty:smoke \
+  && bash scripts/smoke.sh mymurderparty:smoke legacy && bash scripts/smoke.sh mymurderparty:smoke template
 ```
 
 (Windows Git Bash: prefix `docker run` with `MSYS_NO_PATHCONV=1`, mount `"$(cygpath -w "$PWD/Back")"`.)
 
 ## CI (`.github/workflows/ci.yml`)
 
-PRs, `main`, `agent/**`: `back tests (node 20|26)` (npm ci, tsc build, tests) and `container smoke` (builds
-the real Dockerfile, front included).
+PRs, `main`, `agent/**`: `back tests (node 26)` (npm ci, tsc build, tests) and `container smoke` (builds
+the real Dockerfile, front included; checks the image's Node with `scripts/check-node-version.sh`, and that the
+script rejects an unpatched `node:24.21.0-alpine`). `release.yml` and `build-scan-push.yml` run the same Node check on
+the candidate image before anything is pushed.
+
+`scripts/check-node-version.sh IMAGE`: fails if the image's Node is EOL (not 22/24/26) or below the patched
+minimum of its line (CVE-2026-111497: 22.23.5 / 24.22.3 / 26.13.1). Copied unchanged from the box standard
+(pazka/hosh-management#5); the minimums are bumped there when Node ships a security release.
 
 ## What is covered
 
-`Back/test/server.test.js` (12 tests, Node built-ins only; `test/sio-poll.js` is a tiny Socket.IO
+`Back/test/log.test.js` (10 tests, Node built-ins + the app's express): the logging standard (hosh-management
+AGENTS.md §11, DEPLOY.md §5). `services/log.js` unit tests (line format, level filter, `LOG_LEVEL` /
+`APP_LOG_LEVEL`, config names, `errField`, `requestId`, route templates); the request logger on a real Express
+app with a fake clock (5xx = `request_failed` error with `err`, 1000 ms not slow / 1001 ms `request_slow` warn,
+the rest and `/healthz` at debug, `X-Request-Id` kept or generated); the built server (`dist/index.js`,
+`ENV=STAGING`, black box): `startup` (version from `APP_VERSION`, port, config names only; its full key list and
+the `shutdown` one are pinned, so no extra field slips in), a whole party at
+info gives only `user_created`, `room_created`, `room_deleted`, `user_deleted`, then `shutdown` on SIGTERM and
+exit 0; `new-room` (create without joining) broadcasts `all-rooms` and logs exactly one `room_created` with the
+room count; at debug, request lines by route template, socket connect / event names, `action_refused` with the
+server's own reason (duplicate room name, wrong `join-room` password, character already taken), Express's 400 on a bad JSON body with nothing on stderr; a copy of `dist/` with an
+unreadable `version.txt` (server run as nobody 65534 when the suite runs as root) gives `healthz_failed` (503)
+and `request_failed` (500, Express's own page) with `err`. Never a session id, player or room name, password,
+payload, path, query, user agent or IP (asserted). `scripts/smoke.sh` (both modes): container stdout is only
+JSON lines, stderr empty, 2 `startup` + 1 `shutdown` around the restart, the party's lines, no error line.
+
+`Back/test/server.test.js` (16 tests, Node built-ins only; `test/sio-poll.js` is a tiny Socket.IO
 long-polling client on `fetch`): `/info`, `/session` id format and cookie flags (DEV and PROD), redirect of
 unknown routes, login rules and `you-are` / `new-user` events, reconnect with the session cookie, the full
 room flow as the front drives it (create-and-join, unique name, password, users list, character choice and
-conflict, shared objects, room broadcast and history, delete with password), and the quirks below.
+conflict, shared objects, room broadcast and history, delete with password), logout deletes the player (gone from
+`/users`, the cookie no longer resolves), `/healthz` (DEV and PROD, creates nothing), `ops/healthcheck.js`, the `PORT` override,
+and the quirks below.
 
-`scripts/smoke.sh`: the built image with `ENV=PROD`, hardened — front served, REST, PROD cookie flags,
-engine.io handshake, no crash in the logs.
+`scripts/smoke.sh IMAGE legacy`: the built image run **exactly like the box's legacy compose** (`ENV=PROD`, uid 1000,
+read-only rootfs, tmpfs `/tmp`, cap_drop ALL, no-new-privileges, restart always, container port 80) — front
+served, REST, PROD cookie flags, engine.io handshake, a whole two-player party over Socket.IO
+(`Back/test/container-flow.js play`, run with the image's own node: session cookie, login, create-and-join,
+join by code, character, shared objects, room message, `/rooms` + `/users`, delete, logout), no crash in the
+logs, then a container restart comes back empty (`keep` → restart → `empty`: state is in memory). Since the
+hosh-deploy migration it also checks uid / read-only rootfs / no capabilities, `/healthz`, the read-only
+`ops/smoke.js`, and that the image HEALTHCHECK turns `healthy`.
+
+`scripts/smoke.sh IMAGE template`: the same checks on the hosh-deploy compose itself
+(`docker-compose.example.yml` + `.env.example`, image swapped, uid 10001, `PORT=8000`, published on the conf's
+`BIND` 127.0.0.1:9137), after `scripts/register-check.sh` (CI copy of what `hosh-deploy register` refuses on
+the box), plus the conf's `POST_DEPLOY` run inside the container exactly as the box runs it (argv, no shell).
+Both modes run in CI (`container smoke`) and in `release.yml` before any push.
+
+`scripts/browser-smoke.sh IMAGE` (CI `container smoke`, last step): the **front's client-side navigation** in a
+real browser, so a react-router / React / Vite upgrade is judged on what players click, not only on "the
+bundle is served". The built image runs hardened (uid 10001, read-only, cap_drop ALL) with `ENV=STAGING` and the
+page is opened on `http://dev.localhost:9874/`: the front picks its server from the host name
+(`Front/src/services/config.ts`), and any other name means production. The runner's Chrome resolves every
+other host to nothing, and `scripts/browser-flow.mjs` drives it over the DevTools protocol with the image's own
+node (built-in `fetch` + `WebSocket`, no package installed). It pins, for two players in two browser contexts:
+`/` → `/new-user`; login → `/choose-party`; join button disabled until the code is `XXX-DDD`; create a party →
+`/party/<id>` with the room name and `[id]` in the header; Scenario → `/party/<id>/scenario`; the Inventaire
+button only on sub pages; Messagerie from a sub page → `/party/<id>/events` (relative to the party, not to the
+sub page); Inventaire → `/party/<id>`; the character miniature → `/party/<id>/characters`; browser back/forward
+over those entries; a reload of a deep link lands on `/party/<id>` of the same party; player 2 types the code in
+lower case without the dash, it is formatted to `XXX-DDD` and joins the same party; logout from the room header
+→ `/new-user`; no uncaught page error. Checked 2026-11-16: 29/29 on `main` (react-router 6.18) and on the
+#30 lockfile (6.30.6); changing one relative `navigate()` in `PartyRoom.tsx` fails 3 checks.
+
+To run it locally without Docker: build `Back/` and `Front/`, copy `Front/build` to `Back/dist/public`, start
+`ENV=STAGING PORT=9874 node index.js` in `Back/dist`, then `node scripts/browser-flow.mjs http://dev.localhost:9874/`
+(Node ≥ 22; it starts `google-chrome`, or `$CHROME`, itself).
+
+## Visual use cases (visual regression, hosh-management AGENTS.md §3)
+
+`visual/run.sh IMAGE` (CI `container smoke`, after the browser flow): the built image runs hardened (uid 10001,
+read-only, cap_drop ALL) with `ENV=STAGING` on `http://dev.localhost:9874`, two headless Chromes of the runner
+(mouse for 1400 / 1024, touch for 390) resolve every other host to nothing, and `visual/shoot.mjs` runs with the
+image's own node (no package): every case below at **1400, 1024 and 390 px**, a new player (new browser
+context) for each shot, compared with `visual/baseline/<id>-<width>.png` (tolerance: channel 24, 0.1 % of the
+pixels). Copied from pazka/plats `visual/`. Each shot starts at `/` and is reached with the clicks listed.
+
+| id | page / state | steps |
+|---|---|---|
+| H1-new-user | logged out: `/` → `/new-user`, login form | none |
+| C1-choose-party | logged in, no party: `/choose-party` (hello, join by code with the button disabled, create a party with the game list) | login "Visual Alice" |
+| C2-choose-party-code-typed | join form filled: `abc123` typed, formatted to `ABC-123`, Join enabled | login, type the code |
+| P1-party-inventory | in a party (default game "La mort du mysterieux Dr Vaticant"): header, portrait, QR button, Scenario / Messagerie, empty inventory | login, create a party |
+| P2-party-scenario | `/party/<id>/scenario` (game text, no character yet), Inventaire button shown | + Scenario |
+| P3-party-messagerie | `/party/<id>/events`: message box, history "Visual Alice joined the party" | + Messagerie |
+| P4-party-characters | `/party/<id>/characters`: the 12 characters in the frame + "Anonyme" | + click the portrait |
+| P5-party-character-page | `/party/<id>/characters/<first>`: name, Incarner, markdown scenario | + click the first character |
+| P6-tutorial-inventory | in a party of the "Tutorial Game" (empty inventory) | login, pick Tutorial Game, create |
+| P7-tutorial-scenario | its scenario page | + Scenario |
+
+Pinned so a diff means a real change: the room header shows "Visual party" and `[ABC-123]` (party ids are drawn
+by the server, room names must be unique); a player without a character gets one of two "?" portraits at random
+(`CharacterMiniature.tsx`), the harness shows `whoman.png` for both; animations, transitions and the caret are off.
+Game pictures (characters, objects, maps) come from `https://sharing.hosh.it`, which the harness resolves to
+nothing: they are drawn as broken images, the same way on every run, so **those pictures are not covered**.
+
+Not covered, and why:
+- `/objects/<game>` (printable QR sheet) and `/test`: no link leads there and the server redirects every
+  unknown path to `/` (`Back/index.ts`), so a player cannot reach them today.
+- QR scanner pop-up (needs a camera), an object page and object combination (the starting inventory is empty;
+  objects come from scanning), a chosen character, a second player, error snackbars: not yet.
+
+New or changed baselines (a wanted visual change, said in the PR): CI prints every failing shot in the log
+(`VISUAL-PNG` lines); `node visual/from-log.mjs <job log> visual/baseline --chrome` writes them back with
+their sha256 checked. Look at every picture before committing it. Baselines are only meaningful for the
+runner's Chrome (`visual/baseline/chrome.txt`); a local run with another Chrome differs by its fonts.
+Local run: `docker build -t mymurderparty:smoke . && CHROME=/path/to/chrome bash visual/run.sh`.
 
 ## Changes and upgrades (2026-10-19)
 
@@ -114,9 +208,15 @@ Each change has a test that fails on the old code (checked: 6 failures on `main`
   multiset, ids masked), same `/rooms`, no page errors; screenshots differ only in random ids and the fake
   camera frame. Vite dev server checked against the Back (login + create party, no errors).
 
+## Node 26.13.0 pinned, Node 20 dropped (2026-11-06, MIGRATIONS.md)
+
+- CVE-2026-111497 (Brotli RCE in `node:zlib`, exploited) is fixed in 26.12.1; Node 20 is EOL. Both stages
+  are `node:26.13.1-slim@sha256:…` (Dependabot `docker` bumps tag + digest). CI matrix is Node 26 only.
+
 ## Known issues (kept)
 
 - State is in memory: a restart or redeploy ends every game.
 - `/test` (cheat page: all users, all rooms, delete) is routed in production.
 - `Back/dist/` is committed but the image rebuilds it.
-- Image runs as root by default (it works as uid 1000, see the smoke); no HEALTHCHECK.
+- Image runs as root by default (both composes set a non-root user: legacy 1000, hosh-deploy 10001).
+- The app trusts no `X-Forwarded-For` (it never reads the client IP; logs never carry one).

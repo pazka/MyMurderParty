@@ -45,9 +45,12 @@ ssh gh-action@hosh.it "./deploy_app.sh murder"
 
 ## How to deploy
 
+On the hosh.it box: **`DEPLOY.md`** (hosh-deploy, `docker-compose.example.yml`). The box's pre-migration
+compose is `docker-compose.legacy.yml`. Elsewhere:
+
 docker : `docker run -e ENV=PROD -p <your_prod_port>:80 <youraccount>/my-murder-party:latest`
 
-docker-compose.yml : 
+docker-compose : 
 ```yaml
 version: '3'
 

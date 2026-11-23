@@ -1,15 +1,15 @@
 # ---- build stage: install deps + build Back and Front ----
-FROM node:26-slim AS build
+FROM node:26.13.1-slim@sha256:e6bedef217677b276c591795e169840edd9096dbf13f29df8ef8d1856b8820bc AS build
 
 WORKDIR /app_tmp
 
 # install Back dependencies from lockfile
 COPY Back/package.json Back/package-lock.json ./Back/
-RUN cd Back && npm ci
+RUN cd Back && npm ci --ignore-scripts
 
 # install Front dependencies from lockfile
 COPY Front/package.json Front/package-lock.json ./Front/
-RUN cd Front && npm ci --legacy-peer-deps
+RUN cd Front && npm ci --legacy-peer-deps --ignore-scripts
 
 # Bundle app source
 COPY Front ./Front
@@ -27,7 +27,7 @@ RUN cd Front && npm run ci
 RUN cp -r Front/build Back/dist/public
 
 # ---- runtime stage: only the built app + runtime deps ----
-FROM node:26-slim
+FROM node:26.13.1-slim@sha256:e6bedef217677b276c591795e169840edd9096dbf13f29df8ef8d1856b8820bc
 
 # patch OS packages; drop npm (unused at runtime, ships vulnerable bundled deps)
 RUN apt-get update && apt-get -y upgrade && rm -rf /var/lib/apt/lists/* \
@@ -38,7 +38,15 @@ WORKDIR /app
 # copy built back (incl. runtime node_modules + front in public/) to app
 COPY --from=build /app_tmp/Back/dist/ /app/
 
-# run server
+# health: GET /healthz on the configured port (ENV + PORT; legacy compose = :80, hosh-deploy compose = :8000).
+# No curl in the image: node checks it.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 CMD ["node", "/app/ops/healthcheck.js"]
+
+# run server (listens on PORT if set, else 80 in PROD; runs as any uid: nothing is written to disk)
 #interactive for debbuging
 #CMD ["tail", "-f", "/dev/null"]
+# Release tag, the `version` of every log line (release.yml passes it; any other build says "dev")
+ARG VERSION=dev
+ENV APP_VERSION=${VERSION}
+
 CMD ["node", "index.js"]
