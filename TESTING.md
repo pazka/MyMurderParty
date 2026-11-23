@@ -90,6 +90,13 @@ over those entries; a reload of a deep link lands on `/party/<id>` of the same p
 lower case without the dash, it is formatted to `XXX-DDD` and joins the same party; logout from the room header
 → `/new-user`; no uncaught page error. Checked 2026-11-16: 29/29 on `main` (react-router 6.18) and on the
 #30 lockfile (6.30.6); changing one relative `navigate()` in `PartyRoom.tsx` fails 3 checks.
+Since 2026-11-23 it also pins, with player 2, features no other test reaches (41 checks on `main`): a character
+page → Incarner → `/party/<id>/scenario`; the printable QR sheet (qrcode.react), reached by a history entry +
+`popstate` on `/objects/` then the page's own game link: 14 mandatory and 37 QR codes in all for the default
+game (`FULL_INVENTORY` of `Front/src/services/gameService/gameConfigs/VaticantGame.ts`), each a 128x128 svg
+with a non-empty path and the object's name; "PRINT THE QR CODES" (react-to-print, `window.print` replaced by a
+counter in every frame) calls `print()` exactly once on a document holding the same 37 QR codes; "Return to
+the game" → `/party/<id>`, character kept.
 
 To run it locally without Docker: build `Back/` and `Front/`, copy `Front/build` to `Back/dist/public`, start
 `ENV=STAGING PORT=9874 node index.js` in `Back/dist`, then `node scripts/browser-flow.mjs http://dev.localhost:9874/`
@@ -125,7 +132,8 @@ nothing: they are drawn as broken images, the same way on every run, so **those 
 
 Not covered, and why:
 - `/objects/<game>` (printable QR sheet) and `/test`: no link leads there and the server redirects every
-  unknown path to `/` (`Back/index.ts`), so a player cannot reach them today.
+  unknown path to `/` (`Back/index.ts`), so a player cannot reach them today. No screenshot; the QR sheet and
+  its print button are pinned by `scripts/browser-flow.mjs` (above), `/test` by nothing.
 - QR scanner pop-up (needs a camera), an object page and object combination (the starting inventory is empty;
   objects come from scanning), a chosen character, a second player, error snackbars: not yet.
 
