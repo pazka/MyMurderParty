@@ -197,6 +197,64 @@ try {
   check("player 2: join by code -> /party/<id>", (await b.waitPath(ROOM)) === `/party/${roomId}`, await b.path());
   check("player 2 sees the same room header", !!(await b.waitFor(`document.body.innerText.includes("[${roomId}]") && document.body.innerText.includes(${JSON.stringify(ROOM_NAME)})`)));
 
+  // ---------- player 2: choose a character (Incarner) ----------
+  await b.click(".head .character .character-wrapper", "");
+  await b.waitPath(/\/characters$/);
+  await b.waitFor(`!!document.querySelector(".character-list-wrapper .frame .character-wrapper")`);
+  await b.click(".character-list-wrapper .frame .character-wrapper", "");
+  check("player 2: first character of the list -> /party/<id>/characters/<character>",
+    !!(await b.waitPath(new RegExp(`^/party/${roomId}/characters/[^/]+$`))), await b.path());
+  await b.waitFor(`[...document.querySelectorAll(".character-page button")].some((x) => x.innerText.includes("Incarner"))`);
+  await b.click(".character-page button", "Incarner");
+  check("Incarner -> /party/<id>/scenario (one level up from the character page)",
+    (await b.waitPath(/\/scenario$/)) === `/party/${roomId}/scenario`, await b.path());
+
+  // ---------- player 2: the printable QR sheet (qrcode.react) and its print button (react-to-print) ----------
+  // No link of the game leads to /objects and the server redirects a direct load to /, so the page is
+  // reached the way the router is: a history entry + popstate. The game is then picked with the page's own link.
+  // Counts are the game's data: FULL_INVENTORY of Front/src/services/gameService/gameConfigs/VaticantGame.ts
+  // (14 objects with toPrintIrl, 37 in all).
+  const GAME = "La mort du mysterieux Dr Vaticant";
+  const QR_TO_PRINT = 14;
+  const QR_ALL = 37;
+  // print() of every document opened from now on (the print iframe) is counted in the top page, not sent to a printer
+  await b.send("Page.addScriptToEvaluateOnNewDocument", { source: `window.print = () => {
+    top.__printCalls = (top.__printCalls || 0) + 1;
+    top.__printedQr = document.querySelectorAll(".qr-code svg").length;
+  };` });
+  await b.evaluate(`history.pushState({}, "", "/objects/"); dispatchEvent(new PopStateEvent("popstate")); true`);
+  check("/objects/ lists the games", !!(await b.waitFor(`location.pathname === "/objects/" && document.body.innerText.includes("Pick a gamemode") && [...document.querySelectorAll("a")].some((x) => x.innerText === ${JSON.stringify(GAME)})`)), await b.path());
+  await b.click("a", GAME);
+  check("game link -> /objects/<game>, the QR sheet is shown",
+    !!(await b.waitFor(`decodeURIComponent(location.pathname) === ${JSON.stringify("/objects/" + GAME)} && document.body.innerText.includes("Mandatory to print items")`)), await b.path());
+  const qrCount = () => b.evaluate(`document.querySelectorAll(".qr-code svg").length`);
+  await b.waitFor(`document.querySelectorAll(".qr-code svg").length > 0`);
+  check(`QR sheet: ${QR_TO_PRINT} mandatory QR codes`, (await qrCount()) === QR_TO_PRINT, String(await qrCount()));
+  await b.click("button", "Add the non-necessary item");
+  await b.waitFor(`document.querySelectorAll(".qr-code svg").length > ${QR_TO_PRINT}`);
+  check(`QR sheet: ${QR_ALL} QR codes with the non-necessary items`, (await qrCount()) === QR_ALL, String(await qrCount()));
+  const badQr = await b.evaluate(`[...document.querySelectorAll(".qr-code svg")].filter((s) => {
+    const r = s.getBoundingClientRect();
+    const d = [...s.querySelectorAll("path")].map((p) => p.getAttribute("d") || "");
+    return !(r.width === 128 && r.height === 128 && d.length === 2 && d.every((x) => x.length > 0) && d[1].length > 100);
+  }).length`);
+  check("every QR code is a 128x128 svg with a background path and a non-empty module path", badQr === 0, `${badQr} bad`);
+  check("every QR code has its object's name under it",
+    await b.evaluate(`[...document.querySelectorAll(".qr-code")].every((q) => q.querySelector("p") && q.querySelector("p").innerText.length > 0)`));
+
+  await b.evaluate(`window.__printCalls = 0; window.__printedQr = null; true`);
+  await b.click("button", "PRINT THE QR CODES");
+  await b.waitFor(`window.__printCalls > 0`, "print() called", 8000);
+  await sleep(1000); // a second print() would be a bug too
+  const printed = await b.evaluate(`({ calls: window.__printCalls, qr: window.__printedQr })`);
+  check("PRINT THE QR CODES calls print() exactly once", printed.calls === 1, `${printed.calls} call(s)`);
+  check("the printed document holds the same QR codes as the page", printed.qr === QR_ALL, `${printed.qr} in the print document`);
+
+  await b.click("button", "Return to the game");
+  check("Return to the game -> / -> /party/<id> (still in the party)", (await b.waitPath(ROOM)) === `/party/${roomId}`, await b.path());
+  check("player 2 kept the character chosen before the QR sheet",
+    !(await b.evaluate(`document.querySelector(".head .character").innerText.includes("Anonyme")`)));
+
   // ---------- logout from the room header ----------
   await a.click(".header-small button.logout", "Logout");
   check("logout -> /new-user", (await a.waitPath(/^\/new-user$/)) === "/new-user", await a.path());
